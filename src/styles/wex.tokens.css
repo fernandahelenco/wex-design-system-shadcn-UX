@@ -29,6 +29,9 @@
   --wex-text: 206 32% 21%;
   --wex-text-muted: 208 14% 37%;
 
+  /* ===== BRAND (1 token) ===== */
+  --wex-brand-red: 350 85% 42%; /* #c8102e - Official WEX Logo Red */
+
   /* ===== PRIMARY (3 tokens) ===== */
   --wex-primary: 208 100% 32%;
   --wex-primary-contrast: 0 0% 100%;

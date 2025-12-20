@@ -16,6 +16,32 @@ export default function ChangelogPage() {
 
       <div className="space-y-8">
         <ChangelogEntry
+          version="0.6.0"
+          date="December 20, 2024"
+          title="Story Page & Home Redesign"
+          changes={[
+            "Story: Added new 'Story' page with conversational narrative about how the system was built",
+            "Story: Covers token-first architecture, WEX component contract, accessibility approach, and AI collaboration",
+            "Home: Complete redesign using WexCard components for value pillars",
+            "Home: Added stronger hero section with 'A Design System That Means It' headline",
+            "Home: Added transparency callout acknowledging work in progress and honest a11y signals",
+            "Home: Added quick navigation section linking to key areas",
+            "Home: Added animated gradient mesh background with subtle blue/cyan blobs",
+            "Home: Glassmorphism card effects with hover shine animations",
+            "Navigation: Added Story link under Resources section",
+            "Removed bespoke FeatureCard in favor of proper WexCard components",
+            "Fix: Corrected 'Get Started' link on home page to point to the Getting Started guide",
+            "Brand: Added official WEX Brand Red token (#c8102e) matching logo",
+            "Header: Added 2px brand-red gradient accent line at top",
+            "CodeBlock: Added Prism.js syntax highlighting with GitHub-inspired colors",
+            "CodeBlock: Added copy-to-clipboard button with visual feedback",
+            "CodeBlock: Added macOS-style window chrome (traffic light dots)",
+            "CodeBlock: Added optional filename prop for context",
+            "Dependencies: Added prismjs for syntax highlighting",
+          ]}
+        />
+
+        <ChangelogEntry
           version="0.5.0"
           date="December 20, 2024"
           title="Hardening Pass"

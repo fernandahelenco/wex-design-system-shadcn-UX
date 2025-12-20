@@ -43,6 +43,7 @@ export function SidebarNav() {
       <NavSection title="Resources">
         <DocsNavLink to="/accessibility" level={2}>Accessibility</DocsNavLink>
         <DocsNavLink to="/changelog" level={2}>Changelog</DocsNavLink>
+        <DocsNavLink to="/story" level={2}>Story</DocsNavLink>
       </NavSection>
     </div>
   );

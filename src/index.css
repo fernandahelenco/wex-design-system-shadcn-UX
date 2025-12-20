@@ -78,3 +78,105 @@
     color: hsl(var(--info-foreground)) !important;
   }
 }
+
+/* ============================================================
+   MESH ANIMATIONS
+   ============================================================ */
+@keyframes mesh-drift {
+  0% { transform: translate(0, 0) rotate(0deg) scale(1); }
+  33% { transform: translate(15%, -10%) rotate(10deg) scale(1.1); }
+  66% { transform: translate(-10%, 15%) rotate(-10deg) scale(0.9); }
+  100% { transform: translate(0, 0) rotate(0deg) scale(1); }
+}
+
+.animate-mesh {
+  animation: mesh-drift 25s infinite ease-in-out;
+  will-change: transform;
+}
+
+.animate-mesh-slow {
+  animation: mesh-drift 35s infinite reverse ease-in-out;
+  will-change: transform;
+}
+
+.animate-mesh-delayed {
+  animation: mesh-drift 30s infinite 2s ease-in-out;
+  will-change: transform;
+}
+
+/* ============================================================
+   PRISM SYNTAX HIGHLIGHTING OVERRIDES
+   WEX Design System themed - adapts to light/dark mode
+   ============================================================ */
+
+/* Base code styling */
+pre[class*="language-"],
+code[class*="language-"] {
+  background: transparent !important;
+  text-shadow: none !important;
+  color: hsl(var(--foreground));
+}
+
+/* Comments - muted */
+.token.comment,
+.token.prolog,
+.token.doctype,
+.token.cdata {
+  color: hsl(var(--muted-foreground));
+  font-style: italic;
+}
+
+/* Punctuation - subtle foreground */
+.token.punctuation {
+  color: hsl(var(--muted-foreground));
+}
+
+/* Properties, tags, numbers - primary blue */
+.token.property,
+.token.tag,
+.token.boolean,
+.token.number,
+.token.constant,
+.token.symbol,
+.token.deleted {
+  color: hsl(var(--primary));
+}
+
+/* Strings, inserted - success green */
+.token.selector,
+.token.attr-name,
+.token.string,
+.token.char,
+.token.builtin,
+.token.inserted {
+  color: hsl(var(--success));
+}
+
+/* Operators, entities - foreground */
+.token.operator,
+.token.entity,
+.token.url,
+.language-css .token.string,
+.style .token.string {
+  color: hsl(var(--foreground));
+}
+
+/* Keywords - destructive/brand red */
+.token.atrule,
+.token.attr-value,
+.token.keyword {
+  color: hsl(var(--brand-red));
+}
+
+/* Functions, class names - info blue/cyan */
+.token.function,
+.token.class-name {
+  color: hsl(var(--info));
+}
+
+/* Regex, variables - warning amber */
+.token.regex,
+.token.important,
+.token.variable {
+  color: hsl(var(--warning));
+}

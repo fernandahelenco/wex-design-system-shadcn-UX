@@ -25,6 +25,9 @@
   --popover: var(--wex-content-bg);
   --popover-foreground: var(--wex-text);
 
+  /* ===== BRAND ===== */
+  --brand-red: var(--wex-brand-red);
+
   /* ===== PRIMARY (with state) ===== */
   --primary: var(--wex-primary);
   --primary-foreground: var(--wex-primary-contrast);
