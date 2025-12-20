@@ -67,18 +67,21 @@ export default function ContributingPage() {
             step="1"
             title="RFC Issue"
             description="Open a GitHub Issue describing the component, use cases, and proposed API."
+            color="amber"
           />
           <WorkflowStep
             icon={<GitBranch className="h-5 w-5" />}
             step="2"
             title="Development"
             description="After approval, create a feature branch and build the component."
+            color="violet"
           />
           <WorkflowStep
             icon={<CheckCircle className="h-5 w-5" />}
             step="3"
             title="Review & Merge"
             description="Submit a PR, pass validation, and get Design System Team approval."
+            color="emerald"
           />
         </div>
       </Section>
@@ -289,22 +292,32 @@ function ChecklistCard({ title, description }: { title: string; description: str
   );
 }
 
+const workflowColors = {
+  amber: { bg: "bg-amber-500/10", text: "text-amber-500" },
+  violet: { bg: "bg-violet-500/10", text: "text-violet-500" },
+  emerald: { bg: "bg-emerald-500/10", text: "text-emerald-500" },
+  blue: { bg: "bg-blue-500/10", text: "text-blue-500" },
+} as const;
+
 function WorkflowStep({
   icon,
   step,
   title,
   description,
+  color = "blue",
 }: {
   icon: React.ReactNode;
   step: string;
   title: string;
   description: string;
+  color?: keyof typeof workflowColors;
 }) {
+  const colorClasses = workflowColors[color];
   return (
     <WexCard>
       <WexCard.Content className="pt-6">
         <div className="flex items-center gap-3 mb-3">
-          <div className="p-2 rounded-lg bg-primary/10 text-primary">{icon}</div>
+          <div className={`p-2 rounded-lg ${colorClasses.bg} ${colorClasses.text}`}>{icon}</div>
           <span className="text-xs font-semibold text-muted-foreground">STEP {step}</span>
         </div>
         <h3 className="font-semibold text-foreground mb-1">{title}</h3>
