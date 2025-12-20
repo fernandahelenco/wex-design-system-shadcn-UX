@@ -478,203 +478,129 @@ function ComponentDetailContent({ registryKey, data, info, onClose }: ComponentD
     return (
       <>
         <WexDialog.Header>
-          <WexDialog.Title>{componentName} - Accessibility Details</WexDialog.Title>
-          <WexDialog.Description>
-            Test results for documented component examples
+          <div className="flex items-center justify-between">
+            <WexDialog.Title>{componentName}</WexDialog.Title>
+            <Link
+              to={componentRoute}
+              onClick={onClose}
+              className="inline-flex items-center gap-1 text-xs text-muted-foreground hover:text-primary transition-colors"
+            >
+              View docs <ArrowRight className="h-3 w-3" />
+            </Link>
+          </div>
+          <WexDialog.Description className="sr-only">
+            Accessibility test results for {componentName}
           </WexDialog.Description>
         </WexDialog.Header>
         
-        <div className="flex items-center gap-3 my-6">
+        <div className="flex items-center gap-3 py-4">
           <div className="p-2 rounded-full bg-muted">
             <HelpCircle className="h-5 w-5 text-muted-foreground" />
           </div>
           <div>
             <p className="font-medium text-foreground">Not Tested</p>
             <p className="text-sm text-muted-foreground">
-              No accessibility test results available for this component.
+              Run <code className="bg-muted px-1 rounded text-xs">npm run test:a11y</code> to generate results.
             </p>
           </div>
         </div>
-
-        <div className="mb-6">
-          <p className="text-sm text-muted-foreground mb-2">
-            To generate test results, run:
-          </p>
-          <code className="block bg-muted px-3 py-2 rounded text-sm font-mono text-foreground">
-            npm run test:a11y
-          </code>
-        </div>
-
-        <WexDialog.Footer className="flex justify-between">
-          <Link
-            to={componentRoute}
-            onClick={onClose}
-            className="inline-flex items-center gap-1 text-sm text-primary hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background rounded"
-          >
-            View component documentation
-            <ArrowRight className="h-3 w-3" />
-          </Link>
-          <WexDialog.Close asChild>
-            <WexButton intent="secondary" size="sm">
-              Close
-            </WexButton>
-          </WexDialog.Close>
-        </WexDialog.Footer>
       </>
     );
   }
 
-  const testedDate = data.testedAt ? new Date(data.testedAt).toLocaleString() : "Never";
+  const testedDate = data.testedAt ? new Date(data.testedAt).toLocaleDateString() : "Never";
+  
+  // Pre-calculate variants (filter out auto-generated IDs)
+  const variants = data.scenariosTested.filter(s => 
+    !s.startsWith("example-_r_") && !/^example-\d+$/.test(s)
+  );
 
   return (
     <>
       <WexDialog.Header>
-        <div className="flex items-center gap-3">
-          <WexDialog.Title>{componentName}</WexDialog.Title>
-          <StatusBadge status={data.status} />
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <WexDialog.Title>{componentName}</WexDialog.Title>
+            <StatusBadge status={data.status} />
+          </div>
+          <Link
+            to={componentRoute}
+            onClick={onClose}
+            className="inline-flex items-center gap-1 text-xs text-muted-foreground hover:text-primary transition-colors"
+          >
+            View docs <ArrowRight className="h-3 w-3" />
+          </Link>
         </div>
-        <WexDialog.Description>
-          Accessibility test results for documented component examples (light + dark modes)
+        <WexDialog.Description className="sr-only">
+          Accessibility test results for {componentName}
         </WexDialog.Description>
       </WexDialog.Header>
 
-      <div className="my-6 space-y-6">
-        {/* Mode-specific Results */}
-        {data.modes && (data.modes.light || data.modes.dark) && (
-          <div className="grid grid-cols-2 gap-4">
-            {data.modes.light && (
-              <ModeResultCard mode="light" result={data.modes.light} />
-            )}
-            {data.modes.dark && (
-              <ModeResultCard mode="dark" result={data.modes.dark} />
-            )}
+      <div className="space-y-4">
+        {/* Compact Mode Results + Stats Row */}
+        <div className="grid grid-cols-4 gap-2 text-center">
+          {/* Light Mode */}
+          <div className={`p-2 rounded-lg border ${data.modes?.light?.status === 'pass' ? 'border-success/30 bg-success/5' : data.modes?.light?.status === 'fail' ? 'border-destructive/30 bg-destructive/5' : 'border-border bg-muted/30'}`}>
+            <Sun className="h-3 w-3 mx-auto mb-1 text-muted-foreground" />
+            <p className="text-xs font-medium">{data.modes?.light?.violations ?? 0}</p>
+          </div>
+          {/* Dark Mode */}
+          <div className={`p-2 rounded-lg border ${data.modes?.dark?.status === 'pass' ? 'border-success/30 bg-success/5' : data.modes?.dark?.status === 'fail' ? 'border-destructive/30 bg-destructive/5' : 'border-border bg-muted/30'}`}>
+            <Moon className="h-3 w-3 mx-auto mb-1 text-muted-foreground" />
+            <p className="text-xs font-medium">{data.modes?.dark?.violations ?? 0}</p>
+          </div>
+          {/* WCAG Level */}
+          <div className="p-2 rounded-lg border border-border bg-muted/30">
+            <p className="text-[10px] text-muted-foreground">Level</p>
+            <p className="text-xs font-medium">{data.levelAchieved || '—'}</p>
+          </div>
+          {/* Variants */}
+          <div className="p-2 rounded-lg border border-border bg-muted/30">
+            <p className="text-[10px] text-muted-foreground">Variants</p>
+            <p className="text-xs font-medium">{variants.length || data.examplesFound}</p>
+          </div>
+        </div>
+
+        {/* Variants List - only if meaningful */}
+        {variants.length > 0 && (
+          <div className="flex flex-wrap gap-1">
+            {variants.map((variant) => (
+              <code key={variant} className="px-1.5 py-0.5 bg-muted rounded text-[10px] text-foreground">
+                {variant}
+              </code>
+            ))}
           </div>
         )}
 
-        {/* Combined Stats Grid */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          <div className="p-3 rounded-lg bg-muted/50">
-            <p className="text-xs text-muted-foreground mb-1">Combined Status</p>
-            <p className="font-medium text-foreground capitalize">{data.status.replace("_", " ")}</p>
-          </div>
-          {data.levelAchieved && (
-            <div className="p-3 rounded-lg bg-muted/50">
-              <p className="text-xs text-muted-foreground mb-1">WCAG Level</p>
-              <p className="font-medium text-foreground">{data.levelAchieved}</p>
-            </div>
-          )}
-          <div className="p-3 rounded-lg bg-muted/50">
-            <p className="text-xs text-muted-foreground mb-1">Total Violations</p>
-            <p className="font-medium text-foreground">{data.violations}</p>
-          </div>
-          {(() => {
-            // Filter: exclude example-_r_xxx_ (React.useId) and example-N (numeric fallback)
-            const variants = data.scenariosTested.filter(s => 
-              !s.startsWith("example-_r_") && !/^example-\d+$/.test(s)
-            );
-            return (
-              <div className="p-3 rounded-lg bg-muted/50">
-                <p className="text-xs text-muted-foreground mb-1">Variants Tested</p>
-                <p className="font-medium text-foreground">{variants.length || data.examplesFound}</p>
-              </div>
-            );
-          })()}
-        </div>
-
-        {/* Last Tested */}
-        <div className="text-sm">
-          <p className="text-xs text-muted-foreground mb-1">Last Tested</p>
-          <p className="text-foreground">{testedDate}</p>
-        </div>
-
-        {/* Variants Tested - filter out auto-generated example IDs */}
-        {(() => {
-          // Filter: exclude example-_r_xxx_ (React.useId) and example-N (numeric fallback)
-          const variants = data.scenariosTested.filter(s => 
-            !s.startsWith("example-_r_") && !/^example-\d+$/.test(s)
-          );
-          return variants.length > 0 ? (
-            <div>
-              <p className="text-xs text-muted-foreground mb-2">Variants</p>
-              <div className="flex flex-wrap gap-1">
-                {variants.map((variant) => (
-                  <code key={variant} className="px-2 py-0.5 bg-muted rounded text-xs text-foreground">
-                    {variant}
-                  </code>
-                ))}
-              </div>
-            </div>
-          ) : null;
-        })()}
-
-        {/* Issues Found with Fixability Info */}
+        {/* Issues - Compact Cards */}
         {data.issues.length > 0 && (
-          <div>
-            <p className="text-xs text-muted-foreground mb-3">Issues Found (all modes)</p>
-            <div className="space-y-4">
-              {data.issues.map((issue) => {
-                const info = ISSUE_REFERENCE[issue];
-                return (
-                  <div key={issue} className="p-3 rounded-lg border border-border bg-card">
-                    <div className="flex items-start justify-between gap-2 mb-2">
-                      <div className="flex items-center gap-2">
-                        <X className="h-4 w-4 text-destructive flex-shrink-0" />
-                        <code className="bg-muted px-1.5 py-0.5 rounded text-xs font-mono">{issue}</code>
-                      </div>
-                      {info && (
-                        <FixabilityBadge fixable={info.fixable} label={info.fixableLabel} />
-                      )}
+          <div className="space-y-2">
+            <p className="text-xs font-medium text-foreground">Issues</p>
+            {data.issues.map((issue) => {
+              const issueInfo = ISSUE_REFERENCE[issue];
+              return (
+                <div key={issue} className="p-2 rounded border border-border bg-card text-xs">
+                  <div className="flex items-center justify-between gap-2">
+                    <div className="flex items-center gap-1.5">
+                      <X className="h-3 w-3 text-destructive flex-shrink-0" />
+                      <code className="font-mono">{issue}</code>
                     </div>
-                    {info ? (
-                      <div className="ml-6 space-y-2">
-                        <p className="text-sm font-medium text-foreground">{info.title}</p>
-                        <p className="text-xs text-muted-foreground">{info.description}</p>
-                        <div className="pt-2 border-t border-border/50">
-                          <p className="text-xs text-muted-foreground">
-                            <span className="font-medium text-foreground">How to address: </span>
-                            {info.guidance}
-                          </p>
-                        </div>
-                      </div>
-                    ) : (
-                      <p className="ml-6 text-xs text-muted-foreground">
-                        No additional information available for this issue type.
-                      </p>
-                    )}
+                    {issueInfo && <FixabilityBadge fixable={issueInfo.fixable} label={issueInfo.fixableLabel} />}
                   </div>
-                );
-              })}
-            </div>
+                  {issueInfo && (
+                    <p className="mt-1.5 text-muted-foreground pl-4">{issueInfo.guidance}</p>
+                  )}
+                </div>
+              );
+            })}
           </div>
         )}
 
-        {/* Disclaimer */}
-        <p className="text-[10px] text-muted-foreground border-t border-border pt-4">
-          Tests run in both light and dark modes. WCAG level mapping based on automated ruleset coverage. This is a test signal, not a compliance certification.
+        {/* Compact Footer Note */}
+        <p className="text-[10px] text-muted-foreground text-center pt-2 border-t border-border">
+          Tested {testedDate} · Automated axe-core analysis · Not a compliance certification
         </p>
-
-        {/* Reproduce */}
-        <div className="text-sm text-muted-foreground">
-          <span>Reproduce: </span>
-          <code className="bg-muted px-1.5 py-0.5 rounded text-xs text-foreground">npm run test:a11y</code>
-        </div>
       </div>
-
-      <WexDialog.Footer className="flex justify-between">
-        <Link
-          to={componentRoute}
-          onClick={onClose}
-          className="inline-flex items-center gap-1 text-sm text-primary hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background rounded"
-        >
-          View component docs
-          <ArrowRight className="h-3 w-3" />
-        </Link>
-        <WexDialog.Close asChild>
-          <WexButton intent="secondary" size="sm">
-            Close
-          </WexButton>
-        </WexDialog.Close>
-      </WexDialog.Footer>
     </>
   );
 }
@@ -699,46 +625,3 @@ function FixabilityBadge({ fixable, label }: FixabilityBadgeProps) {
   );
 }
 
-interface ModeResultCardProps {
-  mode: "light" | "dark";
-  result: ModeResult;
-}
-
-function ModeResultCard({ mode, result }: ModeResultCardProps) {
-  const icon = mode === "light" 
-    ? <Sun className="h-4 w-4 text-muted-foreground" />
-    : <Moon className="h-4 w-4 text-muted-foreground" />;
-    
-  const statusConfig = {
-    pass: { bg: "bg-success/10", text: "text-success", icon: <Check className="h-3 w-3" /> },
-    partial: { bg: "bg-warning/10", text: "text-warning", icon: <AlertTriangle className="h-3 w-3" /> },
-    fail: { bg: "bg-destructive/10", text: "text-destructive", icon: <X className="h-3 w-3" /> },
-    no_examples: { bg: "bg-warning/10", text: "text-warning", icon: <AlertTriangle className="h-3 w-3" /> },
-    pending: { bg: "bg-muted", text: "text-muted-foreground", icon: <HelpCircle className="h-3 w-3" /> },
-  }[result.status] || { bg: "bg-muted", text: "text-muted-foreground", icon: <HelpCircle className="h-3 w-3" /> };
-
-  return (
-    <div className={`p-4 rounded-lg border border-border ${statusConfig.bg}`}>
-      <div className="flex items-center gap-2 mb-3">
-        {icon}
-        <span className="font-medium text-foreground capitalize">{mode} Mode</span>
-      </div>
-      <div className="space-y-2">
-        <div className="flex items-center gap-1.5">
-          {statusConfig.icon}
-          <span className={`text-sm font-medium ${statusConfig.text} capitalize`}>
-            {result.status.replace("_", " ")}
-          </span>
-        </div>
-        <div className="text-xs text-muted-foreground">
-          {result.violations} violation{result.violations !== 1 ? "s" : ""}
-        </div>
-        {result.levelAchieved && (
-          <div className="text-xs text-muted-foreground">
-            Level: {result.levelAchieved}
-          </div>
-        )}
-      </div>
-    </div>
-  );
-}
