@@ -34,11 +34,20 @@ export function DocsLayout() {
       )}
 
       <Header />
-      <Sidebar>
-        <SidebarNav />
-      </Sidebar>
-      <main className="relative z-10 ml-64 min-h-[calc(100vh-3.5rem)] p-8 overflow-x-hidden">
-        <div className="mx-auto max-w-4xl">
+      
+      {/* Sidebar - hidden on home page for full-bleed landing experience */}
+      {!isHome && (
+        <Sidebar>
+          <SidebarNav />
+        </Sidebar>
+      )}
+      
+      <main 
+        className={`relative z-10 min-h-[calc(100vh-3.5rem)] p-8 overflow-x-hidden ${
+          isHome ? "ml-0" : "ml-64"
+        }`}
+      >
+        <div className={isHome ? "mx-auto max-w-6xl" : "mx-auto max-w-4xl"}>
           <Outlet />
         </div>
       </main>
