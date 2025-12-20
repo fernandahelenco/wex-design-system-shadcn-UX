@@ -98,6 +98,7 @@ export function DocsRoutes() {
           <Route path="changelog" element={<ChangelogPage />} />
           <Route path="accessibility" element={<AccessibilityPage />} />
           <Route path="story" element={<StoryPage />} />
+          <Route path="dialog-test" element={<DialogTestPage />} />
 
           {/* Foundation pages */}
           <Route path="foundations/tokens" element={<TokensPage />} />
