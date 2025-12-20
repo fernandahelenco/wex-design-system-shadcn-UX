@@ -449,87 +449,46 @@ interface KpiTileProps {
   variant?: "success" | "warning" | "destructive";
 }
 
-// Decorative SVG patterns for each KPI card variant
-function KpiPattern({ variant }: { variant?: "success" | "warning" | "destructive" }) {
-  // Default: Dot grid (systematic, data-driven)
-  if (!variant) {
-    return (
-      <svg className="absolute right-0 top-0 h-full w-1/2 opacity-[0.08]" viewBox="0 0 100 80" preserveAspectRatio="xMaxYMid slice">
-        <pattern id="dots" x="0" y="0" width="12" height="12" patternUnits="userSpaceOnUse">
-          <circle cx="2" cy="2" r="1.5" fill="currentColor" />
-        </pattern>
-        <rect x="0" y="0" width="100" height="80" fill="url(#dots)" />
-      </svg>
-    );
-  }
-  
-  // Success: Gentle wave (calm, flowing)
-  if (variant === "success") {
-    return (
-      <svg className="absolute right-0 bottom-0 h-full w-2/3 text-success opacity-[0.12]" viewBox="0 0 120 80" preserveAspectRatio="xMaxYMax slice">
-        <path d="M0,60 Q30,40 60,50 T120,40 L120,80 L0,80 Z" fill="currentColor" />
-        <path d="M0,70 Q40,55 80,65 T120,55 L120,80 L0,80 Z" fill="currentColor" opacity="0.5" />
-      </svg>
-    );
-  }
-  
-  // Warning: Diagonal stripes (in-between, transitional)
-  if (variant === "warning") {
-    return (
-      <svg className="absolute right-0 top-0 h-full w-1/2 text-warning opacity-[0.15]" viewBox="0 0 100 80" preserveAspectRatio="xMaxYMid slice">
-        <pattern id="stripes" x="0" y="0" width="8" height="8" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
-          <line x1="0" y1="0" x2="0" y2="8" stroke="currentColor" strokeWidth="3" />
-        </pattern>
-        <rect x="0" y="0" width="100" height="80" fill="url(#stripes)" />
-      </svg>
-    );
-  }
-  
-  // Destructive: Angular chevrons (attention, urgency)
-  return (
-    <svg className="absolute right-0 top-0 h-full w-1/2 text-destructive opacity-[0.12]" viewBox="0 0 100 80" preserveAspectRatio="xMaxYMid slice">
-      <path d="M60,0 L80,20 L60,40 L80,60 L60,80 L50,80 L70,60 L50,40 L70,20 L50,0 Z" fill="currentColor" />
-      <path d="M80,0 L100,20 L80,40 L100,60 L80,80 L70,80 L90,60 L70,40 L90,20 L70,0 Z" fill="currentColor" opacity="0.6" />
-    </svg>
-  );
-}
-
 function KpiTile({ label, value, icon, variant }: KpiTileProps) {
   const config = {
     success: {
-      bg: "bg-gradient-to-br from-success/5 to-success/10",
+      bg: "bg-gradient-to-br from-success/5 to-success/15",
       border: "border-success/20",
-      iconBg: "bg-success/10",
+      iconBg: "bg-success/15",
       iconColor: "text-success",
       accent: "bg-success",
+      glow: "bg-success",
     },
     warning: {
-      bg: "bg-gradient-to-br from-warning/5 to-warning/10",
+      bg: "bg-gradient-to-br from-warning/5 to-warning/15",
       border: "border-warning/20",
-      iconBg: "bg-warning/10",
+      iconBg: "bg-warning/15",
       iconColor: "text-warning",
       accent: "bg-warning",
+      glow: "bg-warning",
     },
     destructive: {
-      bg: "bg-gradient-to-br from-destructive/5 to-destructive/10",
+      bg: "bg-gradient-to-br from-destructive/5 to-destructive/15",
       border: "border-destructive/20",
-      iconBg: "bg-destructive/10",
+      iconBg: "bg-destructive/15",
       iconColor: "text-destructive",
       accent: "bg-destructive",
+      glow: "bg-destructive",
     },
     default: {
-      bg: "bg-gradient-to-br from-muted/30 to-muted/50",
+      bg: "bg-gradient-to-br from-muted/20 to-muted/40",
       border: "border-border",
       iconBg: "bg-muted",
       iconColor: "text-muted-foreground",
       accent: "bg-muted-foreground",
+      glow: "bg-foreground",
     },
   }[variant || "default"];
 
   return (
     <div className={`relative overflow-hidden rounded-xl border ${config.border} ${config.bg} p-3`}>
-      {/* Unique decorative pattern per variant */}
-      <KpiPattern variant={variant} />
+      {/* Subtle radial glow in corner */}
+      <div className={`absolute -right-8 -top-8 h-24 w-24 rounded-full ${config.glow} opacity-[0.08] blur-2xl`} />
       
       <div className="relative flex items-center gap-3">
         {/* Icon container */}
