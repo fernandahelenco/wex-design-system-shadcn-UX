@@ -173,6 +173,7 @@ function saveToStorage(overrides: ThemeOverrides): void {
 
 /**
  * Apply overrides to CSS variables on the document root
+ * IMPORTANT: Clears the inactive mode's overrides first to prevent stale values
  */
 function applyToDOM(overrides: ThemeOverrides): void {
   if (typeof window === "undefined") return;
@@ -180,8 +181,15 @@ function applyToDOM(overrides: ThemeOverrides): void {
   const root = document.documentElement;
   const isDark = root.classList.contains("dark");
   const activeOverrides = isDark ? overrides.dark : overrides.light;
+  const inactiveOverrides = isDark ? overrides.light : overrides.dark;
   
-  // Apply each override as a CSS variable
+  // First, REMOVE all inactive mode overrides from the DOM
+  // This prevents stale values from the other mode persisting
+  Object.keys(inactiveOverrides).forEach((token) => {
+    root.style.removeProperty(token);
+  });
+  
+  // Then apply each active override as a CSS variable
   Object.entries(activeOverrides).forEach(([token, value]) => {
     root.style.setProperty(token, value);
   });
