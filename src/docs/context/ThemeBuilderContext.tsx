@@ -31,11 +31,15 @@ export type GlobalCategory =
   | "brand";
 
 export interface ThemeBuilderContextValue {
-  // Selection
+  // Selection (legacy - for component/global category)
   selection: ThemeBuilderSelection;
   setSelection: (selection: ThemeBuilderSelection) => void;
   selectGlobal: (category: GlobalCategory) => void;
   selectComponent: (key: string) => void;
+  
+  // Selected token (V4 - for palette shade selection)
+  selectedToken: string | null;
+  setSelectedToken: (token: string | null) => void;
   
   // Edit mode
   editMode: "light" | "dark";
@@ -139,11 +143,14 @@ interface ThemeBuilderProviderProps {
 export function ThemeBuilderProvider({ children, lastVisitedPage }: ThemeBuilderProviderProps) {
   const navigate = useNavigate();
   
-  // Selection state - persisted to sessionStorage
+  // Selection state - persisted to sessionStorage (legacy for component/global)
   const [selection, setSelectionState] = React.useState<ThemeBuilderSelection>(() => {
     const saved = getSavedSelection();
     return saved || { type: "global", category: "surfaces" };
   });
+  
+  // Selected token (V4 - for direct palette shade selection)
+  const [selectedToken, setSelectedToken] = React.useState<string | null>(null);
   
   // Editing mode (light/dark) - also toggles document class
   const [editMode, setEditModeState] = React.useState<"light" | "dark">("light");
@@ -220,6 +227,8 @@ export function ThemeBuilderProvider({ children, lastVisitedPage }: ThemeBuilder
     setSelection,
     selectGlobal,
     selectComponent,
+    selectedToken,
+    setSelectedToken,
     editMode,
     setEditMode,
     issueCounts,

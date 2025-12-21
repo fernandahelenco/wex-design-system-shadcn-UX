@@ -1,86 +1,64 @@
 /**
- * ThemeBuilderNav Component
+ * ThemeBuilderNav Component (V4)
  * 
- * Left rail navigation for Theme Builder mode.
- * Replaces the standard SidebarNav when in Theme Builder.
+ * Simplified left rail navigation for Theme Builder.
+ * Shows inline palette swatches that are directly clickable.
  * 
  * Structure:
  * - Exit button (returns to last visited page)
- * - Global tokens section (Surfaces, Text, Borders, Focus, Radii, Brand)
- * - Components list with a11y badges
+ * - Palette rows with inline swatches (Blue, Green, Amber, Red, Cyan, Slate)
+ * - Brand Colors section
  * - Token Map link
  */
 
 import * as React from "react";
-import { WexSeparator } from "@/components/wex";
-import { 
-  ArrowLeft, 
-  Layers, 
-  Type, 
-  Square, 
-  Focus as FocusIcon, 
-  Circle, 
-  Palette,
-  Map,
-  AlertTriangle,
-  ChevronDown,
-} from "lucide-react";
+import { WexSeparator, WexAlertDialog } from "@/components/wex";
+import { ArrowLeft, Map } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { 
-  useThemeBuilder, 
-  getComponentsWithIssues,
-  type GlobalCategory,
-} from "@/docs/context/ThemeBuilderContext";
-import { COMPONENT_TOKENS, getAllComponentKeys } from "@/docs/data/componentTokenMap";
+import { useThemeBuilder } from "@/docs/context/ThemeBuilderContext";
+import { PALETTE_RAMPS } from "@/docs/data/tokenRegistry";
+import { getSemanticTokensForPaletteWithMode } from "@/docs/components/TokenMapping";
 
 interface ThemeBuilderNavProps {
   onOpenTokenMap: () => void;
   hasUnsavedChanges?: boolean;
 }
 
-// Global category configuration
-const GLOBAL_CATEGORIES: Array<{
-  key: GlobalCategory;
-  label: string;
-  icon: React.ReactNode;
-}> = [
-  { key: "surfaces", label: "Surfaces", icon: <Layers className="h-4 w-4" /> },
-  { key: "text", label: "Text", icon: <Type className="h-4 w-4" /> },
-  { key: "borders", label: "Borders", icon: <Square className="h-4 w-4" /> },
-  { key: "focus", label: "Focus", icon: <FocusIcon className="h-4 w-4" /> },
-  { key: "radii", label: "Radii", icon: <Circle className="h-4 w-4" /> },
-  { key: "brand", label: "Brand Colors", icon: <Palette className="h-4 w-4" /> },
-];
+// Shade labels for display
+const SHADE_LABELS = ["50", "100", "200", "300", "400", "500", "600", "700", "800", "900"];
 
-export function ThemeBuilderNav({ onOpenTokenMap, hasUnsavedChanges = false }: ThemeBuilderNavProps) {
+export function ThemeBuilderNav({ 
+  onOpenTokenMap, 
+  hasUnsavedChanges = false,
+}: ThemeBuilderNavProps) {
   const { 
-    selection, 
-    selectGlobal, 
-    selectComponent, 
-    exitThemeBuilder,
-    editMode,
+    exitThemeBuilder, 
+    editMode, 
+    selectedToken, 
+    setSelectedToken 
   } = useThemeBuilder();
+  
+  // Exit confirmation dialog state
+  const [showExitDialog, setShowExitDialog] = React.useState(false);
 
   // Handle exit with unsaved changes warning
   const handleExit = React.useCallback(() => {
     if (hasUnsavedChanges) {
-      if (confirm("You have unsaved changes. Exit anyway?")) {
-        exitThemeBuilder();
-      }
+      setShowExitDialog(true);
     } else {
       exitThemeBuilder();
     }
   }, [hasUnsavedChanges, exitThemeBuilder]);
 
-  const [componentsExpanded, setComponentsExpanded] = React.useState(true);
-  
-  // Get components with issues for current mode
-  const failingComponents = React.useMemo(() => {
-    return new Set(getComponentsWithIssues(editMode));
-  }, [editMode]);
+  // Check if a palette shade is referenced by any semantic token in current mode
+  const getShadeReferences = React.useCallback((paletteToken: string) => {
+    return getSemanticTokensForPaletteWithMode(paletteToken);
+  }, []);
 
-  // Get all component keys
-  const componentKeys = React.useMemo(() => getAllComponentKeys(), []);
+  const isShadeUsed = React.useCallback((paletteToken: string) => {
+    const refs = getShadeReferences(paletteToken);
+    return refs.some(ref => ref.mode === editMode || ref.mode === "both");
+  }, [getShadeReferences, editMode]);
 
   return (
     <div className="h-full flex flex-col">
@@ -99,75 +77,76 @@ export function ThemeBuilderNav({ onOpenTokenMap, hasUnsavedChanges = false }: T
       </div>
 
       {/* Scrollable Content */}
-      <div className="flex-1 overflow-y-auto">
-        {/* Global Tokens Section */}
-        <div className="p-3">
-          <div className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2 px-2">
-            Global Tokens
-          </div>
-          <div className="space-y-1">
-            {GLOBAL_CATEGORIES.map((cat) => {
-              const isActive = selection.type === "global" && selection.category === cat.key;
-              return (
-                <button
-                  key={cat.key}
-                  onClick={() => selectGlobal(cat.key)}
-                  className={cn(
-                    "flex items-center gap-2 w-full px-3 py-2 text-sm rounded-md transition-colors",
-                    isActive
-                      ? "bg-primary/10 text-primary font-medium"
-                      : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
-                  )}
-                >
-                  <span className={isActive ? "text-primary" : "text-muted-foreground"}>
-                    {cat.icon}
-                  </span>
-                  {cat.label}
-                </button>
-              );
-            })}
-          </div>
+      <div className="flex-1 overflow-y-auto p-3 space-y-4">
+        {/* Color Palettes */}
+        <div className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-3 px-1">
+          Color Palettes
         </div>
-
-        <WexSeparator />
-
-        {/* Components Section */}
-        <div className="p-3">
-          <button
-            onClick={() => setComponentsExpanded(!componentsExpanded)}
-            className="flex items-center justify-between w-full text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2 px-2 hover:text-foreground transition-colors"
-          >
-            <span>Components ({componentKeys.length})</span>
-            <ChevronDown className={cn("h-3 w-3 transition-transform", componentsExpanded && "rotate-180")} />
-          </button>
-          
-          {componentsExpanded && (
-            <div className="space-y-1">
-              {componentKeys.map((key) => {
-                const component = COMPONENT_TOKENS[key];
-                const isActive = selection.type === "component" && selection.key === key;
-                const hasIssues = failingComponents.has(key);
-
+        
+        {PALETTE_RAMPS.map((ramp) => (
+          <div key={ramp.name} className="space-y-1.5">
+            {/* Palette Name */}
+            <div className="flex items-center gap-2 px-1">
+              <div 
+                className="w-3 h-3 rounded-sm"
+                style={{ backgroundColor: `hsl(var(--wex-palette-${ramp.name}-500))` }}
+              />
+              <span className="text-xs font-medium text-foreground">{ramp.label}</span>
+            </div>
+            
+            {/* Inline Swatches */}
+            <div className="flex gap-0.5">
+              {SHADE_LABELS.map((shade) => {
+                const token = `--wex-palette-${ramp.name}-${shade}`;
+                const isSelected = selectedToken === token;
+                const isUsed = isShadeUsed(token);
+                
                 return (
                   <button
-                    key={key}
-                    onClick={() => selectComponent(key)}
+                    key={shade}
+                    onClick={() => setSelectedToken(token)}
+                    title={`${ramp.label} ${shade}${isUsed ? " (in use)" : ""}`}
                     className={cn(
-                      "flex items-center justify-between gap-2 w-full px-3 py-1.5 text-sm rounded-md transition-colors",
-                      isActive
-                        ? "bg-primary/10 text-primary font-medium"
-                        : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
+                      "relative w-5 h-5 rounded-sm transition-all",
+                      "hover:scale-110 hover:z-10",
+                      isSelected && "ring-2 ring-primary ring-offset-1 z-10",
+                      !isUsed && "opacity-50"
                     )}
+                    style={{ backgroundColor: `hsl(var(${token}))` }}
                   >
-                    <span className="truncate">{component.name}</span>
-                    {hasIssues && (
-                      <AlertTriangle className="h-3 w-3 text-warning flex-shrink-0" />
+                    {/* Usage indicator dot */}
+                    {isUsed && (
+                      <span className="absolute -bottom-0.5 left-1/2 -translate-x-1/2 w-1 h-1 bg-foreground rounded-full" />
                     )}
                   </button>
                 );
               })}
             </div>
-          )}
+          </div>
+        ))}
+
+        <WexSeparator className="my-4" />
+
+        {/* Brand Colors */}
+        <div className="space-y-2">
+          <div className="text-xs font-semibold text-muted-foreground uppercase tracking-wider px-1">
+            Brand Colors
+          </div>
+          <button
+            onClick={() => setSelectedToken("--wex-brand-red")}
+            className={cn(
+              "flex items-center gap-2 w-full px-2 py-1.5 rounded-md transition-colors",
+              selectedToken === "--wex-brand-red"
+                ? "bg-muted ring-1 ring-primary/50"
+                : "hover:bg-muted/50"
+            )}
+          >
+            <div 
+              className="w-5 h-5 rounded-sm"
+              style={{ backgroundColor: `hsl(var(--wex-brand-red))` }}
+            />
+            <span className="text-sm">WEX Red</span>
+          </button>
         </div>
       </div>
 
@@ -181,7 +160,25 @@ export function ThemeBuilderNav({ onOpenTokenMap, hasUnsavedChanges = false }: T
           Token Map Reference
         </button>
       </div>
+      
+      {/* Exit Confirmation Dialog */}
+      <WexAlertDialog open={showExitDialog} onOpenChange={setShowExitDialog}>
+        <WexAlertDialog.Content>
+          <WexAlertDialog.Header>
+            <WexAlertDialog.Title>Unsaved Changes</WexAlertDialog.Title>
+            <WexAlertDialog.Description>
+              You have unsaved theme changes. Are you sure you want to exit? 
+              Your changes will be lost.
+            </WexAlertDialog.Description>
+          </WexAlertDialog.Header>
+          <WexAlertDialog.Footer>
+            <WexAlertDialog.Cancel>Cancel</WexAlertDialog.Cancel>
+            <WexAlertDialog.Action onClick={exitThemeBuilder}>
+              Exit Anyway
+            </WexAlertDialog.Action>
+          </WexAlertDialog.Footer>
+        </WexAlertDialog.Content>
+      </WexAlertDialog>
     </div>
   );
 }
-

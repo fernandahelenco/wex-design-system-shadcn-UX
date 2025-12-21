@@ -17,13 +17,26 @@ import {
   SURFACE_TOKENS, 
   TEXT_TOKENS, 
   getAffectedComponentsForMode,
-  detectTokenConflicts,
   type PaletteRamp,
   type TokenDefinition,
 } from "@/docs/data/tokenRegistry";
+import { checkAllContrastPairs, formatContrastRatio, type A11yIssue } from "@/docs/utils/contrast";
 import { getSemanticTokensForPaletteWithMode } from "@/docs/components/TokenMapping";
 import { hexToHSL, hslToHex } from "@/docs/utils/color-convert";
-import { WexButton, WexBadge, WexAlert, WexCard, WexInput, WexTabs, WexProgress, WexSwitch } from "@/components/wex";
+import { 
+  WexButton, 
+  WexBadge, 
+  WexAlert, 
+  WexAlertDialog, 
+  WexCard, 
+  WexInput, 
+  WexTabs, 
+  WexProgress, 
+  WexSwitch,
+  WexCheckbox,
+  WexRadioGroup,
+  WexSkeleton,
+} from "@/components/wex";
 import { 
   Palette, 
   Sun, 
@@ -366,6 +379,57 @@ function ComponentPreview({ components }: ComponentPreviewProps) {
           </p>
         </div>
         
+        {/* Checkbox */}
+        <div className={cn("space-y-2 p-2 rounded", isAffected("Checkbox") && "bg-primary/5 ring-1 ring-primary/20")}>
+          <span className="text-xs text-muted-foreground flex items-center gap-2">
+            Checkbox
+            {isAffected("Checkbox") && <WexBadge intent="info" className="text-[9px] px-1 py-0">affected</WexBadge>}
+          </span>
+          <div className="flex items-center gap-4">
+            <div className="flex items-center gap-2">
+              <WexCheckbox id="cb1" defaultChecked />
+              <label htmlFor="cb1" className="text-sm">Checked</label>
+            </div>
+            <div className="flex items-center gap-2">
+              <WexCheckbox id="cb2" />
+              <label htmlFor="cb2" className="text-sm">Unchecked</label>
+            </div>
+          </div>
+        </div>
+        
+        {/* Radio Group */}
+        <div className={cn("space-y-2 p-2 rounded", isAffected("Radio") && "bg-primary/5 ring-1 ring-primary/20")}>
+          <span className="text-xs text-muted-foreground flex items-center gap-2">
+            Radio Group
+            {isAffected("Radio") && <WexBadge intent="info" className="text-[9px] px-1 py-0">affected</WexBadge>}
+          </span>
+          <WexRadioGroup defaultValue="opt1" className="flex gap-4">
+            <div className="flex items-center gap-2">
+              <WexRadioGroup.Item value="opt1" id="r1" />
+              <label htmlFor="r1" className="text-sm">Selected</label>
+            </div>
+            <div className="flex items-center gap-2">
+              <WexRadioGroup.Item value="opt2" id="r2" />
+              <label htmlFor="r2" className="text-sm">Unselected</label>
+            </div>
+          </WexRadioGroup>
+        </div>
+        
+        {/* Skeleton */}
+        <div className={cn("space-y-2 p-2 rounded", isAffected("Skeleton") && "bg-primary/5 ring-1 ring-primary/20")}>
+          <span className="text-xs text-muted-foreground flex items-center gap-2">
+            Skeleton
+            {isAffected("Skeleton") && <WexBadge intent="info" className="text-[9px] px-1 py-0">affected</WexBadge>}
+          </span>
+          <div className="flex items-center gap-3">
+            <WexSkeleton className="h-10 w-10 rounded-full" />
+            <div className="space-y-2">
+              <WexSkeleton className="h-4 w-32" />
+              <WexSkeleton className="h-3 w-24" />
+            </div>
+          </div>
+        </div>
+        
         {/* Alerts */}
         <div className={cn("space-y-2 p-2 rounded", isAffected("Alert") && "bg-primary/5 ring-1 ring-primary/20")}>
           <span className="text-xs text-muted-foreground flex items-center gap-2">
@@ -440,11 +504,10 @@ function SemanticTokenList({ tokens, selectedToken, onSelectToken }: SemanticTok
 // ============================================================================
 
 export default function ThemeBuilderPage() {
-  const { editMode, setEditMode } = useThemeBuilder();
+  const { editMode, setEditMode, selectedToken, setSelectedToken } = useThemeBuilder();
   const { overrides, setToken, resetAll, exportAsJSON, hasOverrides } = useThemeOverrides();
   
   const [selectedCategory, setSelectedCategory] = React.useState<string>("palette");
-  const [selectedToken, setSelectedToken] = React.useState<string | null>(null);
   const [selectedPalette, setSelectedPalette] = React.useState<string>("blue");
   
   // Handle color change
@@ -466,15 +529,19 @@ export default function ThemeBuilderPage() {
     URL.revokeObjectURL(url);
   }, [exportAsJSON]);
   
-  // Handle reset
-  const handleReset = React.useCallback(() => {
-    if (window.confirm("Reset all theme changes? This cannot be undone.")) {
-      resetAll();
-      // Remove custom properties
-      for (const token of Object.keys(overrides)) {
-        document.documentElement.style.removeProperty(token);
-      }
+  // Reset confirmation dialog state
+  const [showResetDialog, setShowResetDialog] = React.useState(false);
+  
+  // Handle reset confirmation
+  const confirmReset = React.useCallback(() => {
+    resetAll();
+    // Remove custom properties
+    for (const token of Object.keys(overrides)) {
+      document.documentElement.style.removeProperty(token);
     }
+    setShowResetDialog(false);
+    // Force re-read of selected token to update editor panel
+    setSelectedToken(null);
   }, [resetAll, overrides]);
   
   // Get affected components for current selection (mode-aware)
@@ -482,18 +549,18 @@ export default function ThemeBuilderPage() {
     ? getAffectedComponentsForMode(selectedToken, editMode) 
     : [];
   
-  // Detect token conflicts
-  const conflicts = React.useMemo(() => {
-    // Convert overrides to a simple object for conflict detection
-    const overrideValues: Record<string, string> = {};
-    if (overrides[editMode]) {
-      for (const [token, value] of Object.entries(overrides[editMode])) {
-        if (typeof value === "string") {
-          overrideValues[token] = value;
-        }
-      }
-    }
-    return detectTokenConflicts(overrideValues);
+  // Real-time WCAG contrast checking
+  const [a11yIssues, setA11yIssues] = React.useState<A11yIssue[]>([]);
+  const [showA11yDetails, setShowA11yDetails] = React.useState(false);
+  
+  // Check contrast pairs whenever overrides change
+  React.useEffect(() => {
+    // Small delay to let CSS variables update
+    const timer = setTimeout(() => {
+      const issues = checkAllContrastPairs();
+      setA11yIssues(issues);
+    }, 100);
+    return () => clearTimeout(timer);
   }, [overrides, editMode]);
   
   return (
@@ -541,11 +608,16 @@ export default function ThemeBuilderPage() {
               </WexBadge>
             )}
             
-            {conflicts.length > 0 && (
-              <WexBadge intent="destructive" className="text-xs flex items-center gap-1">
-                <AlertTriangle className="w-3 h-3" />
-                {conflicts.length} Conflict{conflicts.length > 1 ? "s" : ""}
-              </WexBadge>
+            {a11yIssues.length > 0 && (
+              <button
+                onClick={() => setShowA11yDetails(!showA11yDetails)}
+                className="inline-flex items-center gap-1"
+              >
+                <WexBadge intent="destructive" className="text-xs flex items-center gap-1 cursor-pointer">
+                  <AlertTriangle className="w-3 h-3" />
+                  {a11yIssues.length} A11y Issue{a11yIssues.length > 1 ? "s" : ""}
+                </WexBadge>
+              </button>
             )}
           </div>
           
@@ -553,7 +625,7 @@ export default function ThemeBuilderPage() {
             <WexButton 
               size="sm" 
               intent="outline" 
-              onClick={handleReset}
+              onClick={() => setShowResetDialog(true)}
               disabled={!hasOverrides}
             >
               <RotateCcw className="w-3.5 h-3.5 mr-1.5" />
@@ -569,6 +641,36 @@ export default function ThemeBuilderPage() {
             </WexButton>
           </div>
         </div>
+        
+        {/* A11y Issues Expandable Details */}
+        {showA11yDetails && a11yIssues.length > 0 && (
+          <div className="mt-3 p-3 bg-destructive/5 border border-destructive/20 rounded-lg">
+            <h3 className="text-sm font-medium text-destructive mb-2">
+              Contrast Issues (WCAG AA requires 4.5:1)
+            </h3>
+            <div className="space-y-2">
+              {a11yIssues.map((issue, idx) => (
+                <div 
+                  key={idx} 
+                  className="flex items-center justify-between text-sm bg-background/50 rounded px-3 py-2"
+                >
+                  <div>
+                    <span className="font-medium">{issue.pair.name}</span>
+                    <span className="text-muted-foreground ml-2">({issue.pair.component})</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <code className="text-xs text-destructive font-mono">
+                      {formatContrastRatio(issue.ratio)}
+                    </code>
+                    <span className="text-xs text-muted-foreground">
+                      needs {formatContrastRatio(issue.required)}
+                    </span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
       </div>
       
       {/* Main Content */}
@@ -847,6 +949,25 @@ export default function ThemeBuilderPage() {
           </div>
         )}
       </div>
+      
+      {/* Reset Confirmation Dialog */}
+      <WexAlertDialog open={showResetDialog} onOpenChange={setShowResetDialog}>
+        <WexAlertDialog.Content>
+          <WexAlertDialog.Header>
+            <WexAlertDialog.Title>Reset All Changes?</WexAlertDialog.Title>
+            <WexAlertDialog.Description>
+              This will reset all theme customizations back to their default values. 
+              This action cannot be undone.
+            </WexAlertDialog.Description>
+          </WexAlertDialog.Header>
+          <WexAlertDialog.Footer>
+            <WexAlertDialog.Cancel>Cancel</WexAlertDialog.Cancel>
+            <WexAlertDialog.Action onClick={confirmReset}>
+              Reset All
+            </WexAlertDialog.Action>
+          </WexAlertDialog.Footer>
+        </WexAlertDialog.Content>
+      </WexAlertDialog>
     </div>
   );
 }

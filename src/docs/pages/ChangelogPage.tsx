@@ -16,6 +16,32 @@ export default function ChangelogPage() {
 
       <div className="space-y-8">
         <ChangelogEntry
+          version="0.14.0"
+          date="December 21, 2025"
+          title="Theme Builder V4 - Simplified Navigation & Real-Time A11y"
+          changes={[
+            "Navigation: Replaced over-engineered category nav with inline palette swatches",
+            "Navigation: Each palette row shows clickable 50-900 shade swatches",
+            "Navigation: Usage indicators (dots) show which shades are referenced by semantic tokens",
+            "Navigation: Brand Colors section for WEX Red and other brand-specific colors",
+            "A11y: Replaced misleading 'Token Conflicts' with real-time WCAG contrast checking",
+            "A11y: Header shows count of contrast failures that need attention",
+            "A11y: Expandable details show exactly which foreground/background pairs fail",
+            "A11y: Defined contrast pairs for all semantic color combinations",
+            "Dialogs: Reset confirmation now uses WexAlertDialog instead of browser confirm()",
+            "Dialogs: Exit confirmation for unsaved changes uses WexAlertDialog",
+            "Editor: Fixed reset state bug where editor panel color didn't update after reset",
+            "Editor: Shared state via ThemeBuilderContext for consistent selection across components",
+            "Preview: Added Checkbox, Radio Group, and Skeleton components",
+            "Preview: All components now shown with per-variant 'affected' highlighting",
+            "Preview: Affected components get visual ring highlight when their token is selected",
+            "Code: Created checkAllContrastPairs() in contrast.ts for real-time accessibility checking",
+            "Code: Added CONTRAST_PAIRS constant defining all foreground/background relationships",
+            "Code: Extended ThemeBuilderContext with selectedToken state for shared selection",
+          ]}
+        />
+
+        <ChangelogEntry
           version="0.13.0"
           date="December 21, 2025"
           title="Theme Builder V3 - Token Architecture"

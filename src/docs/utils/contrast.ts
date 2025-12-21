@@ -258,3 +258,98 @@ export function shouldUseDarkText(bgVar: string): boolean {
   return luminance > 0.5; // Light backgrounds need dark text
 }
 
+/**
+ * Component contrast pairs - defines foreground/background relationships
+ * that must meet WCAG AA (4.5:1) contrast ratio
+ */
+export interface ContrastPair {
+  name: string;
+  component: string;
+  foreground: string;
+  background: string;
+}
+
+export const CONTRAST_PAIRS: ContrastPair[] = [
+  // Primary
+  {
+    name: "Primary Button Text",
+    component: "WexButton (default)",
+    foreground: "--primary-foreground",
+    background: "--primary",
+  },
+  // Destructive
+  {
+    name: "Destructive Button Text",
+    component: "WexButton (destructive)",
+    foreground: "--destructive-foreground",
+    background: "--destructive",
+  },
+  // Success
+  {
+    name: "Success Badge Text",
+    component: "WexBadge (success)",
+    foreground: "--success-foreground",
+    background: "--success",
+  },
+  // Warning
+  {
+    name: "Warning Badge Text",
+    component: "WexBadge (warning)",
+    foreground: "--warning-foreground",
+    background: "--warning",
+  },
+  // Info
+  {
+    name: "Info Badge Text",
+    component: "WexBadge (info)",
+    foreground: "--info-foreground",
+    background: "--info",
+  },
+  // Surface text
+  {
+    name: "Body Text on Background",
+    component: "All text content",
+    foreground: "--foreground",
+    background: "--background",
+  },
+  {
+    name: "Muted Text on Background",
+    component: "Labels, descriptions",
+    foreground: "--muted-foreground",
+    background: "--background",
+  },
+];
+
+/**
+ * A11y issue for display
+ */
+export interface A11yIssue {
+  pair: ContrastPair;
+  ratio: number;
+  required: number;
+  rating: ContrastRating;
+}
+
+/**
+ * Check all contrast pairs and return any failures
+ * @returns Array of A11yIssue objects for pairs that fail WCAG AA
+ */
+export function checkAllContrastPairs(): A11yIssue[] {
+  const issues: A11yIssue[] = [];
+  
+  for (const pair of CONTRAST_PAIRS) {
+    const data = getContrastData(pair.foreground, pair.background);
+    
+    if (data && data.rating === "Fail") {
+      issues.push({
+        pair,
+        ratio: data.ratio,
+        required: CONTRAST_THRESHOLDS.AA_NORMAL,
+        rating: data.rating,
+      });
+    }
+  }
+  
+  return issues;
+}
+

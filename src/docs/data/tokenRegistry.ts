@@ -701,66 +701,7 @@ export const TOKEN_CATEGORIES = [
 ] as const;
 
 // ============================================================================
-// Conflict Detection
+// Note: Token conflict detection has been removed.
+// Real-time WCAG contrast checking is now used instead (see contrast.ts)
 // ============================================================================
-
-export interface TokenConflict {
-  token1: string;
-  token2: string;
-  value: string;
-  message: string;
-}
-
-/**
- * Detect tokens that resolve to the same color value
- */
-export function detectTokenConflicts(
-  overrides: Record<string, string>
-): TokenConflict[] {
-  const conflicts: TokenConflict[] = [];
-  const valueToTokens: Record<string, string[]> = {};
-  
-  // Build map of values to tokens
-  const checkTokens = [
-    ...SEMANTIC_TOKENS.filter(t => t.type === "color"),
-    ...SURFACE_TOKENS.filter(t => t.type === "color"),
-    ...TEXT_TOKENS.filter(t => t.type === "color"),
-  ];
-  
-  for (const token of checkTokens) {
-    // Get value from overrides or default
-    const value = overrides[token.name] || token.lightValue;
-    const normalizedValue = value.trim().toLowerCase();
-    
-    if (!valueToTokens[normalizedValue]) {
-      valueToTokens[normalizedValue] = [];
-    }
-    valueToTokens[normalizedValue].push(token.name);
-  }
-  
-  // Find duplicates
-  for (const [value, tokens] of Object.entries(valueToTokens)) {
-    if (tokens.length > 1) {
-      // Check if these are expected to be the same (e.g., primary and focus ring)
-      const expectedDuplicates = [
-        ["--wex-primary", "--wex-focus-ring-color"],
-      ];
-      
-      const isExpected = expectedDuplicates.some(group => 
-        tokens.every(t => group.includes(t))
-      );
-      
-      if (!isExpected) {
-        conflicts.push({
-          token1: tokens[0],
-          token2: tokens[1],
-          value,
-          message: `${tokens[0]} and ${tokens[1]} both resolve to the same color: ${value}`,
-        });
-      }
-    }
-  }
-  
-  return conflicts;
-}
 
