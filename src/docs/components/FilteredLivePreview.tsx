@@ -81,6 +81,8 @@ interface FilteredLivePreviewProps {
   onValueChange?: (value: string) => void;
   /** Optional className */
   className?: string;
+  /** Full width mode for main workspace */
+  fullWidth?: boolean;
 }
 
 // =============================================================================
@@ -91,7 +93,8 @@ export function FilteredLivePreview({
   selectedToken, 
   currentValue,
   onValueChange,
-  className 
+  className,
+  fullWidth = false,
 }: FilteredLivePreviewProps) {
   const mapping = selectedToken 
     ? TOKEN_COMPONENT_MAP.find(m => m.token === selectedToken)
@@ -100,6 +103,77 @@ export function FilteredLivePreview({
   const easyUsages = selectedToken ? getEasyUsagesForToken(selectedToken) : [];
   const hardUsages = selectedToken ? getHardUsagesForToken(selectedToken) : [];
 
+  // Full width layout for main workspace
+  if (fullWidth) {
+    return (
+      <div className={cn("h-full flex flex-col", className)}>
+        {/* Edit Bar Header */}
+        <div className="sticky top-0 z-10 bg-background/95 backdrop-blur border-b border-border px-6 py-4">
+          <div className="flex items-center justify-between max-w-5xl mx-auto">
+            <div>
+              <h2 className="text-lg font-semibold">
+                {mapping ? mapping.label : "Live Preview"}
+              </h2>
+              <p className="text-sm text-muted-foreground">
+                {mapping 
+                  ? `${easyUsages.length} components, ${hardUsages.length} hover/focus states`
+                  : "Select a token from the left panel to see affected components"
+                }
+              </p>
+            </div>
+            
+            {/* Edit control in header */}
+            {selectedToken && currentValue && onValueChange && (
+              <EditControl 
+                value={currentValue} 
+                onChange={onValueChange}
+                tokenLabel={mapping?.label || selectedToken}
+              />
+            )}
+          </div>
+        </div>
+
+        {/* Preview Content */}
+        <div className="flex-1 p-6 overflow-y-auto">
+          <div className="max-w-5xl mx-auto space-y-8">
+            {!selectedToken && <EmptyStateFullWidth />}
+            
+            {selectedToken === "--wex-primary" && <PrimaryPreviewFullWidth />}
+            {selectedToken === "--wex-destructive" && <DestructivePreviewFullWidth />}
+            {selectedToken === "--wex-success" && <SuccessPreviewFullWidth />}
+            {selectedToken === "--wex-warning" && <WarningPreviewFullWidth />}
+            {selectedToken === "--wex-info" && <InfoPreviewFullWidth />}
+            {selectedToken === "--wex-content-bg" && <SurfaceBackgroundPreview />}
+            {selectedToken === "--wex-surface-subtle" && <SurfaceSubtlePreview />}
+            {selectedToken === "--wex-content-border" && <BorderPreview />}
+            {selectedToken === "--wex-input-border" && <InputBorderPreview />}
+            {selectedToken === "--wex-text" && <TextPreview />}
+            {selectedToken === "--wex-text-muted" && <TextMutedPreview />}
+            {selectedToken === "--wex-focus-ring-color" && <FocusRingPreview />}
+            
+            {/* Foreground tokens */}
+            {selectedToken === "--wex-primary-contrast" && <PrimaryContrastPreview />}
+            {selectedToken === "--wex-destructive-foreground" && <DestructiveForegroundPreview />}
+            {selectedToken === "--wex-success-foreground" && <SuccessForegroundPreview />}
+            {selectedToken === "--wex-warning-foreground" && <WarningForegroundPreview />}
+            {selectedToken === "--wex-info-foreground" && <InfoForegroundPreview />}
+
+            {/* Palette tokens */}
+            {selectedToken?.startsWith("--wex-palette-") && (
+              <PaletteTokenPreview tokenName={selectedToken} />
+            )}
+
+            {/* Hard states swatches */}
+            {hardUsages.length > 0 && (
+              <HardStateSwatches usages={hardUsages} tokenName={selectedToken || ""} />
+            )}
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // Original card layout (for backward compatibility)
   return (
     <WexCard className={cn("h-fit", className)}>
       <WexCard.Header className="pb-2">
@@ -996,6 +1070,311 @@ function InfoForegroundPreview() {
           WexAlert info uses <code className="text-xs">text-info</code> (not foreground) for tinted backgrounds.
         </p>
       </PreviewSection>
+    </div>
+  );
+}
+
+// =============================================================================
+// FULL WIDTH LAYOUT COMPONENTS
+// =============================================================================
+
+function EmptyStateFullWidth() {
+  return (
+    <div className="flex flex-col items-center justify-center min-h-[400px] text-center">
+      <div className="w-16 h-16 rounded-full bg-muted flex items-center justify-center mb-4">
+        <svg className="w-8 h-8 text-muted-foreground" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01" />
+        </svg>
+      </div>
+      <h3 className="text-lg font-medium mb-2">Select a Token</h3>
+      <p className="text-muted-foreground max-w-md">
+        Choose a token from the left panel to see all the components that use it.
+        You can edit the color value to preview changes in real-time.
+      </p>
+    </div>
+  );
+}
+
+/**
+ * Full-width grid layout for preview sections
+ */
+function PreviewGrid({ children }: { children: React.ReactNode }) {
+  return (
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      {children}
+    </div>
+  );
+}
+
+function PreviewCard({ 
+  title, 
+  children 
+}: { 
+  title: string; 
+  children: React.ReactNode;
+}) {
+  return (
+    <div className="p-4 rounded-lg border bg-card">
+      <div className="text-sm font-medium text-muted-foreground mb-3">{title}</div>
+      {children}
+    </div>
+  );
+}
+
+function PrimaryPreviewFullWidth() {
+  const [calendarDate, setCalendarDate] = React.useState<Date | undefined>(new Date());
+  
+  return (
+    <div className="space-y-8">
+      <PreviewGrid>
+        <PreviewCard title="Buttons">
+          <div className="flex flex-wrap gap-2">
+            <WexButton>Primary</WexButton>
+            <WexButton disabled>Disabled</WexButton>
+            <WexButton intent="link">Link Style</WexButton>
+          </div>
+        </PreviewCard>
+
+        <PreviewCard title="Badge">
+          <div className="flex flex-wrap gap-2">
+            <WexBadge>Default</WexBadge>
+            <WexBadge>New</WexBadge>
+            <WexBadge>Beta</WexBadge>
+          </div>
+        </PreviewCard>
+
+        <PreviewCard title="Progress">
+          <WexProgress value={65} className="w-full" />
+          <p className="text-xs text-muted-foreground mt-2">Track (20% opacity) + Bar (solid)</p>
+        </PreviewCard>
+
+        <PreviewCard title="Switch">
+          <div className="flex items-center gap-4">
+            <div className="flex items-center gap-2">
+              <WexSwitch defaultChecked id="sw1" />
+              <label htmlFor="sw1" className="text-sm">On</label>
+            </div>
+            <div className="flex items-center gap-2">
+              <WexSwitch disabled defaultChecked id="sw2" />
+              <label htmlFor="sw2" className="text-sm text-muted-foreground">Disabled</label>
+            </div>
+          </div>
+        </PreviewCard>
+
+        <PreviewCard title="Checkbox">
+          <div className="flex items-center gap-4">
+            <div className="flex items-center gap-2">
+              <WexCheckbox defaultChecked id="cb1" />
+              <label htmlFor="cb1" className="text-sm">Checked</label>
+            </div>
+            <div className="flex items-center gap-2">
+              <WexCheckbox id="cb2" />
+              <label htmlFor="cb2" className="text-sm">Unchecked</label>
+            </div>
+          </div>
+        </PreviewCard>
+
+        <PreviewCard title="Radio Group">
+          <WexRadioGroup defaultValue="opt1" className="flex gap-4">
+            <div className="flex items-center gap-2">
+              <WexRadioGroup.Item value="opt1" id="r1" />
+              <label htmlFor="r1" className="text-sm">Selected</label>
+            </div>
+            <div className="flex items-center gap-2">
+              <WexRadioGroup.Item value="opt2" id="r2" />
+              <label htmlFor="r2" className="text-sm">Option 2</label>
+            </div>
+          </WexRadioGroup>
+        </PreviewCard>
+
+        <PreviewCard title="Slider">
+          <WexSlider defaultValue={[50]} max={100} step={1} className="w-full" />
+          <p className="text-xs text-muted-foreground mt-2">Track, range fill, thumb border</p>
+        </PreviewCard>
+
+        <PreviewCard title="Skeleton">
+          <div className="flex items-center gap-3">
+            <WexSkeleton className="h-12 w-12 rounded-full" />
+            <div className="space-y-2">
+              <WexSkeleton className="h-4 w-32" />
+              <WexSkeleton className="h-3 w-24" />
+            </div>
+          </div>
+        </PreviewCard>
+
+        <PreviewCard title="Focus Ring">
+          <div className="flex items-center gap-4">
+            <div className="w-10 h-10 rounded-md border-2 ring-2 ring-ring ring-offset-2 ring-offset-background" />
+            <span className="text-xs text-muted-foreground">Uses same palette shade</span>
+          </div>
+        </PreviewCard>
+      </PreviewGrid>
+
+      {/* Calendar - Full width */}
+      <div className="p-4 rounded-lg border bg-card">
+        <div className="text-sm font-medium text-muted-foreground mb-3">Calendar (Selected Date)</div>
+        <div className="flex justify-center">
+          <WexCalendar 
+            mode="single" 
+            selected={calendarDate} 
+            onSelect={setCalendarDate}
+          />
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function DestructivePreviewFullWidth() {
+  return (
+    <PreviewGrid>
+      <PreviewCard title="Buttons">
+        <div className="flex flex-wrap gap-2">
+          <WexButton intent="destructive">Delete</WexButton>
+          <WexButton intent="destructive" disabled>Disabled</WexButton>
+        </div>
+      </PreviewCard>
+
+      <PreviewCard title="Badge">
+        <div className="flex flex-wrap gap-2">
+          <WexBadge intent="destructive">Error</WexBadge>
+          <WexBadge intent="destructive">Failed</WexBadge>
+        </div>
+      </PreviewCard>
+
+      <PreviewCard title="Alert">
+        <WexAlert intent="destructive">
+          <WexAlert.Title>Error</WexAlert.Title>
+          <WexAlert.Description>Something went wrong.</WexAlert.Description>
+        </WexAlert>
+      </PreviewCard>
+
+      <PreviewCard title="Form Error">
+        <div className="space-y-1">
+          <WexInput placeholder="Email" aria-invalid="true" className="border-destructive" />
+          <p className="text-sm text-destructive">Invalid email address</p>
+        </div>
+      </PreviewCard>
+    </PreviewGrid>
+  );
+}
+
+function SuccessPreviewFullWidth() {
+  return (
+    <PreviewGrid>
+      <PreviewCard title="Badge">
+        <div className="flex flex-wrap gap-2">
+          <WexBadge intent="success">Complete</WexBadge>
+          <WexBadge intent="success">Active</WexBadge>
+          <WexBadge intent="success">Verified</WexBadge>
+        </div>
+      </PreviewCard>
+
+      <PreviewCard title="Alert">
+        <WexAlert intent="success">
+          <WexAlert.Title>Success!</WexAlert.Title>
+          <WexAlert.Description>Your changes have been saved.</WexAlert.Description>
+        </WexAlert>
+      </PreviewCard>
+
+      <PreviewCard title="Toast Preview">
+        <div className="p-3 rounded-md bg-success text-success-foreground">
+          <div className="font-medium">Success Toast</div>
+          <div className="text-sm opacity-90">Operation completed successfully.</div>
+        </div>
+      </PreviewCard>
+    </PreviewGrid>
+  );
+}
+
+function WarningPreviewFullWidth() {
+  return (
+    <PreviewGrid>
+      <PreviewCard title="Badge">
+        <div className="flex flex-wrap gap-2">
+          <WexBadge intent="warning">Caution</WexBadge>
+          <WexBadge intent="warning">Pending</WexBadge>
+        </div>
+      </PreviewCard>
+
+      <PreviewCard title="Alert">
+        <WexAlert intent="warning">
+          <WexAlert.Title>Warning</WexAlert.Title>
+          <WexAlert.Description>Please review before continuing.</WexAlert.Description>
+        </WexAlert>
+      </PreviewCard>
+
+      <PreviewCard title="Toast Preview">
+        <div className="p-3 rounded-md bg-warning text-warning-foreground">
+          <div className="font-medium">Warning Toast</div>
+          <div className="text-sm opacity-90">Something needs attention.</div>
+        </div>
+      </PreviewCard>
+    </PreviewGrid>
+  );
+}
+
+function InfoPreviewFullWidth() {
+  return (
+    <PreviewGrid>
+      <PreviewCard title="Badge">
+        <div className="flex flex-wrap gap-2">
+          <WexBadge intent="info">Note</WexBadge>
+          <WexBadge intent="info">Info</WexBadge>
+          <WexBadge intent="info">Tip</WexBadge>
+        </div>
+      </PreviewCard>
+
+      <PreviewCard title="Alert">
+        <WexAlert intent="info">
+          <WexAlert.Title>Information</WexAlert.Title>
+          <WexAlert.Description>Here's some helpful information.</WexAlert.Description>
+        </WexAlert>
+      </PreviewCard>
+
+      <PreviewCard title="Toast Preview">
+        <div className="p-3 rounded-md bg-info text-info-foreground">
+          <div className="font-medium">Info Toast</div>
+          <div className="text-sm opacity-90">For your information.</div>
+        </div>
+      </PreviewCard>
+    </PreviewGrid>
+  );
+}
+
+/**
+ * Preview for palette tokens (when clicking on a ramp in left panel)
+ */
+function PaletteTokenPreview({ tokenName }: { tokenName: string }) {
+  // Extract ramp name and shade from token like "--wex-palette-blue-500"
+  const match = tokenName.match(/--wex-palette-(\w+)-?(\d+)?/);
+  const rampName = match?.[1] || "unknown";
+  const shade = match?.[2] || "";
+
+  return (
+    <div className="space-y-6">
+      <PreviewCard title={`Palette Token: ${rampName}${shade ? ` ${shade}` : ""}`}>
+        <div className="flex items-center gap-4">
+          <div 
+            className="w-16 h-16 rounded-lg ring-1 ring-border"
+            style={{ backgroundColor: `var(${tokenName})` }}
+          />
+          <div>
+            <div className="font-mono text-sm">{tokenName}</div>
+            <div className="text-xs text-muted-foreground mt-1">
+              This palette shade is used by semantic tokens that reference it.
+            </div>
+          </div>
+        </div>
+      </PreviewCard>
+
+      <div className="p-4 rounded-lg border bg-muted/30">
+        <p className="text-sm text-muted-foreground">
+          Palette tokens define the raw color values. Semantic tokens (like Primary, Destructive) 
+          reference palette tokens to get their colors. Changes to this shade will affect all 
+          semantic tokens that use it.
+        </p>
+      </div>
     </div>
   );
 }
