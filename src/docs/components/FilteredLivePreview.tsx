@@ -1,15 +1,13 @@
 /**
  * FilteredLivePreview Component
  * 
- * Shows only components that are affected by the currently selected semantic token.
- * This provides focused feedback when editing theme colors.
+ * Data-driven live preview that shows components affected by the selected token.
+ * Uses tokenComponentMap.ts as the single source of truth.
  * 
- * Component mapping based on exhaustive grep of src/components:
- * - PRIMARY: 15 component usages
- * - DESTRUCTIVE: 10 component usages
- * - SUCCESS: 3 component usages
- * - WARNING: 3 component usages
- * - INFO: 3 component usages
+ * Features:
+ * - Renders actual components for "easy" states
+ * - Shows color swatches for "hard" states (focus, hover)
+ * - Calendar date range for surface-subtle token
  */
 
 import * as React from "react";
@@ -28,8 +26,17 @@ import {
   WexInput,
   WexSeparator,
   WexCalendar,
+  WexToggle,
 } from "@/components/wex";
 import { cn } from "@/lib/utils";
+import { 
+  TOKEN_COMPONENT_MAP, 
+  getEasyUsagesForToken, 
+  getHardUsagesForToken,
+  type ComponentUsage 
+} from "@/docs/data/tokenComponentMap";
+import { addDays } from "date-fns";
+import type { DateRange } from "react-day-picker";
 
 interface FilteredLivePreviewProps {
   /** The semantic token being edited, e.g., "--wex-primary" */
@@ -38,61 +45,173 @@ interface FilteredLivePreviewProps {
   className?: string;
 }
 
-/**
- * Component preview configurations per semantic token
- */
-const TOKEN_PREVIEW_MAP: Record<string, React.FC> = {
-  // Intent colors
-  "--wex-primary": PrimaryPreview,
-  "--wex-destructive": DestructivePreview,
-  "--wex-success": SuccessPreview,
-  "--wex-warning": WarningPreview,
-  "--wex-info": InfoPreview,
-  // Surface tokens
-  "--wex-content-bg": SurfacePreview,
-  "--wex-content-border": SurfacePreview,
-  "--wex-surface-subtle": SurfacePreview,
-  "--wex-input-border": SurfacePreview,
-  // Text tokens
-  "--wex-text": TextPreview,
-  "--wex-text-muted": TextPreview,
-};
+// =============================================================================
+// MAIN COMPONENT
+// =============================================================================
+
+export function FilteredLivePreview({ 
+  selectedToken, 
+  className 
+}: FilteredLivePreviewProps) {
+  const mapping = selectedToken 
+    ? TOKEN_COMPONENT_MAP.find(m => m.token === selectedToken)
+    : null;
+
+  const easyUsages = selectedToken ? getEasyUsagesForToken(selectedToken) : [];
+  const hardUsages = selectedToken ? getHardUsagesForToken(selectedToken) : [];
+
+  return (
+    <WexCard className={cn("h-fit", className)}>
+      <WexCard.Header className="pb-2">
+        <WexCard.Title className="text-base">Live Preview</WexCard.Title>
+        <WexCard.Description>
+          {mapping 
+            ? `${mapping.label}: ${easyUsages.length} renderable, ${hardUsages.length} hover/focus states`
+            : "Select a token to see affected components"
+          }
+        </WexCard.Description>
+      </WexCard.Header>
+      <WexCard.Content className="space-y-6">
+        {!selectedToken && <DefaultPreview />}
+        
+        {selectedToken === "--wex-primary" && <PrimaryPreview />}
+        {selectedToken === "--wex-destructive" && <DestructivePreview />}
+        {selectedToken === "--wex-success" && <SuccessPreview />}
+        {selectedToken === "--wex-warning" && <WarningPreview />}
+        {selectedToken === "--wex-info" && <InfoPreview />}
+        {selectedToken === "--wex-content-bg" && <SurfaceBackgroundPreview />}
+        {selectedToken === "--wex-surface-subtle" && <SurfaceSubtlePreview />}
+        {selectedToken === "--wex-content-border" && <BorderPreview />}
+        {selectedToken === "--wex-text" && <TextPreview />}
+        {selectedToken === "--wex-text-muted" && <TextMutedPreview />}
+        {selectedToken === "--wex-focus-ring-color" && <FocusRingPreview />}
+
+        {/* Show hard-to-render states as swatches */}
+        {hardUsages.length > 0 && (
+          <HardStateSwatches usages={hardUsages} tokenName={selectedToken || ""} />
+        )}
+      </WexCard.Content>
+    </WexCard>
+  );
+}
+
+// =============================================================================
+// HELPER COMPONENTS
+// =============================================================================
+
+function PreviewSection({ 
+  label, 
+  children 
+}: { 
+  label: string; 
+  children: React.ReactNode; 
+}) {
+  return (
+    <div className="space-y-1.5">
+      <div className="text-xs font-medium text-muted-foreground">{label}</div>
+      {children}
+    </div>
+  );
+}
+
+function DefaultPreview() {
+  return (
+    <div className="flex items-center justify-center h-32 text-muted-foreground text-sm">
+      Select a semantic token to preview affected components
+    </div>
+  );
+}
+
 
 /**
- * Preview for Primary token - EXHAUSTIVE list from component grep:
- * 
- * 1. WexButton (default) - bg-primary, text-primary-foreground
- * 2. WexButton (link) - text-primary
- * 3. WexBadge (default) - bg-primary, text-primary-foreground
- * 4. WexSwitch (checked) - data-[state=checked]:bg-primary
- * 5. WexCheckbox (checked + border) - border-primary, data-[state=checked]:bg-primary
- * 6. WexRadio (border + indicator) - border-primary, text-primary
- * 7. WexSlider (track, range, thumb) - bg-primary/20, bg-primary, border-primary
- * 8. WexProgress (track, bar) - bg-primary/20, bg-primary
- * 9. WexSkeleton (pulse bg) - bg-primary/10
- * 10. WexCalendar (selected) - bg-primary, text-primary-foreground
- * 11. Field (checked bg/border) - bg-primary/5, border-primary
- * 12. Item/Empty (links) - text-primary
- * 13. Sonner (action button) - bg-primary, text-primary-foreground
+ * Shows swatches for hard-to-render states
  */
+function HardStateSwatches({ 
+  usages, 
+  tokenName 
+}: { 
+  usages: ComponentUsage[];
+  tokenName: string;
+}) {
+  // Group by state type
+  const hoverStates = usages.filter(u => u.state === "hover");
+  const focusStates = usages.filter(u => u.state === "focus");
+
+  // Determine the base color class for swatches
+  const getSwatchColor = () => {
+    if (tokenName.includes("primary")) return "bg-primary";
+    if (tokenName.includes("destructive")) return "bg-destructive";
+    if (tokenName.includes("success")) return "bg-success";
+    if (tokenName.includes("warning")) return "bg-warning";
+    if (tokenName.includes("info")) return "bg-info";
+    if (tokenName.includes("focus") || tokenName.includes("ring")) return "bg-ring";
+    if (tokenName.includes("muted")) return "bg-muted";
+    if (tokenName.includes("accent")) return "bg-accent";
+    return "bg-primary";
+  };
+
+  return (
+    <PreviewSection label="Interactive States (Swatches)">
+      <div className="space-y-3 p-3 rounded-md bg-muted/30 border border-dashed">
+        <p className="text-xs text-muted-foreground italic">
+          These states require user interaction and cannot be shown statically:
+        </p>
+        
+        {hoverStates.length > 0 && (
+          <div className="space-y-2">
+            <div className="text-xs font-medium">Hover States</div>
+            <div className="grid grid-cols-2 gap-2">
+              {hoverStates.slice(0, 4).map((usage, i) => (
+                <div key={i} className="text-xs text-muted-foreground">
+                  • {usage.component} {usage.variant && `(${usage.variant})`}
+                </div>
+              ))}
+              {hoverStates.length > 4 && (
+                <div className="text-xs text-muted-foreground">
+                  +{hoverStates.length - 4} more...
+                </div>
+              )}
+            </div>
+          </div>
+        )}
+        
+        {focusStates.length > 0 && (
+          <div className="space-y-2">
+            <div className="text-xs font-medium">Focus States</div>
+            <div className="flex items-center gap-3">
+              <div 
+                className={cn(
+                  "w-6 h-6 rounded-md ring-2 ring-offset-2 ring-offset-background",
+                  getSwatchColor().replace("bg-", "ring-")
+                )}
+              />
+              <span className="text-xs text-muted-foreground">
+                {focusStates.length} components use this focus ring
+              </span>
+            </div>
+          </div>
+        )}
+      </div>
+    </PreviewSection>
+  );
+}
+
+// =============================================================================
+// PRIMARY TOKEN PREVIEW
+// =============================================================================
+
 function PrimaryPreview() {
   const [calendarDate, setCalendarDate] = React.useState<Date | undefined>(new Date());
   
   return (
     <div className="space-y-4">
       {/* Buttons */}
-      <PreviewSection label="Button">
+      <PreviewSection label="Button (default, disabled)">
         <div className="flex flex-wrap gap-2">
           <WexButton size="sm">Primary</WexButton>
           <WexButton size="sm" disabled>Disabled</WexButton>
+          <a href="#" onClick={e => e.preventDefault()} className="text-primary text-sm hover:underline">Link</a>
         </div>
-      </PreviewSection>
-
-      {/* Link */}
-      <PreviewSection label="Link Text">
-        <a href="#" onClick={e => e.preventDefault()} className="text-primary hover:underline text-sm">
-          Primary colored link
-        </a>
       </PreviewSection>
 
       {/* Badge */}
@@ -101,34 +220,42 @@ function PrimaryPreview() {
       </PreviewSection>
 
       {/* Progress */}
-      <PreviewSection label="Progress (track + bar)">
+      <PreviewSection label="Progress (track bg-primary/20 + bar bg-primary)">
         <WexProgress value={65} className="w-full" />
       </PreviewSection>
 
       {/* Switch */}
-      <PreviewSection label="Switch (checked state)">
+      <PreviewSection label="Switch (checked, unchecked, disabled)">
         <div className="flex items-center gap-4">
           <div className="flex items-center gap-2">
             <WexSwitch defaultChecked id="sw-checked" />
-            <label htmlFor="sw-checked" className="text-sm">On</label>
+            <label htmlFor="sw-checked" className="text-xs">On</label>
           </div>
           <div className="flex items-center gap-2">
             <WexSwitch id="sw-unchecked" />
-            <label htmlFor="sw-unchecked" className="text-sm">Off</label>
+            <label htmlFor="sw-unchecked" className="text-xs">Off</label>
+          </div>
+          <div className="flex items-center gap-2">
+            <WexSwitch disabled defaultChecked id="sw-disabled" />
+            <label htmlFor="sw-disabled" className="text-xs text-muted-foreground">Disabled</label>
           </div>
         </div>
       </PreviewSection>
 
       {/* Checkbox */}
-      <PreviewSection label="Checkbox (border + checked)">
+      <PreviewSection label="Checkbox (checked, unchecked, disabled)">
         <div className="flex items-center gap-4">
           <div className="flex items-center gap-2">
             <WexCheckbox defaultChecked id="cb-checked" />
-            <label htmlFor="cb-checked" className="text-sm">Checked</label>
+            <label htmlFor="cb-checked" className="text-xs">Checked</label>
           </div>
           <div className="flex items-center gap-2">
             <WexCheckbox id="cb-unchecked" />
-            <label htmlFor="cb-unchecked" className="text-sm">Unchecked</label>
+            <label htmlFor="cb-unchecked" className="text-xs">Unchecked</label>
+          </div>
+          <div className="flex items-center gap-2">
+            <WexCheckbox disabled defaultChecked id="cb-disabled" />
+            <label htmlFor="cb-disabled" className="text-xs text-muted-foreground">Disabled</label>
           </div>
         </div>
       </PreviewSection>
@@ -138,17 +265,17 @@ function PrimaryPreview() {
         <WexRadioGroup defaultValue="opt1" className="flex gap-4">
           <div className="flex items-center gap-2">
             <WexRadioGroup.Item value="opt1" id="r1" />
-            <label htmlFor="r1" className="text-sm">Selected</label>
+            <label htmlFor="r1" className="text-xs">Selected</label>
           </div>
           <div className="flex items-center gap-2">
             <WexRadioGroup.Item value="opt2" id="r2" />
-            <label htmlFor="r2" className="text-sm">Option 2</label>
+            <label htmlFor="r2" className="text-xs">Option 2</label>
           </div>
         </WexRadioGroup>
       </PreviewSection>
 
       {/* Slider */}
-      <PreviewSection label="Slider (track + range + thumb)">
+      <PreviewSection label="Slider (track, range, thumb border)">
         <WexSlider defaultValue={[50]} max={100} step={1} className="w-full" />
       </PreviewSection>
 
@@ -176,7 +303,7 @@ function PrimaryPreview() {
       </PreviewSection>
 
       {/* Field checked state */}
-      <PreviewSection label="Field (checked highlight)">
+      <PreviewSection label="Field (checked highlight bg-primary/5)">
         <div className="flex items-center gap-3 p-3 rounded-md border bg-primary/5 border-primary">
           <WexCheckbox defaultChecked id="field-cb" />
           <label htmlFor="field-cb" className="text-sm">Selected field with primary highlight</label>
@@ -186,22 +313,15 @@ function PrimaryPreview() {
   );
 }
 
-/**
- * Preview for Destructive token - EXHAUSTIVE list:
- * 
- * 1. WexButton (destructive) - bg-destructive, text-destructive-foreground
- * 2. WexBadge (destructive) - bg-destructive, text-destructive-foreground
- * 3. WexAlert (destructive) - border-destructive/50, text-destructive
- * 4. Form (error) - text-destructive
- * 5. Field (invalid) - text-destructive, border-destructive
- * 6. InputGroup (invalid) - ring-destructive/20, border-destructive
- * 7. Sonner (error toast) - bg-destructive
- */
+// =============================================================================
+// DESTRUCTIVE TOKEN PREVIEW
+// =============================================================================
+
 function DestructivePreview() {
   return (
     <div className="space-y-4">
       {/* Button */}
-      <PreviewSection label="Button">
+      <PreviewSection label="Button (default, disabled)">
         <div className="flex flex-wrap gap-2">
           <WexButton size="sm" intent="destructive">Delete</WexButton>
           <WexButton size="sm" intent="destructive" disabled>Disabled</WexButton>
@@ -238,12 +358,10 @@ function DestructivePreview() {
   );
 }
 
-/**
- * Preview for Success token:
- * 1. WexAlert (success) - border-success/50, bg-success/10, text-success
- * 2. WexBadge (success) - bg-success, text-success-foreground
- * 3. Sonner (success toast) - bg-success
- */
+// =============================================================================
+// SUCCESS TOKEN PREVIEW
+// =============================================================================
+
 function SuccessPreview() {
   return (
     <div className="space-y-4">
@@ -265,12 +383,10 @@ function SuccessPreview() {
   );
 }
 
-/**
- * Preview for Warning token:
- * 1. WexAlert (warning) - border-warning/50, bg-warning/10, text-warning-foreground
- * 2. WexBadge (warning) - bg-warning, text-warning-foreground
- * 3. Sonner (warning toast) - bg-warning
- */
+// =============================================================================
+// WARNING TOKEN PREVIEW
+// =============================================================================
+
 function WarningPreview() {
   return (
     <div className="space-y-4">
@@ -292,12 +408,10 @@ function WarningPreview() {
   );
 }
 
-/**
- * Preview for Info token:
- * 1. WexAlert (info) - border-info/50, bg-info/10, text-info
- * 2. WexBadge (info) - bg-info, text-info-foreground
- * 3. Sonner (info toast) - bg-info
- */
+// =============================================================================
+// INFO TOKEN PREVIEW
+// =============================================================================
+
 function InfoPreview() {
   return (
     <div className="space-y-4">
@@ -319,21 +433,113 @@ function InfoPreview() {
   );
 }
 
-/**
- * Preview for Surface tokens (bg, border, subtle)
- */
-function SurfacePreview() {
+// =============================================================================
+// SURFACE BACKGROUND PREVIEW
+// =============================================================================
+
+function SurfaceBackgroundPreview() {
   return (
     <div className="space-y-4">
       {/* Card */}
-      <PreviewSection label="Card (background + border)">
+      <PreviewSection label="Card (bg-background)">
         <WexCard className="p-4">
-          <p className="text-sm">This card uses surface background and border colors.</p>
+          <p className="text-sm">Card uses background color.</p>
+        </WexCard>
+      </PreviewSection>
+
+      {/* Nested example */}
+      <PreviewSection label="Layered Surfaces">
+        <div className="p-4 bg-muted rounded-md">
+          <p className="text-xs text-muted-foreground mb-2">Muted layer</p>
+          <div className="p-3 bg-background rounded-md border">
+            <p className="text-sm">Content on background</p>
+          </div>
+        </div>
+      </PreviewSection>
+    </div>
+  );
+}
+
+// =============================================================================
+// SURFACE SUBTLE (MUTED/ACCENT) PREVIEW
+// =============================================================================
+
+function SurfaceSubtlePreview() {
+  const today = new Date();
+  const [dateRange, setDateRange] = React.useState<DateRange | undefined>({
+    from: today,
+    to: addDays(today, 5),
+  });
+
+  return (
+    <div className="space-y-4">
+      {/* Tabs */}
+      <PreviewSection label="Tabs (bg-muted list)">
+        <WexTabs defaultValue="tab1" className="w-full">
+          <WexTabs.List>
+            <WexTabs.Trigger value="tab1">Active</WexTabs.Trigger>
+            <WexTabs.Trigger value="tab2">Inactive</WexTabs.Trigger>
+          </WexTabs.List>
+        </WexTabs>
+      </PreviewSection>
+
+      {/* Muted Background */}
+      <PreviewSection label="Muted Background">
+        <div className="bg-muted rounded-md p-4">
+          <p className="text-sm">Content on muted surface.</p>
+        </div>
+      </PreviewSection>
+
+      {/* Toggle (on state uses accent) */}
+      <PreviewSection label="Toggle (on = bg-accent)">
+        <div className="flex gap-2">
+          <WexToggle defaultPressed>On</WexToggle>
+          <WexToggle>Off</WexToggle>
+        </div>
+      </PreviewSection>
+
+      {/* Calendar Date Range - shows bg-accent for middle dates */}
+      <PreviewSection label="Calendar Date Range (middle dates = bg-accent)">
+        <div className="border rounded-md w-fit">
+          <WexCalendar 
+            mode="range" 
+            selected={dateRange}
+            onSelect={setDateRange}
+            className="p-0"
+          />
+        </div>
+        <p className="text-xs text-muted-foreground mt-1">
+          Dates between start and end use bg-accent (surface-subtle)
+        </p>
+      </PreviewSection>
+
+      {/* Kbd */}
+      <PreviewSection label="Keyboard Shortcut (bg-muted)">
+        <div className="flex items-center gap-1 text-sm">
+          Press <kbd className="bg-muted text-muted-foreground px-1.5 py-0.5 rounded text-xs font-mono">⌘</kbd> + 
+          <kbd className="bg-muted text-muted-foreground px-1.5 py-0.5 rounded text-xs font-mono">K</kbd>
+        </div>
+      </PreviewSection>
+    </div>
+  );
+}
+
+// =============================================================================
+// BORDER TOKEN PREVIEW
+// =============================================================================
+
+function BorderPreview() {
+  return (
+    <div className="space-y-4">
+      {/* Card */}
+      <PreviewSection label="Card Border">
+        <WexCard className="p-4">
+          <p className="text-sm">Card with border.</p>
         </WexCard>
       </PreviewSection>
 
       {/* Input */}
-      <PreviewSection label="Input (border)">
+      <PreviewSection label="Input Border">
         <WexInput placeholder="Input with border..." />
       </PreviewSection>
 
@@ -345,20 +551,30 @@ function SurfacePreview() {
           <p className="text-sm">Content below</p>
         </div>
       </PreviewSection>
+    </div>
+  );
+}
 
-      {/* Subtle background */}
-      <PreviewSection label="Subtle Background (muted)">
-        <div className="bg-muted rounded-md p-4">
-          <p className="text-sm">This uses the subtle surface background.</p>
-        </div>
+// =============================================================================
+// TEXT TOKEN PREVIEW
+// =============================================================================
+
+function TextPreview() {
+  return (
+    <div className="space-y-4">
+      {/* Foreground text */}
+      <PreviewSection label="Foreground Text">
+        <p className="text-foreground">
+          This is primary text content using the foreground color.
+        </p>
       </PreviewSection>
 
-      {/* Tabs (uses muted bg) */}
-      <PreviewSection label="Tabs (muted background)">
-        <WexTabs defaultValue="tab1" className="w-full">
+      {/* Active tab */}
+      <PreviewSection label="Active Tab Text">
+        <WexTabs defaultValue="tab1">
           <WexTabs.List>
-            <WexTabs.Trigger value="tab1">Selected</WexTabs.Trigger>
-            <WexTabs.Trigger value="tab2">Tab Two</WexTabs.Trigger>
+            <WexTabs.Trigger value="tab1">Active (foreground)</WexTabs.Trigger>
+            <WexTabs.Trigger value="tab2">Inactive (muted)</WexTabs.Trigger>
           </WexTabs.List>
         </WexTabs>
       </PreviewSection>
@@ -366,19 +582,13 @@ function SurfacePreview() {
   );
 }
 
-/**
- * Preview for Text tokens
- */
-function TextPreview() {
+// =============================================================================
+// TEXT MUTED TOKEN PREVIEW
+// =============================================================================
+
+function TextMutedPreview() {
   return (
     <div className="space-y-4">
-      {/* Foreground text */}
-      <PreviewSection label="Primary Text (foreground)">
-        <p className="text-foreground">
-          This is primary text content using the foreground color.
-        </p>
-      </PreviewSection>
-
       {/* Muted text */}
       <PreviewSection label="Muted Text">
         <p className="text-muted-foreground">
@@ -386,78 +596,83 @@ function TextPreview() {
         </p>
       </PreviewSection>
 
-      {/* Mixed example */}
-      <PreviewSection label="Combined Example">
-        <div className="space-y-1">
-          <h4 className="text-foreground font-medium">Heading Text</h4>
-          <p className="text-muted-foreground text-sm">
-            Description text that provides additional context.
-          </p>
+      {/* Placeholder */}
+      <PreviewSection label="Input Placeholder">
+        <WexInput placeholder="Placeholder uses muted color..." />
+      </PreviewSection>
+
+      {/* Card description */}
+      <PreviewSection label="Card Description">
+        <WexCard>
+          <WexCard.Header>
+            <WexCard.Title>Title</WexCard.Title>
+            <WexCard.Description>
+              This description uses muted foreground color.
+            </WexCard.Description>
+          </WexCard.Header>
+        </WexCard>
+      </PreviewSection>
+
+      {/* Inactive tabs */}
+      <PreviewSection label="Inactive Tab Text">
+        <WexTabs defaultValue="tab2">
+          <WexTabs.List>
+            <WexTabs.Trigger value="tab1">Tab 1 (inactive/muted)</WexTabs.Trigger>
+            <WexTabs.Trigger value="tab2">Tab 2 (active)</WexTabs.Trigger>
+          </WexTabs.List>
+        </WexTabs>
+      </PreviewSection>
+    </div>
+  );
+}
+
+// =============================================================================
+// FOCUS RING TOKEN PREVIEW
+// =============================================================================
+
+function FocusRingPreview() {
+  return (
+    <div className="space-y-4">
+      {/* Explanation */}
+      <PreviewSection label="Focus Ring Color">
+        <p className="text-sm text-muted-foreground">
+          The focus ring appears when elements are focused via keyboard navigation.
+          Below are swatches showing how the ring color is used:
+        </p>
+      </PreviewSection>
+
+      {/* Visual swatch showing the ring */}
+      <PreviewSection label="Ring Swatch">
+        <div className="flex items-center gap-4">
+          <div className="w-10 h-10 rounded-md border-2 ring-2 ring-ring ring-offset-2 ring-offset-background" />
+          <div className="text-sm">
+            <div className="font-medium">Focus Ring</div>
+            <div className="text-muted-foreground text-xs">ring-ring with ring-offset-background</div>
+          </div>
         </div>
       </PreviewSection>
 
-      {/* Placeholder */}
-      <PreviewSection label="Placeholder (muted)">
-        <WexInput placeholder="Placeholder uses muted color..." />
+      {/* Focusable elements */}
+      <PreviewSection label="Try Tab Key to See Focus">
+        <div className="flex flex-wrap gap-2">
+          <WexButton size="sm">Tab to me</WexButton>
+          <WexInput className="w-32" placeholder="Or me..." />
+          <WexCheckbox id="focus-cb" />
+        </div>
+        <p className="text-xs text-muted-foreground mt-2">
+          Press Tab to navigate and see the focus ring on each element.
+        </p>
+      </PreviewSection>
+
+      {/* Components that use focus ring */}
+      <PreviewSection label="Components with Focus Ring">
+        <div className="text-xs text-muted-foreground space-y-1">
+          <div>• WexButton, WexBadge, WexCheckbox, WexRadioGroup</div>
+          <div>• WexSwitch, WexSlider, WexInput, WexTextarea</div>
+          <div>• WexSelect, WexTabs, WexCalendar, Toggle</div>
+          <div>• Dialog/Sheet close buttons, Resizable handles</div>
+        </div>
       </PreviewSection>
     </div>
-  );
-}
-
-/**
- * Helper component for preview sections
- */
-function PreviewSection({ 
-  label, 
-  children 
-}: { 
-  label: string; 
-  children: React.ReactNode; 
-}) {
-  return (
-    <div className="space-y-1.5">
-      <div className="text-xs font-medium text-muted-foreground">{label}</div>
-      {children}
-    </div>
-  );
-}
-
-/**
- * Default preview when no token is selected
- */
-function DefaultPreview() {
-  return (
-    <div className="flex items-center justify-center h-32 text-muted-foreground text-sm">
-      Select a semantic token to preview affected components
-    </div>
-  );
-}
-
-/**
- * Main FilteredLivePreview component
- */
-export function FilteredLivePreview({ 
-  selectedToken, 
-  className 
-}: FilteredLivePreviewProps) {
-  const PreviewComponent = selectedToken 
-    ? TOKEN_PREVIEW_MAP[selectedToken] || DefaultPreview
-    : DefaultPreview;
-
-  return (
-    <WexCard className={cn("h-fit", className)}>
-      <WexCard.Header className="pb-2">
-        <WexCard.Title className="text-base">Live Preview</WexCard.Title>
-        <WexCard.Description>
-          {selectedToken 
-            ? `Showing components affected by ${selectedToken.replace("--wex-", "")}`
-            : "Components update in real-time as you make changes"
-          }
-        </WexCard.Description>
-      </WexCard.Header>
-      <WexCard.Content>
-        <PreviewComponent />
-      </WexCard.Content>
-    </WexCard>
   );
 }
