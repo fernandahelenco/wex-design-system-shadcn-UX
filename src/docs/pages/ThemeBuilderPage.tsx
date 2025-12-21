@@ -17,6 +17,7 @@ import {
   WexButton, 
   WexBadge, 
   WexAlertDialog,
+  WexAlert,
   WexCard,
   WexInput,
   WexProgress,
@@ -24,6 +25,8 @@ import {
   WexCheckbox,
   WexRadioGroup,
   WexSkeleton,
+  WexTabs,
+  WexSlider,
 } from "@/components/wex";
 import { 
   Palette, 
@@ -334,6 +337,49 @@ function LivePreview() {
             </div>
           </div>
         </div>
+        
+        {/* Alerts */}
+        <div className="space-y-2">
+          <span className="text-xs text-muted-foreground">Alerts</span>
+          <div className="space-y-2">
+            <WexAlert>
+              <WexAlert.Title>Default Alert</WexAlert.Title>
+              <WexAlert.Description>Uses primary border color.</WexAlert.Description>
+            </WexAlert>
+            <WexAlert intent="destructive">
+              <WexAlert.Title>Destructive</WexAlert.Title>
+              <WexAlert.Description>Error state styling.</WexAlert.Description>
+            </WexAlert>
+          </div>
+        </div>
+        
+        {/* Tabs */}
+        <div className="space-y-2">
+          <span className="text-xs text-muted-foreground">Tabs</span>
+          <WexTabs defaultValue="tab1" className="w-full">
+            <WexTabs.List>
+              <WexTabs.Trigger value="tab1">Tab One</WexTabs.Trigger>
+              <WexTabs.Trigger value="tab2">Tab Two</WexTabs.Trigger>
+              <WexTabs.Trigger value="tab3">Tab Three</WexTabs.Trigger>
+            </WexTabs.List>
+          </WexTabs>
+        </div>
+        
+        {/* Links & Focus */}
+        <div className="space-y-2">
+          <span className="text-xs text-muted-foreground">Links & Focus</span>
+          <div className="flex flex-wrap items-center gap-4">
+            <a href="#" className="text-primary hover:underline text-sm">Primary Link</a>
+            <span className="text-sm text-muted-foreground">|</span>
+            <WexInput placeholder="Focus for ring..." className="w-40" />
+          </div>
+        </div>
+        
+        {/* Slider */}
+        <div className="space-y-2">
+          <span className="text-xs text-muted-foreground">Slider</span>
+          <WexSlider defaultValue={[50]} max={100} step={1} className="w-48" />
+        </div>
       </WexCard.Content>
     </WexCard>
   );
@@ -344,12 +390,26 @@ function LivePreview() {
 // ============================================================================
 
 export default function ThemeBuilderPage() {
-  const { editMode, setEditMode, setSelectedToken } = useThemeBuilder();
+  const { editMode, setEditMode, selectedToken, setSelectedToken } = useThemeBuilder();
   const { resetAll, exportAsJSON, hasOverrides, removeToken } = useThemeOverrides();
   
   // Current workspace view
   const [view, setView] = React.useState<WorkspaceView>("semantic");
   const [editingPalette, setEditingPalette] = React.useState<string | null>(null);
+  
+  // React to left nav palette selection
+  React.useEffect(() => {
+    if (!selectedToken) return;
+    
+    // Check if this is a palette token (e.g., --wex-palette-blue-500)
+    const paletteMatch = selectedToken.match(/^--wex-palette-(\w+)-\d+$/);
+    if (paletteMatch) {
+      const paletteName = paletteMatch[1];
+      // Switch to ramp view and open this palette's editor
+      setView("ramp");
+      setEditingPalette(paletteName);
+    }
+  }, [selectedToken]);
   
   // Reset confirmation dialog
   const [showResetDialog, setShowResetDialog] = React.useState(false);
@@ -466,7 +526,7 @@ export default function ThemeBuilderPage() {
               intent={view === "ramp" ? undefined : "outline"}
               onClick={() => setView("ramp")}
             >
-              <Paintbrush className="w-4 h-4 mr-1.5" />
+              <Paintbrush className="h-4 w-4" />
               Palette Ramps
             </WexButton>
             <WexButton
@@ -474,7 +534,7 @@ export default function ThemeBuilderPage() {
               intent={view === "semantic" ? undefined : "outline"}
               onClick={() => setView("semantic")}
             >
-              <ChevronRight className="w-4 h-4 mr-1.5" />
+              <ChevronRight className="h-4 w-4" />
               Semantic Tokens
             </WexButton>
           </div>
