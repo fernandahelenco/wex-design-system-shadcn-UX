@@ -211,3 +211,147 @@ export function getTokenMapping(token: string): TokenMappingData | undefined {
   return TOKEN_MAPPINGS[token];
 }
 
+/**
+ * Reverse lookup: Get all tokens used by a specific component
+ */
+export function getTokensForComponent(componentName: string): TokenMappingData[] {
+  const tokens: TokenMappingData[] = [];
+  
+  for (const mapping of Object.values(TOKEN_MAPPINGS)) {
+    // Check if any component in the list contains the search term
+    const matches = mapping.components.some(comp => 
+      comp.toLowerCase().includes(componentName.toLowerCase())
+    );
+    if (matches) {
+      tokens.push(mapping);
+    }
+  }
+  
+  return tokens;
+}
+
+/**
+ * Get all unique components from the token mappings
+ */
+export function getAllComponents(): string[] {
+  const components = new Set<string>();
+  
+  for (const mapping of Object.values(TOKEN_MAPPINGS)) {
+    for (const component of mapping.components) {
+      // Extract base component name (e.g., "WexButton" from "WexButton (default)")
+      const baseName = component.split(" ")[0];
+      if (baseName.startsWith("Wex")) {
+        components.add(baseName);
+      }
+    }
+  }
+  
+  return Array.from(components).sort();
+}
+
+/**
+ * Cascade chain showing palette -> semantic -> bridge -> tailwind -> components
+ */
+export interface CascadeChain {
+  palette: string | null;
+  semantic: string;
+  bridge: string;
+  tailwind: string[];
+  components: string[];
+}
+
+/**
+ * Token to shadcn bridge variable mapping
+ */
+const BRIDGE_MAP: Record<string, string> = {
+  "--wex-primary": "--primary",
+  "--wex-primary-contrast": "--primary-foreground",
+  "--wex-primary-hover": "--primary",
+  "--wex-destructive": "--destructive",
+  "--wex-destructive-foreground": "--destructive-foreground",
+  "--wex-destructive-hover": "--destructive",
+  "--wex-success": "--success",
+  "--wex-success-foreground": "--success-foreground",
+  "--wex-success-hover": "--success",
+  "--wex-warning": "--warning",
+  "--wex-warning-foreground": "--warning-foreground",
+  "--wex-warning-hover": "--warning",
+  "--wex-info": "--info",
+  "--wex-info-foreground": "--info-foreground",
+  "--wex-info-hover": "--info",
+  "--wex-content-bg": "--background",
+  "--wex-content-border": "--border",
+  "--wex-surface-subtle": "--muted",
+  "--wex-text": "--foreground",
+  "--wex-text-muted": "--muted-foreground",
+  "--wex-input-border": "--input",
+  "--wex-focus-ring-color": "--ring",
+};
+
+/**
+ * Token to palette reference mapping (light mode)
+ */
+const PALETTE_MAP: Record<string, string> = {
+  "--wex-primary": "--wex-palette-blue-700",
+  "--wex-primary-hover": "--wex-palette-blue-800",
+  "--wex-destructive": "--wex-palette-red-500",
+  "--wex-destructive-hover": "--wex-palette-red-600",
+  "--wex-success": "--wex-palette-green-600",
+  "--wex-success-hover": "--wex-palette-green-700",
+  "--wex-warning": "--wex-palette-amber-500",
+  "--wex-warning-hover": "--wex-palette-amber-600",
+  "--wex-info": "--wex-palette-cyan-500",
+  "--wex-info-hover": "--wex-palette-cyan-600",
+  "--wex-focus-ring-color": "--wex-palette-blue-700",
+};
+
+/**
+ * Get the full cascade chain for a semantic token
+ */
+export function getCascadeChain(tokenName: string): CascadeChain | null {
+  const mapping = TOKEN_MAPPINGS[tokenName];
+  if (!mapping) return null;
+  
+  return {
+    palette: PALETTE_MAP[tokenName] || null,
+    semantic: tokenName,
+    bridge: BRIDGE_MAP[tokenName] || tokenName.replace("--wex-", "--"),
+    tailwind: mapping.tailwindUtilities,
+    components: mapping.components,
+  };
+}
+
+/**
+ * Find which semantic tokens reference a given palette token
+ */
+export function getSemanticTokensForPalette(paletteToken: string): string[] {
+  const semanticTokens: string[] = [];
+  
+  for (const [semantic, palette] of Object.entries(PALETTE_MAP)) {
+    if (palette === paletteToken) {
+      semanticTokens.push(semantic);
+    }
+  }
+  
+  return semanticTokens;
+}
+
+/**
+ * Get all components affected by a palette token change
+ */
+export function getComponentsAffectedByPalette(paletteToken: string): string[] {
+  const components = new Set<string>();
+  const semanticTokens = getSemanticTokensForPalette(paletteToken);
+  
+  for (const semanticToken of semanticTokens) {
+    const mapping = TOKEN_MAPPINGS[semanticToken];
+    if (mapping) {
+      for (const component of mapping.components) {
+        components.add(component);
+      }
+    }
+  }
+  
+  return Array.from(components);
+}
+

@@ -16,6 +16,30 @@ export default function ChangelogPage() {
 
       <div className="space-y-8">
         <ChangelogEntry
+          version="0.13.0"
+          date="December 21, 2025"
+          title="Theme Builder V3 - Token Architecture"
+          changes={[
+            "Architecture: Wired semantic tokens to palette references establishing proper cascade",
+            "Architecture: Palette tokens (50-900) are now the single source of truth for colors",
+            "Architecture: Changing a palette color automatically updates all semantic tokens",
+            "Palette: Added new Cyan palette (50-900) for info token",
+            "Tokens: Primary → blue-700 (light) / blue-500 (dark)",
+            "Tokens: Destructive → red-500/600 for base/hover",
+            "Tokens: Success → green-600/700 (light) / green-500/600 (dark)",
+            "Tokens: Warning → amber-500/600 (light) / amber-400/500 (dark)",
+            "Tokens: Info → cyan-500/600 (light) / cyan-400/500 (dark)",
+            "Tokens: Focus ring now references primary palette",
+            "UI: Token-first editing experience - select palette or semantic tokens",
+            "UI: Cascade visualization shows palette → semantic → component chain",
+            "UI: Conflict detection warns when multiple tokens resolve to same color",
+            "Data: Created tokenRegistry.ts with full token definitions and cascade data",
+            "Data: Extended TokenMapping.tsx with reverse lookups and cascade chains",
+            "Export: Style Dictionary compatible JSON maintains token references",
+          ]}
+        />
+
+        <ChangelogEntry
           version="0.12.0"
           date="December 21, 2025"
           title="Theme Builder V2 - Figma-Style Editing"

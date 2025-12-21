@@ -145,8 +145,43 @@ export function ThemeBuilderProvider({ children, lastVisitedPage }: ThemeBuilder
     return saved || { type: "global", category: "surfaces" };
   });
   
-  // Editing mode (light/dark)
-  const [editMode, setEditMode] = React.useState<"light" | "dark">("light");
+  // Editing mode (light/dark) - also toggles document class
+  const [editMode, setEditModeState] = React.useState<"light" | "dark">("light");
+  
+  // Store original theme to restore on exit
+  const originalTheme = React.useRef<"light" | "dark">("light");
+  
+  // Capture original theme on mount
+  React.useEffect(() => {
+    originalTheme.current = document.documentElement.classList.contains("dark") 
+      ? "dark" 
+      : "light";
+  }, []);
+  
+  // Custom setEditMode that also applies dark class to document
+  const setEditMode = React.useCallback((mode: "light" | "dark") => {
+    setEditModeState(mode);
+    if (typeof document !== "undefined") {
+      if (mode === "dark") {
+        document.documentElement.classList.add("dark");
+      } else {
+        document.documentElement.classList.remove("dark");
+      }
+    }
+  }, []);
+  
+  // Restore original theme when unmounting (exiting Theme Builder)
+  React.useEffect(() => {
+    return () => {
+      if (typeof document !== "undefined") {
+        if (originalTheme.current === "dark") {
+          document.documentElement.classList.add("dark");
+        } else {
+          document.documentElement.classList.remove("dark");
+        }
+      }
+    };
+  }, []);
   
   // A11y issue counts per mode (computed once)
   const issueCounts = React.useMemo(() => getA11yIssueCounts(), []);
