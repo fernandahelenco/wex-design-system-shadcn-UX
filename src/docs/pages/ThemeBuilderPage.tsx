@@ -262,9 +262,12 @@ const TOKEN_GROUPS = [
   },
 ];
 
-function SemanticMode() {
+interface SemanticModeProps {
+  setToken: (token: string, value: string, mode: "light" | "dark", cascade?: boolean) => void;
+}
+
+function SemanticMode({ setToken }: SemanticModeProps) {
   const { editMode } = useThemeBuilder();
-  const { setToken } = useThemeOverrides();
   const [selectedToken, setSelectedToken] = React.useState<string | null>(null);
   
   // Get all editable tokens (flattened from groups)
@@ -445,7 +448,7 @@ function TokenGroupCard({
 
 export default function ThemeBuilderPage() {
   const { setSelectedToken } = useThemeBuilder();
-  const { resetAll, exportAsJSON, hasOverrides, removeToken } = useThemeOverrides();
+  const { resetAll, exportAsJSON, hasOverrides, removeToken, setToken } = useThemeOverrides();
   
   // Current mode
   const [mode, setMode] = React.useState<ThemeBuilderMode>("semantic");
@@ -504,7 +507,7 @@ export default function ThemeBuilderPage() {
           {mode === "palette" ? (
             <PaletteMode onResetPalette={handleResetPalette} />
           ) : (
-            <SemanticMode />
+            <SemanticMode setToken={setToken} />
           )}
         </div>
       </div>
