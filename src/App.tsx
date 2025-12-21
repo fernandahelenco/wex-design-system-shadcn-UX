@@ -1,5 +1,6 @@
 import { DocsRoutes } from '@/docs/routes'
 import { Toaster } from '@/components/ui/sonner'
+import { TooltipProvider } from '@/components/ui/tooltip'
 
 /**
  * Main App component
@@ -7,10 +8,10 @@ import { Toaster } from '@/components/ui/sonner'
  */
 function App() {
   return (
-    <>
+    <TooltipProvider>
       <DocsRoutes />
       <Toaster />
-    </>
+    </TooltipProvider>
   )
 }
 
