@@ -201,7 +201,7 @@ interface TokenRowWithPickerProps {
 /**
  * Format a palette value like "blue-700" to "Blue 700", "white" to "White"
  */
-function formatPaletteValue(value: string): string {
+export function formatPaletteValue(value: string): string {
   // Handle neutral tokens (white/black)
   if (value === "white" || value === "black") {
     return value.charAt(0).toUpperCase() + value.slice(1);
@@ -216,42 +216,19 @@ function formatPaletteValue(value: string): string {
 export function TokenRowWithPicker({
   label,
   value,
-  onChange,
   className,
-}: TokenRowWithPickerProps) {
+}: Omit<TokenRowWithPickerProps, 'onChange'>) {
   const displayValue = formatPaletteValue(value);
   
   return (
-    <div className={cn("flex items-center justify-between py-2 px-1", className)}>
-      {/* Left side: Swatch + Label/Value */}
-      <div className="flex items-center gap-3">
-        <SwatchDisplay value={value} size="md" className="ring-1 ring-border/50" />
-        <div className="flex flex-col">
-          <span className="text-sm font-medium">{label}</span>
-          <span className="text-xs text-muted-foreground font-mono">
-            {displayValue}
-          </span>
-        </div>
+    <div className={cn("flex items-center gap-3 py-2 px-1", className)}>
+      <SwatchDisplay value={value} size="md" className="ring-1 ring-border/50" />
+      <div className="flex flex-col">
+        <span className="text-sm font-medium">{label}</span>
+        <span className="text-xs text-muted-foreground font-mono">
+          {displayValue}
+        </span>
       </div>
-      
-      {/* Right side: Edit button */}
-      <PaletteSwatchPicker value={value} onSelect={onChange}>
-        <button 
-          type="button"
-          className="p-1.5 rounded-md text-muted-foreground hover:text-foreground hover:bg-muted/50 transition-colors"
-          title={`Edit ${label}`}
-          onClick={(e) => e.stopPropagation()}
-        >
-          <svg 
-            className="w-4 h-4" 
-            fill="none" 
-            viewBox="0 0 24 24" 
-            stroke="currentColor"
-          >
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
-          </svg>
-        </button>
-      </PaletteSwatchPicker>
     </div>
   );
 }
