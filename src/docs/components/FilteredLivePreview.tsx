@@ -707,7 +707,7 @@ function TextPreview() {
 
       {/* Badge outline */}
       <PreviewSection label="Badge Outline">
-        <WexBadge variant="outline">Outline Badge</WexBadge>
+        <WexBadge intent="outline">Outline Badge</WexBadge>
       </PreviewSection>
 
       {/* Active tab */}
@@ -879,7 +879,7 @@ function DestructiveForegroundPreview() {
       <PreviewSection label="Components Using destructive-foreground">
         <div className="flex flex-wrap gap-2">
           <WexButton intent="destructive">Delete</WexButton>
-          <WexBadge variant="destructive">Error</WexBadge>
+          <WexBadge intent="destructive">Error</WexBadge>
         </div>
       </PreviewSection>
 
@@ -906,7 +906,7 @@ function SuccessForegroundPreview() {
 
       <PreviewSection label="Components Using success-foreground">
         <div className="flex flex-wrap gap-2">
-          <WexBadge variant="success">Complete</WexBadge>
+          <WexBadge intent="success">Complete</WexBadge>
           <WexAlert intent="success">
             <WexAlert.Title>Success!</WexAlert.Title>
           </WexAlert>
@@ -936,7 +936,7 @@ function WarningForegroundPreview() {
 
       <PreviewSection label="Components Using warning-foreground">
         <div className="flex flex-wrap gap-2">
-          <WexBadge variant="warning">Caution</WexBadge>
+          <WexBadge intent="warning">Caution</WexBadge>
           <WexAlert intent="warning">
             <WexAlert.Title>Warning</WexAlert.Title>
           </WexAlert>
@@ -966,7 +966,7 @@ function InfoForegroundPreview() {
 
       <PreviewSection label="Components Using info-foreground">
         <div className="flex flex-wrap gap-2">
-          <WexBadge variant="info">Note</WexBadge>
+          <WexBadge intent="info">Note</WexBadge>
           <WexAlert intent="info">
             <WexAlert.Title>Information</WexAlert.Title>
           </WexAlert>
