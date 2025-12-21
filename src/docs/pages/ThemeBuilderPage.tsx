@@ -303,22 +303,26 @@ function SemanticMode() {
     setAssignments(updated);
   }, [editMode, allEditableTokens]);
   
-  // Handle assignment change for palette-referenced tokens
-  const handleAssignmentChange = React.useCallback((tokenName: string, paletteValue: string) => {
-    const paletteToken = `--wex-palette-${paletteValue}`;
+  // Handle assignment change for both palette-referenced tokens and raw HSL tokens
+  const handleAssignmentChange = React.useCallback((tokenName: string, value: string) => {
+    // Check if this is a palette reference (like "blue-700") or raw HSL value
+    const isPaletteRef = /^[a-z]+-\d+$/.test(value);
     
-    // Update CSS to reference the palette token
-    document.documentElement.style.setProperty(tokenName, `var(${paletteToken})`);
-    
-    // Update state
-    setAssignments(prev => ({ ...prev, [tokenName]: paletteValue }));
-    
-    // Persist to overrides
-    setToken(tokenName, `var(${paletteToken})`, editMode);
+    if (isPaletteRef) {
+      // Palette reference - wrap with var()
+      const paletteToken = `--wex-palette-${value}`;
+      document.documentElement.style.setProperty(tokenName, `var(${paletteToken})`);
+      setAssignments(prev => ({ ...prev, [tokenName]: value }));
+      setToken(tokenName, `var(${paletteToken})`, editMode);
+    } else {
+      // Raw HSL value - apply directly
+      document.documentElement.style.setProperty(tokenName, value);
+      setToken(tokenName, value, editMode);
+    }
     
     // Keep selected for preview
     setSelectedToken(tokenName);
-  }, [editMode, setToken]);
+  }, [editMode, setToken, setSelectedToken]);
 
   return (
     <div className="grid grid-cols-2 gap-6 h-full">
@@ -353,6 +357,95 @@ function SemanticMode() {
 
       {/* Right: Filtered Live Preview */}
       <FilteredLivePreview selectedToken={selectedToken} />
+    </div>
+  );
+}
+
+// ============================================================================
+// HSL Token Row - For editing surface/text tokens with color picker
+// ============================================================================
+
+interface HslTokenRowProps {
+  token: TokenDefinition;
+  editMode: "light" | "dark";
+  isSelected: boolean;
+  onSelect: () => void;
+  onChange: (hslValue: string) => void;
+}
+
+function HslTokenRow({ token, editMode, isSelected, onSelect, onChange }: HslTokenRowProps) {
+  const currentValue = editMode === "light" ? token.lightValue : (token.darkValue || token.lightValue);
+  const formattedValue = `HSL(${currentValue.replace(/\s+/g, ", ")})`;
+  
+  // Convert HSL to hex for the color picker
+  const hslParts = currentValue.split(/\s+/);
+  let hexValue = "#808080";
+  try {
+    if (hslParts.length >= 3) {
+      const h = parseFloat(hslParts[0]);
+      const s = parseFloat(hslParts[1].replace("%", ""));
+      const l = parseFloat(hslParts[2].replace("%", ""));
+      hexValue = hslToHex({ h, s, l });
+    }
+  } catch {
+    // Use default
+  }
+  
+  // Handle color picker change
+  const handleColorChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const hex = e.target.value;
+    // Convert hex to HSL
+    const r = parseInt(hex.slice(1, 3), 16) / 255;
+    const g = parseInt(hex.slice(3, 5), 16) / 255;
+    const b = parseInt(hex.slice(5, 7), 16) / 255;
+    
+    const max = Math.max(r, g, b);
+    const min = Math.min(r, g, b);
+    const l = (max + min) / 2;
+    let h = 0;
+    let s = 0;
+    
+    if (max !== min) {
+      const d = max - min;
+      s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+      switch (max) {
+        case r: h = ((g - b) / d + (g < b ? 6 : 0)) / 6; break;
+        case g: h = ((b - r) / d + 2) / 6; break;
+        case b: h = ((r - g) / d + 4) / 6; break;
+      }
+    }
+    
+    const hslString = `${Math.round(h * 360)} ${Math.round(s * 100)}% ${Math.round(l * 100)}%`;
+    onChange(hslString);
+  };
+  
+  return (
+    <div
+      className={cn(
+        "flex items-center gap-2 px-2 py-1.5 rounded-md transition-colors",
+        isSelected && "bg-muted/50"
+      )}
+    >
+      {/* Color picker input */}
+      <label className="relative w-6 h-6 rounded-sm border border-border/50 overflow-hidden cursor-pointer flex-shrink-0">
+        <input
+          type="color"
+          value={hexValue}
+          onChange={handleColorChange}
+          className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+        />
+        <div 
+          className="w-full h-full"
+          style={{ backgroundColor: `hsl(${currentValue})` }}
+        />
+      </label>
+      <div 
+        className="flex flex-col flex-1 cursor-pointer"
+        onClick={onSelect}
+      >
+        <span className="text-sm font-medium">{token.label}</span>
+        <span className="text-xs text-muted-foreground font-mono">{formattedValue}</span>
+      </div>
     </div>
   );
 }
@@ -407,29 +500,16 @@ function TokenGroupCard({
             );
           }
           
-          // For surface/text tokens without palette refs, show current value
-          const currentValue = editMode === "light" ? token.lightValue : (token.darkValue || token.lightValue);
-          // Format HSL nicely, e.g., "206 32% 21%" → "HSL(206, 32%, 21%)"
-          const formattedValue = `HSL(${currentValue.replace(/\s+/g, ", ")})`;
-          
+          // For surface/text tokens without palette refs, show editable color picker
           return (
-            <div
+            <HslTokenRow
               key={token.name}
-              className={cn(
-                "flex items-center gap-2 px-2 py-1.5 rounded-md transition-colors cursor-pointer hover:bg-muted/30",
-                selectedToken === token.name && "bg-muted/50"
-              )}
-              onClick={() => onSelect(token.name)}
-            >
-              <div 
-                className="w-6 h-6 rounded-sm border border-border/50 flex-shrink-0"
-                style={{ backgroundColor: `hsl(${currentValue})` }}
-              />
-              <div className="flex flex-col">
-                <span className="text-sm font-medium">{token.label}</span>
-                <span className="text-xs text-muted-foreground font-mono">{formattedValue}</span>
-              </div>
-            </div>
+              token={token}
+              editMode={editMode}
+              isSelected={selectedToken === token.name}
+              onSelect={() => onSelect(token.name)}
+              onChange={(hslValue) => onChange(token.name, hslValue)}
+            />
           );
         })}
       </WexCard.Content>

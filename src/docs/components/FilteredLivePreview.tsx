@@ -150,6 +150,8 @@ function HardStateSwatches({
     return "bg-primary";
   };
 
+  const swatchColor = getSwatchColor();
+  
   return (
     <PreviewSection label="Interactive States (Swatches)">
       <div className="space-y-3 p-3 rounded-md bg-muted/30 border border-dashed">
@@ -160,17 +162,20 @@ function HardStateSwatches({
         {hoverStates.length > 0 && (
           <div className="space-y-2">
             <div className="text-xs font-medium">Hover States</div>
-            <div className="grid grid-cols-2 gap-2">
-              {hoverStates.slice(0, 4).map((usage, i) => (
-                <div key={i} className="text-xs text-muted-foreground">
-                  • {usage.component} {usage.variant && `(${usage.variant})`}
-                </div>
-              ))}
-              {hoverStates.length > 4 && (
-                <div className="text-xs text-muted-foreground">
-                  +{hoverStates.length - 4} more...
-                </div>
-              )}
+            <div className="flex items-center gap-3">
+              {/* Hover swatch - slightly darker shade */}
+              <div 
+                className={cn(
+                  "w-6 h-6 rounded-md border border-border/50",
+                  swatchColor
+                )}
+                style={{ filter: "brightness(0.85)" }}
+                title="Hover color (darker shade)"
+              />
+              <div className="text-xs text-muted-foreground">
+                <span className="font-medium">{hoverStates.length} components</span>
+                <span className="ml-1">({hoverStates.slice(0, 3).map(u => u.component).join(", ")}{hoverStates.length > 3 ? "..." : ""})</span>
+              </div>
             </div>
           </div>
         )}
@@ -182,7 +187,7 @@ function HardStateSwatches({
               <div 
                 className={cn(
                   "w-6 h-6 rounded-md ring-2 ring-offset-2 ring-offset-background",
-                  getSwatchColor().replace("bg-", "ring-")
+                  swatchColor.replace("bg-", "ring-")
                 )}
               />
               <span className="text-xs text-muted-foreground">

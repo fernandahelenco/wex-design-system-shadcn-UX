@@ -1,73 +1,135 @@
-# React + TypeScript + Vite
+# WEX Design System
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A comprehensive design system built with React, TypeScript, Tailwind CSS, and shadcn/ui primitives.
 
-Currently, two official plugins are available:
+## Getting Started
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+```bash
+# Install dependencies
+npm install
 
-## React Compiler
+# Start development server
+npm run dev
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+# Build for production
+npm run build
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## Project Structure
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
 ```
+src/
+├── components/
+│   ├── ui/          # Base shadcn/ui components
+│   └── wex/         # WEX-branded wrapper components
+├── docs/
+│   ├── components/  # Documentation site components
+│   ├── context/     # React contexts (ThemeBuilder, etc.)
+│   ├── data/        # Token registries and mappings
+│   ├── hooks/       # Custom hooks
+│   ├── pages/       # Documentation pages
+│   └── utils/       # Utility functions
+├── lib/             # Shared utilities (cn, etc.)
+└── styles/
+    ├── wex.tokens.css       # Core WEX design tokens
+    └── wex.shadcn-bridge.css # Semantic token bridge
+```
+
+## Available Scripts
+
+| Script | Description |
+|--------|-------------|
+| `npm run dev` | Start development server |
+| `npm run build` | Build for production |
+| `npm run lint` | Run ESLint |
+| `npm run test:unit` | Run unit tests |
+| `npm run test:a11y` | Run accessibility tests |
+| `npm run generate:token-map` | Regenerate token-component mapping |
+
+## Token Map Generator
+
+The Token Map Generator automatically scans all component files for token usage patterns and generates a mapping file for the Theme Builder.
+
+### When to Run
+
+Run the generator after:
+- Adding new components that use design tokens
+- Modifying existing components to use different tokens
+- Adding new color/token variants
+
+### Usage
+
+```bash
+npm run generate:token-map
+```
+
+This will:
+1. Scan all files in `src/components/` for Tailwind token patterns
+2. Detect component names, variants, and states
+3. Classify each usage as "easy" (can render statically) or "hard" (requires interaction)
+4. Output to `src/docs/data/tokenComponentMap.generated.ts`
+
+### Output
+
+The generator creates a file with:
+- `PRIMARY_USAGES`, `DESTRUCTIVE_USAGES`, etc. - Arrays of component usages per token
+- `TOKEN_SUMMARY` - Quick counts of usages per token
+
+### Integrating Updates
+
+After running the generator:
+1. Review `tokenComponentMap.generated.ts`
+2. Compare with the main `tokenComponentMap.ts`
+3. Update descriptions and variant names as needed in the main file
+4. The Live Preview in Theme Builder uses `tokenComponentMap.ts`
+
+## Theme Builder
+
+The Theme Builder provides a visual interface for customizing design tokens:
+
+### Two-Workflow Architecture
+
+1. **Palette Ramps** - Edit base colors (mode-agnostic, affects both light/dark)
+   - Set the 500 shade, auto-generates 50-900 ramp
+   - Changes cascade to all semantic tokens referencing the palette
+
+2. **Semantic Tokens** - Edit theme mapping (mode-specific)
+   - Intent colors (primary, destructive, success, warning, info)
+   - Surface tokens (background, muted, accent)
+   - Text tokens (foreground, muted-foreground)
+
+### Live Preview
+
+The Live Preview shows:
+- Components affected by the selected token
+- All states (checked, unchecked, disabled)
+- Interactive states shown as swatches (hover, focus)
+
+### Exporting
+
+Click Export to download your theme overrides as JSON for integration into your app.
+
+## Token Cascade
+
+The design tokens follow a three-layer architecture:
+
+```
+Palette Ramps (wex.tokens.css)
+  ↓
+Semantic Tokens (wex.shadcn-bridge.css)
+  ↓
+Tailwind Utilities (tailwind.config.ts)
+```
+
+Example cascade:
+```
+--wex-palette-blue-700 → --wex-primary → --primary → bg-primary
+```
+
+## Contributing
+
+See the [Contributing](http://localhost:5173/contributing) page in the docs for guidelines on:
+- Component development
+- Token management
+- Testing requirements
+- Documentation standards
