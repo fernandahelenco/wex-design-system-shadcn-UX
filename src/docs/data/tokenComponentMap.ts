@@ -255,6 +255,266 @@ export const PRIMARY_USAGES: ComponentUsage[] = [
     tailwindClasses: ["group-[.toast]:bg-primary", "group-[.toast]:text-primary-foreground"],
     description: "Toast action button",
   },
+
+  // SPINNER
+  {
+    component: "WexSpinner",
+    variant: "default",
+    state: "default",
+    renderability: "easy",
+    tailwindClasses: ["text-primary"],
+    description: "Loading spinner (inherits primary color)",
+  },
+
+  // BUTTON GROUP
+  {
+    component: "WexButtonGroup",
+    variant: "primary",
+    state: "default",
+    renderability: "easy",
+    tailwindClasses: ["bg-primary", "text-primary-foreground"],
+    description: "Grouped primary buttons",
+  },
+
+  // PAGINATION
+  {
+    component: "WexPagination",
+    variant: "link",
+    state: "active",
+    renderability: "easy",
+    tailwindClasses: ["bg-primary", "text-primary-foreground"],
+    description: "Active pagination page",
+  },
+
+  // DATE PICKER (uses Calendar which uses primary)
+  {
+    component: "WexDatePicker",
+    variant: "calendar",
+    state: "selected",
+    renderability: "hard",
+    tailwindClasses: ["bg-primary", "text-primary-foreground"],
+    description: "Selected date in date picker (via Calendar)",
+  },
+
+  // DATA TABLE
+  {
+    component: "WexDataTable",
+    variant: "sort-icon",
+    state: "active",
+    renderability: "hard",
+    tailwindClasses: ["text-primary"],
+    description: "Active sort column indicator",
+  },
+
+  // DIALOG (action buttons)
+  {
+    component: "WexDialog",
+    variant: "action",
+    state: "default",
+    renderability: "hard",
+    tailwindClasses: ["bg-primary", "text-primary-foreground"],
+    description: "Dialog primary action button",
+  },
+
+  // ALERT DIALOG (confirm button)
+  {
+    component: "WexAlertDialog",
+    variant: "action",
+    state: "default",
+    renderability: "hard",
+    tailwindClasses: ["bg-primary", "text-primary-foreground"],
+    description: "Alert dialog confirm button",
+  },
+
+  // SHEET (close button uses primary on hover)
+  {
+    component: "WexSheet",
+    variant: "close",
+    state: "hover",
+    renderability: "hard",
+    tailwindClasses: ["hover:text-primary"],
+    description: "Sheet close button hover",
+  },
+
+  // COMMAND (selected item)
+  {
+    component: "WexCommand",
+    variant: "item",
+    state: "selected",
+    renderability: "hard",
+    tailwindClasses: ["aria-selected:bg-primary/10", "aria-selected:text-primary"],
+    description: "Selected command item",
+  },
+
+  // COMBOBOX (selected item)
+  {
+    component: "WexCombobox",
+    variant: "item",
+    state: "selected",
+    renderability: "hard",
+    tailwindClasses: ["bg-primary/10", "text-primary"],
+    description: "Selected combobox item",
+  },
+
+  // SELECT (selected indicator)
+  {
+    component: "WexSelect",
+    variant: "item",
+    state: "selected",
+    renderability: "hard",
+    tailwindClasses: ["text-primary"],
+    description: "Selected item check indicator",
+  },
+
+  // NAVIGATION MENU (active link)
+  {
+    component: "WexNavigationMenu",
+    variant: "link",
+    state: "active",
+    renderability: "hard",
+    tailwindClasses: ["text-primary"],
+    description: "Active navigation link",
+  },
+
+  // BREADCRUMB (current page or link hover)
+  {
+    component: "WexBreadcrumb",
+    variant: "link",
+    state: "hover",
+    renderability: "hard",
+    tailwindClasses: ["hover:text-primary"],
+    description: "Breadcrumb link hover",
+  },
+
+  // ACCORDION (trigger hover)
+  {
+    component: "WexAccordion",
+    variant: "trigger",
+    state: "hover",
+    renderability: "hard",
+    tailwindClasses: ["hover:underline"],
+    description: "Accordion trigger hover state",
+  },
+
+  // CAROUSEL (active navigation dot)
+  {
+    component: "WexCarousel",
+    variant: "dot",
+    state: "active",
+    renderability: "hard",
+    tailwindClasses: ["bg-primary"],
+    description: "Active carousel navigation dot",
+  },
+
+  // CHART (primary data series)
+  {
+    component: "WexChart",
+    variant: "series",
+    state: "default",
+    renderability: "hard",
+    tailwindClasses: ["fill-primary", "stroke-primary"],
+    description: "Primary chart data series color",
+  },
+
+  // DRAWER (action buttons)
+  {
+    component: "WexDrawer",
+    variant: "action",
+    state: "default",
+    renderability: "hard",
+    tailwindClasses: ["bg-primary", "text-primary-foreground"],
+    description: "Drawer primary action button",
+  },
+
+  // EMPTY (action link)
+  {
+    component: "WexEmpty",
+    variant: "action",
+    state: "default",
+    renderability: "hard",
+    tailwindClasses: ["text-primary"],
+    description: "Empty state action link",
+  },
+
+  // HOVER CARD (link text)
+  {
+    component: "WexHoverCard",
+    variant: "link",
+    state: "default",
+    renderability: "hard",
+    tailwindClasses: ["text-primary"],
+    description: "Hover card link text",
+  },
+
+  // MENUBAR (active item)
+  {
+    component: "WexMenubar",
+    variant: "item",
+    state: "active",
+    renderability: "hard",
+    tailwindClasses: ["bg-accent", "text-accent-foreground"],
+    description: "Active menubar item",
+  },
+
+  // SIDEBAR (active navigation)
+  {
+    component: "WexSidebar",
+    variant: "nav-item",
+    state: "active",
+    renderability: "hard",
+    tailwindClasses: ["bg-primary/10", "text-primary"],
+    description: "Active sidebar navigation item",
+  },
+
+  // TABLE (sort headers)
+  {
+    component: "WexTable",
+    variant: "header",
+    state: "sortable",
+    renderability: "hard",
+    tailwindClasses: ["text-primary"],
+    description: "Sortable table header indicator",
+  },
+
+  // TOGGLE GROUP (pressed state)
+  {
+    component: "WexToggleGroup",
+    variant: "item",
+    state: "pressed",
+    renderability: "hard",
+    tailwindClasses: ["bg-primary", "text-primary-foreground"],
+    description: "Pressed toggle group item",
+  },
+
+  // TOOLTIP (link text)
+  {
+    component: "WexTooltip",
+    variant: "content",
+    state: "default",
+    renderability: "hard",
+    tailwindClasses: ["bg-popover", "text-popover-foreground"],
+    description: "Tooltip content",
+  },
+
+  // INPUT OTP (focus ring)
+  {
+    component: "WexInputOTP",
+    variant: "slot",
+    state: "focus",
+    renderability: "hard",
+    tailwindClasses: ["ring-primary"],
+    description: "Focused OTP slot ring",
+  },
+
+  // INPUT GROUP (focus state)
+  {
+    component: "WexInputGroup",
+    variant: "default",
+    state: "focus",
+    renderability: "hard",
+    tailwindClasses: ["ring-ring"],
+    description: "Focused input group ring",
+  },
 ];
 
 // =============================================================================
@@ -490,6 +750,66 @@ export const SURFACE_BACKGROUND_USAGES: ComponentUsage[] = [
     tailwindClasses: ["bg-background"],
     description: "Drawer content background",
   },
+
+  // ALERT DIALOG
+  {
+    component: "WexAlertDialog",
+    variant: "content",
+    state: "default",
+    renderability: "hard",
+    tailwindClasses: ["bg-background"],
+    description: "Alert dialog content background",
+  },
+
+  // TOOLTIP
+  {
+    component: "WexTooltip",
+    variant: "content",
+    state: "default",
+    renderability: "hard",
+    tailwindClasses: ["bg-popover"],
+    description: "Tooltip background",
+  },
+
+  // HOVER CARD
+  {
+    component: "WexHoverCard",
+    variant: "content",
+    state: "default",
+    renderability: "hard",
+    tailwindClasses: ["bg-popover"],
+    description: "Hover card background",
+  },
+
+  // CONTEXT MENU
+  {
+    component: "WexContextMenu",
+    variant: "content",
+    state: "default",
+    renderability: "hard",
+    tailwindClasses: ["bg-popover"],
+    description: "Context menu background",
+  },
+
+  // DROPDOWN MENU
+  {
+    component: "WexDropdownMenu",
+    variant: "content",
+    state: "default",
+    renderability: "hard",
+    tailwindClasses: ["bg-popover"],
+    description: "Dropdown menu background",
+  },
+
+  // COMMAND
+  {
+    component: "WexCommand",
+    variant: "dialog",
+    state: "default",
+    renderability: "hard",
+    tailwindClasses: ["bg-popover"],
+    description: "Command palette background",
+  },
 ];
 
 export const SURFACE_MUTED_USAGES: ComponentUsage[] = [
@@ -588,6 +908,56 @@ export const SURFACE_MUTED_USAGES: ComponentUsage[] = [
     renderability: "easy",
     tailwindClasses: ["bg-muted"],
     description: "Empty state icon container",
+  },
+
+  // AVATAR (fallback background)
+  {
+    component: "WexAvatar",
+    variant: "fallback",
+    state: "default",
+    renderability: "easy",
+    tailwindClasses: ["bg-muted"],
+    description: "Avatar fallback background",
+  },
+
+  // ACCORDION (trigger hover)
+  {
+    component: "WexAccordion",
+    variant: "trigger",
+    state: "hover",
+    renderability: "hard",
+    tailwindClasses: ["hover:bg-muted"],
+    description: "Accordion trigger hover state",
+  },
+
+  // DATA TABLE (row hover)
+  {
+    component: "WexDataTable",
+    variant: "row",
+    state: "hover",
+    renderability: "hard",
+    tailwindClasses: ["hover:bg-muted/50"],
+    description: "Table row hover background",
+  },
+
+  // PAGINATION (ellipsis and non-active items)
+  {
+    component: "WexPagination",
+    variant: "ellipsis",
+    state: "default",
+    renderability: "easy",
+    tailwindClasses: ["text-muted-foreground"],
+    description: "Pagination ellipsis",
+  },
+
+  // CAROUSEL (navigation buttons)
+  {
+    component: "WexCarousel",
+    variant: "nav-button",
+    state: "default",
+    renderability: "easy",
+    tailwindClasses: ["bg-muted/50"],
+    description: "Carousel navigation buttons",
   },
 ];
 
@@ -1126,6 +1496,36 @@ export const INPUT_BORDER_USAGES: ComponentUsage[] = [
     renderability: "easy",
     tailwindClasses: ["border-input"],
     description: "Input group container border",
+  },
+
+  // TEXTAREA (multi-line input)
+  {
+    component: "WexTextarea",
+    variant: "default",
+    state: "default",
+    renderability: "easy",
+    tailwindClasses: ["border-input"],
+    description: "Textarea border",
+  },
+
+  // DATE PICKER (input variant)
+  {
+    component: "WexDatePicker",
+    variant: "input",
+    state: "default",
+    renderability: "easy",
+    tailwindClasses: ["border-input"],
+    description: "Date picker input border",
+  },
+
+  // DATA TABLE (pagination input)
+  {
+    component: "WexDataTable",
+    variant: "pagination-input",
+    state: "default",
+    renderability: "easy",
+    tailwindClasses: ["border-input"],
+    description: "Data table rows per page input",
   },
 ];
 

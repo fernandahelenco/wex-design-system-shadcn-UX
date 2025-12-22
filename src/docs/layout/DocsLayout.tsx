@@ -71,8 +71,8 @@ export function DocsLayout() {
           {/* Token Map Modal - can be opened from Theme Builder */}
           <TokenMapModal open={tokenMapOpen} onOpenChange={setTokenMapOpen} />
           
-          {/* Theme Builder manages its own layout */}
-          <main className="relative z-10 min-h-[calc(100vh-3.5rem)] overflow-x-hidden">
+          {/* Theme Builder manages its own layout - fixed height, no page scroll */}
+          <main className="relative z-10 h-[calc(100vh-3.5rem)] overflow-hidden">
             <Outlet />
           </main>
         </ThemeBuilderProvider>

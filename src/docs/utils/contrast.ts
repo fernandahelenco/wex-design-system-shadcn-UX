@@ -267,45 +267,184 @@ export interface ContrastPair {
   component: string;
   foreground: string;
   background: string;
+  /** Maps to PreviewCard title in FilteredLivePreview for per-card indicators */
+  previewCard?: string;
 }
 
 export const CONTRAST_PAIRS: ContrastPair[] = [
-  // Primary
+  // ==========================================================================
+  // BUTTONS
+  // ==========================================================================
   {
     name: "Primary Button Text",
     component: "WexButton (default)",
     foreground: "--primary-foreground",
     background: "--primary",
+    previewCard: "Buttons",
   },
-  // Destructive
   {
     name: "Destructive Button Text",
     component: "WexButton (destructive)",
     foreground: "--destructive-foreground",
     background: "--destructive",
+    previewCard: "Buttons",
   },
-  // Success
+
+  // ==========================================================================
+  // BADGES
+  // ==========================================================================
+  {
+    name: "Default Badge Text",
+    component: "WexBadge (default)",
+    foreground: "--primary-foreground",
+    background: "--primary",
+    previewCard: "Badge",
+  },
   {
     name: "Success Badge Text",
     component: "WexBadge (success)",
     foreground: "--success-foreground",
     background: "--success",
+    previewCard: "Badge",
   },
-  // Warning
   {
     name: "Warning Badge Text",
     component: "WexBadge (warning)",
     foreground: "--warning-foreground",
     background: "--warning",
+    previewCard: "Badge",
   },
-  // Info
   {
     name: "Info Badge Text",
     component: "WexBadge (info)",
     foreground: "--info-foreground",
     background: "--info",
+    previewCard: "Badge",
   },
-  // Surface text
+
+  // ==========================================================================
+  // PROGRESS
+  // ==========================================================================
+  {
+    name: "Progress Bar on Track",
+    component: "WexProgress",
+    foreground: "--primary",
+    background: "--muted",
+    previewCard: "Progress",
+  },
+
+  // ==========================================================================
+  // SWITCH (graphical object contrast - 3:1 minimum, but we check 4.5:1)
+  // ==========================================================================
+  {
+    name: "Switch Checked State",
+    component: "WexSwitch (checked)",
+    foreground: "--primary-foreground",
+    background: "--primary",
+    previewCard: "Switch",
+  },
+
+  // ==========================================================================
+  // CHECKBOX
+  // ==========================================================================
+  {
+    name: "Checkbox Checked State",
+    component: "WexCheckbox (checked)",
+    foreground: "--primary-foreground",
+    background: "--primary",
+    previewCard: "Checkbox",
+  },
+
+  // ==========================================================================
+  // RADIO GROUP
+  // ==========================================================================
+  {
+    name: "Radio Selected State",
+    component: "WexRadioGroup (selected)",
+    foreground: "--primary-foreground",
+    background: "--primary",
+    previewCard: "Radio Group",
+  },
+
+  // ==========================================================================
+  // SLIDER
+  // ==========================================================================
+  {
+    name: "Slider Track Fill",
+    component: "WexSlider",
+    foreground: "--primary",
+    background: "--muted",
+    previewCard: "Slider",
+  },
+
+  // ==========================================================================
+  // SKELETON
+  // ==========================================================================
+  {
+    name: "Skeleton on Background",
+    component: "WexSkeleton",
+    foreground: "--muted",
+    background: "--background",
+    previewCard: "Skeleton",
+  },
+
+  // ==========================================================================
+  // FOCUS RING
+  // ==========================================================================
+  {
+    name: "Focus Ring Visibility",
+    component: "Focus ring on background",
+    foreground: "--ring",
+    background: "--background",
+    previewCard: "Focus Ring",
+  },
+
+  // ==========================================================================
+  // CALENDAR
+  // ==========================================================================
+  {
+    name: "Calendar Selected Date",
+    component: "WexCalendar (selected)",
+    foreground: "--primary-foreground",
+    background: "--primary",
+    previewCard: "Calendar",
+  },
+
+  // ==========================================================================
+  // ALERTS
+  // ==========================================================================
+  {
+    name: "Destructive Alert Text",
+    component: "WexAlert (destructive)",
+    foreground: "--destructive",
+    background: "--background",
+    previewCard: "Alert",
+  },
+  {
+    name: "Success Alert Text",
+    component: "WexAlert (success)",
+    foreground: "--success",
+    background: "--background",
+    previewCard: "Alert",
+  },
+  {
+    name: "Warning Alert Text",
+    component: "WexAlert (warning)",
+    foreground: "--warning",
+    background: "--background",
+    previewCard: "Alert",
+  },
+  {
+    name: "Info Alert Text",
+    component: "WexAlert (info)",
+    foreground: "--info",
+    background: "--background",
+    previewCard: "Alert",
+  },
+
+  // ==========================================================================
+  // SURFACE TEXT (general - no specific card)
+  // ==========================================================================
   {
     name: "Body Text on Background",
     component: "All text content",
@@ -317,6 +456,233 @@ export const CONTRAST_PAIRS: ContrastPair[] = [
     component: "Labels, descriptions",
     foreground: "--muted-foreground",
     background: "--background",
+  },
+  {
+    name: "Card Title Text",
+    component: "WexCard.Title",
+    foreground: "--card-foreground",
+    background: "--card",
+  },
+
+  // ==========================================================================
+  // SPINNER
+  // ==========================================================================
+  {
+    name: "Spinner on Background",
+    component: "WexSpinner",
+    foreground: "--primary",
+    background: "--background",
+    previewCard: "Spinner",
+  },
+
+  // ==========================================================================
+  // BUTTON GROUP
+  // ==========================================================================
+  {
+    name: "Button Group Primary",
+    component: "WexButtonGroup (primary)",
+    foreground: "--primary-foreground",
+    background: "--primary",
+    previewCard: "Button Group",
+  },
+
+  // ==========================================================================
+  // PAGINATION
+  // ==========================================================================
+  {
+    name: "Pagination Active Page",
+    component: "WexPagination (active)",
+    foreground: "--primary-foreground",
+    background: "--primary",
+    previewCard: "Pagination",
+  },
+
+  // ==========================================================================
+  // AVATAR
+  // ==========================================================================
+  {
+    name: "Avatar Fallback Text",
+    component: "WexAvatar (fallback)",
+    foreground: "--muted-foreground",
+    background: "--muted",
+    previewCard: "Avatar (fallback = bg-muted)",
+  },
+
+  // ==========================================================================
+  // TEXTAREA
+  // ==========================================================================
+  {
+    name: "Textarea Placeholder",
+    component: "WexTextarea",
+    foreground: "--muted-foreground",
+    background: "--background",
+    previewCard: "Textarea",
+  },
+
+  // ==========================================================================
+  // SELECT
+  // ==========================================================================
+  {
+    name: "Select Placeholder Text",
+    component: "WexSelect (trigger)",
+    foreground: "--muted-foreground",
+    background: "--background",
+    previewCard: "Select (trigger = border-input)",
+  },
+
+  // ==========================================================================
+  // TABS
+  // ==========================================================================
+  {
+    name: "Tabs Active Text",
+    component: "WexTabs (active trigger)",
+    foreground: "--foreground",
+    background: "--background",
+    previewCard: "Tabs (bg-muted list)",
+  },
+
+  // ==========================================================================
+  // TOGGLE
+  // ==========================================================================
+  {
+    name: "Toggle Pressed Text",
+    component: "WexToggle (pressed)",
+    foreground: "--accent-foreground",
+    background: "--accent",
+    previewCard: "Toggle (on = bg-accent)",
+  },
+
+  // ==========================================================================
+  // TOAST PREVIEWS
+  // ==========================================================================
+  {
+    name: "Success Toast Text",
+    component: "WexToast/Sonner (success)",
+    foreground: "--success-foreground",
+    background: "--success",
+    previewCard: "Toast Preview",
+  },
+  {
+    name: "Warning Toast Text",
+    component: "WexToast/Sonner (warning)",
+    foreground: "--warning-foreground",
+    background: "--warning",
+    previewCard: "Toast Preview",
+  },
+  {
+    name: "Info Toast Text",
+    component: "WexToast/Sonner (info)",
+    foreground: "--info-foreground",
+    background: "--info",
+    previewCard: "Toast Preview",
+  },
+
+  // ==========================================================================
+  // ADDITIONAL COMPONENTS (non-rendered in live preview)
+  // ==========================================================================
+  
+  // Accordion
+  {
+    name: "Accordion Trigger Text",
+    component: "WexAccordion",
+    foreground: "--foreground",
+    background: "--background",
+  },
+
+  // Carousel
+  {
+    name: "Carousel Navigation on Background",
+    component: "WexCarousel",
+    foreground: "--foreground",
+    background: "--muted",
+  },
+
+  // Chart (text labels)
+  {
+    name: "Chart Axis Labels",
+    component: "WexChart",
+    foreground: "--muted-foreground",
+    background: "--background",
+  },
+
+  // Drawer
+  {
+    name: "Drawer Content Text",
+    component: "WexDrawer",
+    foreground: "--foreground",
+    background: "--background",
+  },
+
+  // Empty state
+  {
+    name: "Empty State Text",
+    component: "WexEmpty",
+    foreground: "--muted-foreground",
+    background: "--background",
+  },
+
+  // Hover Card
+  {
+    name: "Hover Card Text",
+    component: "WexHoverCard",
+    foreground: "--popover-foreground",
+    background: "--popover",
+  },
+
+  // Input Group
+  {
+    name: "Input Group Label",
+    component: "WexInputGroup",
+    foreground: "--foreground",
+    background: "--background",
+  },
+
+  // Input OTP
+  {
+    name: "OTP Input Text",
+    component: "WexInputOTP",
+    foreground: "--foreground",
+    background: "--background",
+  },
+
+  // Menubar
+  {
+    name: "Menubar Item Text",
+    component: "WexMenubar",
+    foreground: "--foreground",
+    background: "--background",
+  },
+
+  // Sidebar
+  {
+    name: "Sidebar Item Text",
+    component: "WexSidebar",
+    foreground: "--sidebar-foreground",
+    background: "--sidebar",
+  },
+
+  // Table
+  {
+    name: "Table Cell Text",
+    component: "WexTable",
+    foreground: "--foreground",
+    background: "--background",
+  },
+
+  // Toggle Group
+  {
+    name: "Toggle Group Pressed Text",
+    component: "WexToggleGroup",
+    foreground: "--accent-foreground",
+    background: "--accent",
+  },
+
+  // Tooltip
+  {
+    name: "Tooltip Text",
+    component: "WexTooltip",
+    foreground: "--popover-foreground",
+    background: "--popover",
   },
 ];
 

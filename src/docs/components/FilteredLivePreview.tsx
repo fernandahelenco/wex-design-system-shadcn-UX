@@ -27,6 +27,12 @@ import {
   WexSeparator,
   WexCalendar,
   WexToggle,
+  WexSpinner,
+  WexButtonGroup,
+  WexPagination,
+  WexAvatar,
+  WexTextarea,
+  WexSelect,
 } from "@/components/wex";
 import { cn } from "@/lib/utils";
 import { 
@@ -40,6 +46,9 @@ import { addDays } from "date-fns";
 import type { DateRange } from "react-day-picker";
 import { PaletteSwatchPicker, SwatchDisplay, formatPaletteValue } from "./PaletteSwatchPicker";
 import { hexToHSL, formatHSL, hslToHex, parseHSL } from "@/docs/utils/color-convert";
+import { useContrastCompliance, type ContrastCheckResult } from "@/docs/hooks/useContrastCompliance";
+import { WexPopover } from "@/components/wex";
+import { CheckCircle2, AlertTriangle, ChevronRight } from "lucide-react";
 
 // =============================================================================
 // EDIT CONTROL COMPONENT
@@ -165,10 +174,18 @@ export function FilteredLivePreview({
   const easyUsages = selectedToken ? getEasyUsagesForToken(selectedToken) : [];
   const hardUsages = selectedToken ? getHardUsagesForToken(selectedToken) : [];
 
+  // Real-time contrast compliance checking
+  const { getIssuesForCard } = useContrastCompliance();
+  const complianceContextValue = React.useMemo(
+    () => ({ getIssuesForCard }),
+    [getIssuesForCard]
+  );
+
   // Full width layout for main workspace
   if (fullWidth) {
     return (
-      <div className={cn("h-full flex flex-col", className)}>
+      <ContrastComplianceContext.Provider value={complianceContextValue}>
+        <div className={cn("h-full flex flex-col", className)}>
         {/* Edit Bar Header */}
         <div className="sticky top-0 z-10 bg-background/95 backdrop-blur border-b border-border px-6 py-4">
           <div className="flex items-center justify-between max-w-5xl mx-auto">
@@ -249,12 +266,14 @@ export function FilteredLivePreview({
           </div>
         </div>
       </div>
+      </ContrastComplianceContext.Provider>
     );
   }
 
   // Original card layout (for backward compatibility)
   return (
-    <WexCard className={cn("h-fit", className)}>
+    <ContrastComplianceContext.Provider value={complianceContextValue}>
+      <WexCard className={cn("h-fit", className)}>
       <WexCard.Header className="pb-2">
         <div className="flex items-start justify-between">
           <div>
@@ -307,6 +326,7 @@ export function FilteredLivePreview({
         )}
       </WexCard.Content>
     </WexCard>
+    </ContrastComplianceContext.Provider>
   );
 }
 
@@ -682,6 +702,26 @@ function SurfaceBackgroundPreview() {
           </div>
         </div>
       </PreviewSection>
+
+      {/* Additional non-renderable components */}
+      <AdditionalComponentsList
+        tokenName="--background"
+        components={[
+          { name: "WexDialog", description: "Dialog content background" },
+          { name: "WexAlertDialog", description: "Alert dialog content background" },
+          { name: "WexSheet", description: "Sheet content background" },
+          { name: "WexDrawer", description: "Drawer content background" },
+          { name: "WexPopover", description: "Popover content background" },
+          { name: "WexTooltip", description: "Tooltip content background" },
+          { name: "WexHoverCard", description: "Hover card content background" },
+          { name: "WexDropdownMenu", description: "Dropdown menu background" },
+          { name: "WexContextMenu", description: "Context menu background" },
+          { name: "WexCommand", description: "Command palette background" },
+          { name: "WexMenubar", description: "Menubar background" },
+          { name: "WexNavigationMenu", description: "Navigation menu trigger" },
+          { name: "WexSidebar", description: "Sidebar content background" },
+        ]}
+      />
     </div>
   );
 }
@@ -716,6 +756,21 @@ function SurfaceSubtlePreview() {
         </div>
       </PreviewSection>
 
+      {/* Avatar */}
+      <PreviewSection label="Avatar (fallback = bg-muted)">
+        <div className="flex items-center gap-3">
+          <WexAvatar>
+            <WexAvatar.Fallback>JD</WexAvatar.Fallback>
+          </WexAvatar>
+          <WexAvatar>
+            <WexAvatar.Fallback>AB</WexAvatar.Fallback>
+          </WexAvatar>
+          <WexAvatar>
+            <WexAvatar.Fallback>WX</WexAvatar.Fallback>
+          </WexAvatar>
+        </div>
+      </PreviewSection>
+
       {/* Toggle (on state uses accent) */}
       <PreviewSection label="Toggle (on = bg-accent)">
         <div className="flex gap-2">
@@ -746,6 +801,19 @@ function SurfaceSubtlePreview() {
           <kbd className="bg-muted text-muted-foreground px-1.5 py-0.5 rounded text-xs font-mono">K</kbd>
         </div>
       </PreviewSection>
+
+      {/* Additional non-renderable components */}
+      <AdditionalComponentsList
+        tokenName="--muted"
+        components={[
+          { name: "WexAccordion", description: "Trigger hover background" },
+          { name: "WexDataTable", description: "Row hover background" },
+          { name: "WexTable", description: "Footer background" },
+          { name: "WexCarousel", description: "Navigation button background" },
+          { name: "WexSidebar", description: "Inactive item background" },
+          { name: "WexEmpty", description: "Icon container background" },
+        ]}
+      />
     </div>
   );
 }
@@ -772,6 +840,20 @@ function BorderPreview() {
           <p className="text-sm">Content below</p>
         </div>
       </PreviewSection>
+
+      {/* Additional non-renderable components */}
+      <AdditionalComponentsList
+        tokenName="--border"
+        components={[
+          { name: "WexAccordion", description: "Accordion item borders" },
+          { name: "WexTable", description: "Table cell borders" },
+          { name: "WexDataTable", description: "Data table borders" },
+          { name: "WexDialog", description: "Dialog border" },
+          { name: "WexSheet", description: "Sheet border" },
+          { name: "WexDrawer", description: "Drawer border" },
+          { name: "WexSidebar", description: "Sidebar border" },
+        ]}
+      />
     </div>
   );
 }
@@ -793,10 +875,21 @@ function InputBorderPreview() {
 
       {/* Textarea */}
       <PreviewSection label="Textarea">
-        <textarea 
-          className="flex min-h-[80px] w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm placeholder:text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50"
-          placeholder="Textarea with border-input..."
-        />
+        <WexTextarea placeholder="Multi-line text input with border-input..." />
+      </PreviewSection>
+
+      {/* Select */}
+      <PreviewSection label="Select (trigger = border-input)">
+        <WexSelect>
+          <WexSelect.Trigger className="w-full">
+            <WexSelect.Value placeholder="Select an option..." />
+          </WexSelect.Trigger>
+          <WexSelect.Content>
+            <WexSelect.Item value="option1">Option 1</WexSelect.Item>
+            <WexSelect.Item value="option2">Option 2</WexSelect.Item>
+            <WexSelect.Item value="option3">Option 3</WexSelect.Item>
+          </WexSelect.Content>
+        </WexSelect>
       </PreviewSection>
 
       {/* Outline buttons */}
@@ -824,6 +917,17 @@ function InputBorderPreview() {
           </p>
         </div>
       </PreviewSection>
+
+      {/* Additional non-renderable components */}
+      <AdditionalComponentsList
+        tokenName="--input"
+        components={[
+          { name: "WexInputOTP", description: "OTP input slot borders" },
+          { name: "WexInputGroup", description: "Input group container border" },
+          { name: "WexDatePicker", description: "Date picker input trigger" },
+          { name: "WexCombobox", description: "Combobox input trigger" },
+        ]}
+      />
     </div>
   );
 }
@@ -1186,6 +1290,205 @@ function PreviewGrid({ children }: { children: React.ReactNode }) {
   );
 }
 
+// =============================================================================
+// CONTRAST BADGE COMPONENT
+// =============================================================================
+
+interface ContrastBadgeProps {
+  cardTitle: string;
+  getIssuesForCard: (title: string) => ContrastCheckResult[];
+}
+
+function ContrastBadge({ cardTitle, getIssuesForCard }: ContrastBadgeProps) {
+  const issues = getIssuesForCard(cardTitle);
+  
+  // If no contrast pairs are mapped to this card, don't show anything
+  if (issues.length === 0) {
+    return null;
+  }
+
+  const failingIssues = issues.filter((i) => !i.passes);
+  const allPass = failingIssues.length === 0;
+  
+  // Show the lowest ratio for quick reference
+  const lowestRatio = Math.min(...issues.map((i) => i.ratio));
+
+  return (
+    <WexPopover>
+      <WexPopover.Trigger asChild>
+        <button
+          className={cn(
+            "flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] font-medium transition-colors",
+            allPass
+              ? "bg-success/10 text-success hover:bg-success/20"
+              : "bg-destructive/10 text-destructive hover:bg-destructive/20"
+          )}
+          aria-label={allPass ? "Contrast checks passing" : "Contrast issues detected"}
+        >
+          {allPass ? (
+            <CheckCircle2 className="h-3 w-3" />
+          ) : (
+            <AlertTriangle className="h-3 w-3" />
+          )}
+          <span>{lowestRatio.toFixed(1)}:1</span>
+        </button>
+      </WexPopover.Trigger>
+      <WexPopover.Content side="top" align="end" className="w-72 p-0">
+        <div className="p-3 space-y-2">
+          <div className="text-xs font-semibold">
+            {allPass ? "All Contrast Checks Passing" : "Contrast Issues"}
+          </div>
+          {issues.map((issue, idx) => (
+            <div
+              key={idx}
+              className={cn(
+                "text-xs p-2 rounded border",
+                issue.passes
+                  ? "bg-success/5 border-success/20"
+                  : "bg-destructive/5 border-destructive/20"
+              )}
+            >
+              <div className="flex items-center justify-between mb-1">
+                <span className="font-medium">{issue.pair.name}</span>
+                <span
+                  className={cn(
+                    "px-1.5 py-0.5 rounded text-[10px] font-medium",
+                    issue.passes ? "bg-success/20 text-success" : "bg-destructive/20 text-destructive"
+                  )}
+                >
+                  {issue.ratio.toFixed(1)}:1
+                </span>
+              </div>
+              {!issue.passes && issue.suggestion && (
+                <p className="text-muted-foreground text-[10px] leading-relaxed">
+                  {issue.suggestion}
+                </p>
+              )}
+            </div>
+          ))}
+        </div>
+      </WexPopover.Content>
+    </WexPopover>
+  );
+}
+
+// =============================================================================
+// ADDITIONAL COMPONENTS LIST (for non-renderable components)
+// =============================================================================
+
+interface AdditionalComponent {
+  name: string;
+  description: string;
+}
+
+interface AdditionalComponentsListProps {
+  /** Token name for color swatch */
+  tokenName: string;
+  /** List of components that use this token but aren't rendered */
+  components: AdditionalComponent[];
+  /** Get contrast check results for a component */
+  getContrastForComponent?: (componentName: string) => ContrastCheckResult | undefined;
+}
+
+function AdditionalComponentsList({ 
+  tokenName, 
+  components,
+  getContrastForComponent 
+}: AdditionalComponentsListProps) {
+  const [isOpen, setIsOpen] = React.useState(false);
+  
+  if (components.length === 0) {
+    return null;
+  }
+
+  // Get the token color for the swatch
+  const tokenColor = React.useMemo(() => {
+    if (typeof window === "undefined") return "hsl(0 0% 50%)";
+    const value = getComputedStyle(document.documentElement)
+      .getPropertyValue(tokenName)
+      .trim();
+    return value ? `hsl(${value})` : "hsl(0 0% 50%)";
+  }, [tokenName]);
+
+  return (
+    <div className="mt-6 border-t border-border pt-4">
+      <button
+        onClick={() => setIsOpen(!isOpen)}
+        className="w-full flex items-center gap-2 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
+      >
+        <ChevronRight
+          className={cn(
+            "h-4 w-4 transition-transform",
+            isOpen && "rotate-90"
+          )}
+        />
+        <span>Additional Components ({components.length})</span>
+      </button>
+      
+      {isOpen && (
+        <div className="mt-3 space-y-1">
+          {components.map((comp) => {
+            const contrastResult = getContrastForComponent?.(comp.name);
+            
+            return (
+              <div 
+                key={comp.name}
+                className="flex items-center gap-3 px-2 py-1.5 rounded hover:bg-muted/50 transition-colors"
+              >
+                {/* Color swatch */}
+                <div 
+                  className="w-4 h-4 rounded-sm border border-border/50 flex-shrink-0"
+                  style={{ backgroundColor: tokenColor }}
+                />
+                
+                {/* Component info */}
+                <div className="flex-1 min-w-0">
+                  <div className="text-xs font-medium truncate">{comp.name}</div>
+                  <div className="text-[10px] text-muted-foreground truncate">
+                    {comp.description}
+                  </div>
+                </div>
+                
+                {/* Contrast badge */}
+                {contrastResult && (
+                  <span
+                    className={cn(
+                      "px-1.5 py-0.5 rounded text-[10px] font-medium flex-shrink-0",
+                      contrastResult.passes
+                        ? "bg-success/10 text-success"
+                        : "bg-destructive/10 text-destructive"
+                    )}
+                  >
+                    {contrastResult.ratio.toFixed(1)}:1
+                  </span>
+                )}
+              </div>
+            );
+          })}
+        </div>
+      )}
+    </div>
+  );
+}
+
+// =============================================================================
+// CONTRAST COMPLIANCE CONTEXT
+// =============================================================================
+
+interface ContrastComplianceContextValue {
+  getIssuesForCard: (title: string) => ContrastCheckResult[];
+}
+
+const ContrastComplianceContext = React.createContext<ContrastComplianceContextValue | null>(null);
+
+function useContrastComplianceContext() {
+  return React.useContext(ContrastComplianceContext);
+}
+
+// =============================================================================
+// PREVIEW CARD WITH A11Y INDICATOR
+// =============================================================================
+
 function PreviewCard({ 
   title, 
   children 
@@ -1193,9 +1496,19 @@ function PreviewCard({
   title: string; 
   children: React.ReactNode;
 }) {
+  const complianceContext = useContrastComplianceContext();
+
   return (
-    <div className="p-4 rounded-lg border bg-card">
-      <div className="text-sm font-medium text-muted-foreground mb-3">{title}</div>
+    <div className="p-4 rounded-lg border bg-card relative">
+      <div className="flex items-center justify-between mb-3">
+        <div className="text-sm font-medium text-muted-foreground">{title}</div>
+        {complianceContext && (
+          <ContrastBadge 
+            cardTitle={title} 
+            getIssuesForCard={complianceContext.getIssuesForCard} 
+          />
+        )}
+      </div>
       {children}
     </div>
   );
@@ -1288,11 +1601,47 @@ function PrimaryPreviewFullWidth() {
             <span className="text-xs text-muted-foreground">Uses same palette shade</span>
           </div>
         </PreviewCard>
+
+        <PreviewCard title="Spinner">
+          <div className="flex items-center gap-4">
+            <WexSpinner className="h-6 w-6 text-primary" />
+            <span className="text-xs text-muted-foreground">Loading indicator</span>
+          </div>
+        </PreviewCard>
+
+        <PreviewCard title="Button Group">
+          <WexButtonGroup>
+            <WexButton size="sm">One</WexButton>
+            <WexButton size="sm">Two</WexButton>
+            <WexButton size="sm">Three</WexButton>
+          </WexButtonGroup>
+        </PreviewCard>
+
+        <PreviewCard title="Pagination">
+          <WexPagination>
+            <WexPagination.Content>
+              <WexPagination.Item>
+                <WexPagination.Previous href="#" />
+              </WexPagination.Item>
+              <WexPagination.Item>
+                <WexPagination.Link href="#">1</WexPagination.Link>
+              </WexPagination.Item>
+              <WexPagination.Item>
+                <WexPagination.Link href="#" isActive>2</WexPagination.Link>
+              </WexPagination.Item>
+              <WexPagination.Item>
+                <WexPagination.Link href="#">3</WexPagination.Link>
+              </WexPagination.Item>
+              <WexPagination.Item>
+                <WexPagination.Next href="#" />
+              </WexPagination.Item>
+            </WexPagination.Content>
+          </WexPagination>
+        </PreviewCard>
       </PreviewGrid>
 
       {/* Calendar - Full width */}
-      <div className="p-4 rounded-lg border bg-card">
-        <div className="text-sm font-medium text-muted-foreground mb-3">Calendar (Selected Date)</div>
+      <PreviewCard title="Calendar">
         <div className="flex justify-center">
           <WexCalendar 
             mode="single" 
@@ -1300,125 +1649,201 @@ function PrimaryPreviewFullWidth() {
             onSelect={setCalendarDate}
           />
         </div>
-      </div>
+      </PreviewCard>
+
+      {/* Additional non-renderable components */}
+      <AdditionalComponentsList
+        tokenName="--primary"
+        components={[
+          { name: "WexDialog", description: "Primary action button in dialogs" },
+          { name: "WexAlertDialog", description: "Confirm button uses primary" },
+          { name: "WexSheet", description: "Action buttons in sheet" },
+          { name: "WexDrawer", description: "Action buttons in drawer" },
+          { name: "WexSelect", description: "Selected item indicator" },
+          { name: "WexCommand", description: "Selected command item" },
+          { name: "WexCombobox", description: "Selected item highlight" },
+          { name: "WexDropdownMenu", description: "Focus state on items" },
+          { name: "WexContextMenu", description: "Focus state on items" },
+          { name: "WexNavigationMenu", description: "Active link indicator" },
+          { name: "WexMenubar", description: "Active menu item" },
+          { name: "WexDataTable", description: "Sort column indicator" },
+          { name: "WexTable", description: "Sort headers, row selection" },
+          { name: "WexDatePicker", description: "Selected date (via Calendar)" },
+          { name: "WexBreadcrumb", description: "Link hover state" },
+          { name: "WexAccordion", description: "Trigger hover/focus state" },
+          { name: "WexCarousel", description: "Active navigation dot" },
+          { name: "WexChart", description: "Primary data series color" },
+          { name: "WexEmpty", description: "Action link uses primary" },
+          { name: "WexHoverCard", description: "Link text in card content" },
+          { name: "WexSidebar", description: "Active navigation item" },
+          { name: "WexToggleGroup", description: "Pressed toggle state" },
+          { name: "WexTooltip", description: "Link text in tooltip" },
+        ]}
+      />
     </div>
   );
 }
 
 function DestructivePreviewFullWidth() {
   return (
-    <PreviewGrid>
-      <PreviewCard title="Buttons">
-        <div className="flex flex-wrap gap-2">
-          <WexButton intent="destructive">Delete</WexButton>
-          <WexButton intent="destructive" disabled>Disabled</WexButton>
-        </div>
-      </PreviewCard>
+    <div className="space-y-8">
+      <PreviewGrid>
+        <PreviewCard title="Buttons">
+          <div className="flex flex-wrap gap-2">
+            <WexButton intent="destructive">Delete</WexButton>
+            <WexButton intent="destructive" disabled>Disabled</WexButton>
+          </div>
+        </PreviewCard>
 
-      <PreviewCard title="Badge">
-        <div className="flex flex-wrap gap-2">
-          <WexBadge intent="destructive">Error</WexBadge>
-          <WexBadge intent="destructive">Failed</WexBadge>
-        </div>
-      </PreviewCard>
+        <PreviewCard title="Badge">
+          <div className="flex flex-wrap gap-2">
+            <WexBadge intent="destructive">Error</WexBadge>
+            <WexBadge intent="destructive">Failed</WexBadge>
+          </div>
+        </PreviewCard>
 
-      <PreviewCard title="Alert">
-        <WexAlert intent="destructive">
-          <WexAlert.Title>Error</WexAlert.Title>
-          <WexAlert.Description>Something went wrong.</WexAlert.Description>
-        </WexAlert>
-      </PreviewCard>
+        <PreviewCard title="Alert">
+          <WexAlert intent="destructive">
+            <WexAlert.Title>Error</WexAlert.Title>
+            <WexAlert.Description>Something went wrong.</WexAlert.Description>
+          </WexAlert>
+        </PreviewCard>
 
-      <PreviewCard title="Form Error">
-        <div className="space-y-1">
-          <WexInput placeholder="Email" aria-invalid="true" className="border-destructive" />
-          <p className="text-sm text-destructive">Invalid email address</p>
-        </div>
-      </PreviewCard>
-    </PreviewGrid>
+        <PreviewCard title="Form Error">
+          <div className="space-y-1">
+            <WexInput placeholder="Email" aria-invalid="true" className="border-destructive" />
+            <p className="text-sm text-destructive">Invalid email address</p>
+          </div>
+        </PreviewCard>
+      </PreviewGrid>
+
+      {/* Additional non-renderable components */}
+      <AdditionalComponentsList
+        tokenName="--destructive"
+        components={[
+          { name: "WexAlertDialog", description: "Destructive action button" },
+          { name: "WexButtonGroup", description: "Grouped destructive buttons" },
+          { name: "WexToast/Sonner", description: "Error toast notifications" },
+          { name: "WexForm", description: "Validation error messages" },
+          { name: "WexField", description: "Invalid field styling" },
+          { name: "WexInputGroup", description: "Invalid input group border" },
+          { name: "WexInputOTP", description: "Invalid OTP slot styling" },
+        ]}
+      />
+    </div>
   );
 }
 
 function SuccessPreviewFullWidth() {
   return (
-    <PreviewGrid>
-      <PreviewCard title="Badge">
-        <div className="flex flex-wrap gap-2">
-          <WexBadge intent="success">Complete</WexBadge>
-          <WexBadge intent="success">Active</WexBadge>
-          <WexBadge intent="success">Verified</WexBadge>
-        </div>
-      </PreviewCard>
+    <div className="space-y-8">
+      <PreviewGrid>
+        <PreviewCard title="Badge">
+          <div className="flex flex-wrap gap-2">
+            <WexBadge intent="success">Complete</WexBadge>
+            <WexBadge intent="success">Active</WexBadge>
+            <WexBadge intent="success">Verified</WexBadge>
+          </div>
+        </PreviewCard>
 
-      <PreviewCard title="Alert">
-        <WexAlert intent="success">
-          <WexAlert.Title>Success!</WexAlert.Title>
-          <WexAlert.Description>Your changes have been saved.</WexAlert.Description>
-        </WexAlert>
-      </PreviewCard>
+        <PreviewCard title="Alert">
+          <WexAlert intent="success">
+            <WexAlert.Title>Success!</WexAlert.Title>
+            <WexAlert.Description>Your changes have been saved.</WexAlert.Description>
+          </WexAlert>
+        </PreviewCard>
 
-      <PreviewCard title="Toast Preview">
-        <div className="p-3 rounded-md bg-success text-success-foreground">
-          <div className="font-medium">Success Toast</div>
-          <div className="text-sm opacity-90">Operation completed successfully.</div>
-        </div>
-      </PreviewCard>
-    </PreviewGrid>
+        <PreviewCard title="Toast Preview">
+          <div className="p-3 rounded-md bg-success text-success-foreground">
+            <div className="font-medium">Success Toast</div>
+            <div className="text-sm opacity-90">Operation completed successfully.</div>
+          </div>
+        </PreviewCard>
+      </PreviewGrid>
+
+      {/* Additional non-renderable components */}
+      <AdditionalComponentsList
+        tokenName="--success"
+        components={[
+          { name: "WexToast/Sonner", description: "Success toast notifications" },
+        ]}
+      />
+    </div>
   );
 }
 
 function WarningPreviewFullWidth() {
   return (
-    <PreviewGrid>
-      <PreviewCard title="Badge">
-        <div className="flex flex-wrap gap-2">
-          <WexBadge intent="warning">Caution</WexBadge>
-          <WexBadge intent="warning">Pending</WexBadge>
-        </div>
-      </PreviewCard>
+    <div className="space-y-8">
+      <PreviewGrid>
+        <PreviewCard title="Badge">
+          <div className="flex flex-wrap gap-2">
+            <WexBadge intent="warning">Caution</WexBadge>
+            <WexBadge intent="warning">Pending</WexBadge>
+          </div>
+        </PreviewCard>
 
-      <PreviewCard title="Alert">
-        <WexAlert intent="warning">
-          <WexAlert.Title>Warning</WexAlert.Title>
-          <WexAlert.Description>Please review before continuing.</WexAlert.Description>
-        </WexAlert>
-      </PreviewCard>
+        <PreviewCard title="Alert">
+          <WexAlert intent="warning">
+            <WexAlert.Title>Warning</WexAlert.Title>
+            <WexAlert.Description>Please review before continuing.</WexAlert.Description>
+          </WexAlert>
+        </PreviewCard>
 
-      <PreviewCard title="Toast Preview">
-        <div className="p-3 rounded-md bg-warning text-warning-foreground">
-          <div className="font-medium">Warning Toast</div>
-          <div className="text-sm opacity-90">Something needs attention.</div>
-        </div>
-      </PreviewCard>
-    </PreviewGrid>
+        <PreviewCard title="Toast Preview">
+          <div className="p-3 rounded-md bg-warning text-warning-foreground">
+            <div className="font-medium">Warning Toast</div>
+            <div className="text-sm opacity-90">Something needs attention.</div>
+          </div>
+        </PreviewCard>
+      </PreviewGrid>
+
+      {/* Additional non-renderable components */}
+      <AdditionalComponentsList
+        tokenName="--warning"
+        components={[
+          { name: "WexToast/Sonner", description: "Warning toast notifications" },
+        ]}
+      />
+    </div>
   );
 }
 
 function InfoPreviewFullWidth() {
   return (
-    <PreviewGrid>
-      <PreviewCard title="Badge">
-        <div className="flex flex-wrap gap-2">
-          <WexBadge intent="info">Note</WexBadge>
-          <WexBadge intent="info">Info</WexBadge>
-          <WexBadge intent="info">Tip</WexBadge>
-        </div>
-      </PreviewCard>
+    <div className="space-y-8">
+      <PreviewGrid>
+        <PreviewCard title="Badge">
+          <div className="flex flex-wrap gap-2">
+            <WexBadge intent="info">Note</WexBadge>
+            <WexBadge intent="info">Info</WexBadge>
+            <WexBadge intent="info">Tip</WexBadge>
+          </div>
+        </PreviewCard>
 
-      <PreviewCard title="Alert">
-        <WexAlert intent="info">
-          <WexAlert.Title>Information</WexAlert.Title>
-          <WexAlert.Description>Here's some helpful information.</WexAlert.Description>
-        </WexAlert>
-      </PreviewCard>
+        <PreviewCard title="Alert">
+          <WexAlert intent="info">
+            <WexAlert.Title>Information</WexAlert.Title>
+            <WexAlert.Description>Here's some helpful information.</WexAlert.Description>
+          </WexAlert>
+        </PreviewCard>
 
-      <PreviewCard title="Toast Preview">
-        <div className="p-3 rounded-md bg-info text-info-foreground">
-          <div className="font-medium">Info Toast</div>
-          <div className="text-sm opacity-90">For your information.</div>
-        </div>
-      </PreviewCard>
-    </PreviewGrid>
+        <PreviewCard title="Toast Preview">
+          <div className="p-3 rounded-md bg-info text-info-foreground">
+            <div className="font-medium">Info Toast</div>
+            <div className="text-sm opacity-90">For your information.</div>
+          </div>
+        </PreviewCard>
+      </PreviewGrid>
+
+      {/* Additional non-renderable components */}
+      <AdditionalComponentsList
+        tokenName="--info"
+        components={[
+          { name: "WexToast/Sonner", description: "Info toast notifications" },
+        ]}
+      />
+    </div>
   );
 }
 

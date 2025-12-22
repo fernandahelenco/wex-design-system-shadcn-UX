@@ -156,9 +156,9 @@ export default function ThemeBuilderPage() {
   }, [resetAll]);
 
   return (
-    <div className="min-h-[calc(100vh-4rem)] flex">
-      {/* Left Navigation - Layers Panel */}
-      <div className="w-72 flex-shrink-0">
+    <div className="h-full flex overflow-hidden">
+      {/* Left Navigation - Layers Panel (fixed height, independent scroll) */}
+      <div className="w-72 flex-shrink-0 h-full overflow-hidden">
         <ThemeBuilderNav
           selectedToken={selectedToken}
           onSelectToken={handleSelectToken}
@@ -174,7 +174,7 @@ export default function ThemeBuilderPage() {
       </div>
 
       {/* Main Workspace - Full Width Live Preview or Export View */}
-      <div className="flex-1 overflow-y-auto bg-background">
+      <div className="flex-1 h-full overflow-y-auto bg-background">
         {showExportView ? (
           <ThemeExportView onClose={() => setShowExportView(false)} />
         ) : (

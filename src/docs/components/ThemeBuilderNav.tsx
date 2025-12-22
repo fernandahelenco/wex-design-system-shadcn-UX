@@ -20,6 +20,8 @@ import {
   Moon,
   ChevronRight,
   Pencil,
+  CheckCircle2,
+  AlertTriangle,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useThemeBuilder } from "@/docs/context/ThemeBuilderContext";
@@ -29,10 +31,9 @@ import {
   SURFACE_TOKENS,
   TEXT_TOKENS,
   type TokenDefinition,
-  type PaletteRamp,
 } from "@/docs/data/tokenRegistry";
 import { PaletteSwatchPicker, formatPaletteValue } from "./PaletteSwatchPicker";
-import { hexToHSL, formatHSL, hslToHex } from "@/docs/utils/color-convert";
+import { useContrastCompliance } from "@/docs/hooks/useContrastCompliance";
 
 // ============================================================================
 // Types
@@ -109,13 +110,16 @@ export function ThemeBuilderNav({
   onSelectToken,
   assignments,
   onAssignmentChange,
-  setToken,
+  setToken: _setToken,
   editMode: editModeProp,
   onExport,
   onReset,
   hasUnsavedChanges = false,
   hasOverrides = false,
 }: ThemeBuilderNavProps) {
+  // _setToken passed for potential future use but currently unused
+  void _setToken;
+  
   const { exitThemeBuilder, editMode: contextEditMode, setEditMode } = useThemeBuilder();
   const editMode = editModeProp ?? contextEditMode;
 
@@ -246,8 +250,10 @@ export function ThemeBuilderNav({
         ))}
       </div>
 
-      {/* Actions at bottom */}
+      {/* A11y Compliance Summary + Actions at bottom */}
       <div className="p-3 border-t border-border space-y-1">
+        <ContrastComplianceSummary />
+        <WexSeparator className="my-2" />
         <ActionButton
           onClick={onReset}
           icon={<RotateCcw className="h-4 w-4" />}
@@ -268,6 +274,95 @@ export function ThemeBuilderNav({
         />
         </div>
     </div>
+  );
+}
+
+// ============================================================================
+// WCAG Contrast Compliance Summary
+// ============================================================================
+
+function ContrastComplianceSummary() {
+  const { results, passCount, failCount, totalCount, isCompliant } = useContrastCompliance();
+  const { editMode } = useThemeBuilder();
+
+  if (totalCount === 0) {
+    return null; // Still loading
+  }
+
+  const ModeIcon = editMode === "light" ? Sun : Moon;
+
+  return (
+    <WexPopover>
+      <WexPopover.Trigger asChild>
+        <button
+          className={cn(
+            "w-full flex items-center gap-2 px-3 py-2 rounded-md text-sm transition-colors",
+            isCompliant
+              ? "text-success hover:bg-success/10"
+              : "text-destructive hover:bg-destructive/10"
+          )}
+        >
+          <ModeIcon className="h-3.5 w-3.5 text-muted-foreground" />
+          {isCompliant ? (
+            <CheckCircle2 className="h-4 w-4" />
+          ) : (
+            <AlertTriangle className="h-4 w-4" />
+          )}
+          <span className="flex-1 text-left">
+            {isCompliant ? "Contrast: OK" : `Contrast: ${failCount} Issue${failCount !== 1 ? "s" : ""}`}
+          </span>
+          <span className="text-xs text-muted-foreground">
+            {passCount}/{totalCount}
+          </span>
+        </button>
+      </WexPopover.Trigger>
+      <WexPopover.Content side="right" align="end" className="w-80 p-0 max-h-96 overflow-y-auto">
+        <div className="p-3 border-b border-border sticky top-0 bg-popover">
+          <div className="flex items-center gap-2 text-sm font-semibold">
+            <ModeIcon className="h-4 w-4 text-muted-foreground" />
+            {isCompliant ? "All Contrast Checks Passing" : "Contrast Issues Detected"}
+          </div>
+          <div className="text-xs text-muted-foreground mt-1">
+            WCAG AA requires 4.5:1 for normal text ({editMode} mode)
+          </div>
+        </div>
+        <div className="p-3 space-y-2">
+          {results.map((result, idx) => (
+            <div
+              key={idx}
+              className={cn(
+                "p-2 rounded border text-xs",
+                result.passes
+                  ? "bg-success/5 border-success/20"
+                  : "bg-destructive/5 border-destructive/20"
+              )}
+            >
+              <div className="flex items-center justify-between mb-1">
+                <span className="font-medium">{result.pair.name}</span>
+                <span
+                  className={cn(
+                    "px-1.5 py-0.5 rounded text-[10px] font-medium",
+                    result.passes
+                      ? "bg-success/20 text-success"
+                      : "bg-destructive/20 text-destructive"
+                  )}
+                >
+                  {result.ratio.toFixed(1)}:1
+                </span>
+              </div>
+              <div className="text-muted-foreground text-[10px]">
+                {result.pair.component}
+              </div>
+              {!result.passes && result.suggestion && (
+                <p className="text-muted-foreground text-[10px] mt-1 pt-1 border-t border-border/50">
+                  {result.suggestion}
+                </p>
+              )}
+            </div>
+          ))}
+        </div>
+      </WexPopover.Content>
+    </WexPopover>
   );
 }
 
@@ -308,81 +403,10 @@ function CollapsibleSection({
 }
 
 // ============================================================================
-// Palette Ramp Editor (color picker for editing ramp base color)
+// Token Row (selectable + editable)
 // ============================================================================
 
-interface PaletteRampEditorProps {
-  ramp: PaletteRamp;
-  onColorChange: (hexColor: string) => void;
-}
-
-function PaletteRampEditor({ ramp, onColorChange }: PaletteRampEditorProps) {
-  const shade500 = ramp.shades.find((s) => s.shade === 500);
-  const currentHsl = shade500
-    ? { h: ramp.hue, s: ramp.saturation, l: shade500.lightness }
-    : { h: 0, s: 0, l: 50 };
-
-  // Convert HSL to hex for color input
-  const [hexValue, setHexValue] = React.useState(() => 
-    hslToHex({ h: currentHsl.h, s: currentHsl.s, l: currentHsl.l })
-  );
-
-  const handleColorChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const hex = e.target.value;
-    setHexValue(hex);
-    onColorChange(hex);
-  };
-
-  return (
-    <div className="space-y-3">
-      <div>
-        <div className="text-sm font-medium mb-2">Edit {ramp.label} Ramp</div>
-        <div className="text-xs text-muted-foreground mb-3">
-          Pick a base color (500 shade). All shades will be generated automatically.
-        </div>
-      </div>
-      
-      <div className="space-y-2">
-        <label className="text-xs font-medium text-foreground">Base Color (500)</label>
-        <div className="flex items-center gap-2">
-          <div
-            className="w-12 h-12 rounded border border-border/50 flex-shrink-0"
-            style={{
-              backgroundColor: `hsl(${currentHsl.h} ${currentHsl.s}% ${currentHsl.l}%)`,
-            }}
-          />
-          <input
-            type="color"
-            value={hexValue}
-            onChange={handleColorChange}
-            className="flex-1 h-8 rounded border border-border cursor-pointer"
-          />
-        </div>
-      </div>
-
-      {/* Preview of generated ramp */}
-      <div className="space-y-2">
-        <div className="text-xs font-medium text-foreground">Ramp Preview</div>
-        <div className="flex gap-px rounded overflow-hidden border border-border/30">
-          {[50, 100, 200, 300, 400, 500, 600, 700, 800, 900].map((shade) => {
-            const shadeData = ramp.shades.find((s) => s.shade === shade);
-            const l = shadeData?.lightness ?? 50;
-            return (
-              <div
-                key={shade}
-                className="h-8 flex-1"
-                style={{
-                  backgroundColor: `hsl(${ramp.hue} ${ramp.saturation}% ${l}%)`,
-                }}
-                title={`${ramp.label} ${shade}`}
-              />
-            );
-          })}
-        </div>
-      </div>
-    </div>
-  );
-}
+// Note: PaletteRampEditor was removed as it's unused; kept in git history
 
 // ============================================================================
 // Token Row (selectable + editable)
@@ -529,7 +553,7 @@ function TokenRow({
           >
             <PaletteSwatchPicker
               value={value || ""}
-              onChange={(newValue) => {
+              onSelect={(newValue: string) => {
                 onChange(newValue);
                 setIsPopoverOpen(false);
               }}
