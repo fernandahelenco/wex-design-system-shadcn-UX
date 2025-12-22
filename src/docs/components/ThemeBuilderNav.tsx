@@ -28,11 +28,10 @@ import {
   SEMANTIC_TOKENS,
   SURFACE_TOKENS,
   TEXT_TOKENS,
-  NEUTRAL_TOKENS,
   type TokenDefinition,
   type PaletteRamp,
 } from "@/docs/data/tokenRegistry";
-import { PaletteSwatchPicker, SwatchDisplay, formatPaletteValue } from "./PaletteSwatchPicker";
+import { PaletteSwatchPicker, formatPaletteValue } from "./PaletteSwatchPicker";
 import { hexToHSL, formatHSL, hslToHex } from "@/docs/utils/color-convert";
 
 // ============================================================================
@@ -314,11 +313,10 @@ function CollapsibleSection({
 
 interface PaletteRampEditorProps {
   ramp: PaletteRamp;
-  editMode: "light" | "dark";
   onColorChange: (hexColor: string) => void;
 }
 
-function PaletteRampEditor({ ramp, editMode, onColorChange }: PaletteRampEditorProps) {
+function PaletteRampEditor({ ramp, onColorChange }: PaletteRampEditorProps) {
   const shade500 = ramp.shades.find((s) => s.shade === 500);
   const currentHsl = shade500
     ? { h: ramp.hue, s: ramp.saturation, l: shade500.lightness }
@@ -382,127 +380,6 @@ function PaletteRampEditor({ ramp, editMode, onColorChange }: PaletteRampEditorP
           })}
         </div>
       </div>
-    </div>
-  );
-}
-
-// ============================================================================
-// Palette Ramp Row (shows ramp preview)
-// ============================================================================
-
-interface PaletteRampRowProps {
-  ramp: PaletteRamp;
-  isSelected: boolean;
-  onSelect: () => void;
-  editMode: "light" | "dark";
-  setToken?: (token: string, value: string, mode: "light" | "dark") => void;
-}
-
-function PaletteRampRow({
-  ramp,
-  isSelected,
-  onSelect,
-  editMode,
-  setToken,
-}: PaletteRampRowProps) {
-  // Debug: verify setToken is passed
-  React.useEffect(() => {
-    console.log('[PaletteRampRow]', { rampName: ramp.name, hasSetToken: !!setToken });
-  }, [ramp.name, setToken]);
-
-  // Get the 500 shade value
-  const shade500 = ramp.shades.find((s) => s.shade === 500);
-  const hslValue = shade500
-    ? `${ramp.hue} ${ramp.saturation}% ${shade500.lightness}%`
-    : "0 0% 50%";
-
-  // #region agent log
-  React.useEffect(() => {
-    const swatches = [200, 500, 800].map((shade) => {
-      const shadeData = ramp.shades.find((s) => s.shade === shade);
-      return {
-        shade,
-        lightness: shadeData?.lightness,
-        color: `hsl(${ramp.hue} ${ramp.saturation}% ${shadeData?.lightness ?? 50}%)`,
-      };
-    });
-    fetch("http://127.0.0.1:7243/ingest/cfb597a8-c124-40f4-8323-a95d1a296ffa", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        location: "ThemeBuilderNav.tsx:PaletteRampRow",
-        message: "Ramp swatches computed",
-        data: { ramp: ramp.name, swatches },
-        timestamp: Date.now(),
-        sessionId: "debug-session",
-        hypothesisId: "F",
-      }),
-    }).catch(() => {});
-  }, [ramp.name, ramp.hue, ramp.saturation, ramp.shades]);
-  // #endregion
-
-  const [isPopoverOpen, setIsPopoverOpen] = React.useState(false);
-
-  return (
-    <div
-      className={cn(
-        "flex items-center gap-2 px-1 py-1.5 rounded transition-colors group",
-        isSelected ? "bg-primary/10 ring-1 ring-primary/30" : "hover:bg-muted/50"
-      )}
-    >
-      {/* Mini ramp preview - show 3 key shades */}
-      <div className="flex gap-px cursor-pointer" onClick={onSelect}>
-        {[200, 500, 800].map((shade) => {
-          const shadeData = ramp.shades.find((s) => s.shade === shade);
-          const l = shadeData?.lightness ?? 50;
-          return (
-            <div
-              key={shade}
-              className="w-3 h-4 first:rounded-l-sm last:rounded-r-sm border border-border/30"
-              style={{
-                backgroundColor: `hsl(${ramp.hue} ${ramp.saturation}% ${l}%)`,
-              }}
-            />
-          );
-        })}
-      </div>
-      <span className="text-xs font-medium flex-1 cursor-pointer" onClick={onSelect}>
-        {ramp.label}
-      </span>
-      
-      {/* Edit button - always visible if setToken is provided */}
-      {setToken && (
-        <WexPopover open={isPopoverOpen} onOpenChange={setIsPopoverOpen}>
-          <WexPopover.Trigger asChild>
-            <button
-              className="p-1 rounded hover:bg-muted transition-opacity"
-              onClick={(e) => {
-                e.stopPropagation();
-                setIsPopoverOpen(true);
-              }}
-              title="Edit ramp"
-            >
-              <Pencil className="h-3 w-3 text-muted-foreground" />
-            </button>
-          </WexPopover.Trigger>
-          <WexPopover.Content side="right" align="start" className="w-64 p-4">
-            <PaletteRampEditor
-              ramp={ramp}
-              editMode={editMode}
-              onColorChange={(hexColor) => {
-                const hsl = hexToHSL(hexColor);
-                if (hsl) {
-                  const token500 = `--wex-palette-${ramp.name}-500`;
-                  const hslValue = formatHSL(hsl);
-                  // setToken will automatically cascade to generate all shades (cascade defaults to true)
-                  setToken(token500, hslValue, editMode);
-                }
-                setIsPopoverOpen(false);
-              }}
-            />
-          </WexPopover.Content>
-        </WexPopover>
-      )}
     </div>
   );
 }

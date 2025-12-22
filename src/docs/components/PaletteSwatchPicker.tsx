@@ -172,12 +172,6 @@ export function SwatchDisplay({ value, size = "md", className }: SwatchDisplayPr
   const token = isNeutral ? `--wex-palette-${value}` : `--wex-palette-${value}`;
   const bgColor = `hsl(var(${token}))`;
 
-  // #region agent log
-  React.useEffect(() => {
-    fetch('http://127.0.0.1:7243/ingest/cfb597a8-c124-40f4-8323-a95d1a296ffa',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'PaletteSwatchPicker.tsx:SwatchDisplay',message:'SwatchDisplay rendered',data:{value,token,bgColor},timestamp:Date.now(),sessionId:'debug-session',hypothesisId:'F'})}).catch(()=>{});
-  }, [value, token, bgColor]);
-  // #endregion
-
   return (
     <div
       className={cn(
@@ -191,8 +185,6 @@ export function SwatchDisplay({ value, size = "md", className }: SwatchDisplayPr
         minHeight: size === 'sm' ? '16px' : size === 'md' ? '24px' : '32px',
       }}
       title={value}
-      data-debug-swatch-value={value}
-      data-debug-swatch-token={token}
     />
   );
 }
