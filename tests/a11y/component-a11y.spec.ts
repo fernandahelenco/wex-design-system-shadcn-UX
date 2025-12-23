@@ -8,6 +8,7 @@ import * as path from "path";
  *
  * SCOPED TO COMPONENT EXAMPLES ONLY
  * TESTS BOTH LIGHT AND DARK MODES
+ * RECORDS PER-EXAMPLE RESULTS
  * 
  * This test scans ONLY elements with data-testid="component-example",
  * excluding docs UI (sidebar, headers, guidance text, code blocks).
@@ -15,6 +16,9 @@ import * as path from "path";
  * Each component is tested twice:
  * 1. Light mode (no .dark class on html)
  * 2. Dark mode (.dark class on html)
+ *
+ * Results are recorded PER-EXAMPLE so we can identify exactly which
+ * variant passed or failed in each mode.
  *
  * THRESHOLD RULES:
  * - pass: 0 violations
@@ -101,13 +105,14 @@ const COLOR_MODES: ColorMode[] = ["light", "dark"];
 // Ensure output directory exists
 const outputDir = path.join(process.cwd(), "test-results", "a11y-components");
 
-interface ViolationSummary {
-  id: string;
-  impact: string;
-  description: string;
-  exampleId: string;
+/** Result for a single example in a single mode */
+interface ExampleResult {
+  status: "pass" | "fail";
+  violations: number;
+  issues: string[];
 }
 
+/** Results for a mode, including per-example breakdown */
 interface ModeTestResult {
   violations: number;
   criticalViolations: number;
@@ -115,6 +120,8 @@ interface ModeTestResult {
   issues: string[];
   examplesTested: string[];
   examplesFound: number;
+  /** NEW: Per-example results for pinpointing failures */
+  examples: Record<string, ExampleResult>;
 }
 
 test.describe("Component Accessibility Tests (Light + Dark Modes)", () => {
@@ -163,8 +170,10 @@ test.describe("Component Accessibility Tests (Light + Dark Modes)", () => {
         let criticalViolations = 0;
         let seriousViolations = 0;
         const allIssues: string[] = [];
-        const allViolationDetails: ViolationSummary[] = [];
         const examplesTested: string[] = [];
+        
+        // NEW: Per-example results
+        const exampleResults: Record<string, ExampleResult> = {};
         
         // Handle case where no examples are found
         if (exampleCount === 0) {
@@ -177,60 +186,98 @@ test.describe("Component Accessibility Tests (Light + Dark Modes)", () => {
             issues: [],
             examplesTested: [],
             examplesFound: 0,
+            examples: {},
           };
           continue;
         }
         
-        // Scan each example container individually
+        // First, collect all example IDs
+        const exampleIds: string[] = [];
         for (let i = 0; i < exampleContainers.length; i++) {
           const container = exampleContainers[i];
-          
-          // Get the example ID from data attribute, or use index-based fallback
           const exampleId = await container.getAttribute("data-example-id") || `example-${i}`;
+          exampleIds.push(exampleId);
           examplesTested.push(exampleId);
+        }
+        
+        // Scan each example container individually
+        for (let i = 0; i < exampleContainers.length; i++) {
+          const exampleId = exampleIds[i];
+          
+          // Initialize result for this example
+          let exampleViolations = 0;
+          const exampleIssues: string[] = [];
           
           try {
-            // Run axe-core scoped to this specific example container
-            const accessibilityScanResults = await new AxeBuilder({ page })
-              .include(EXAMPLE_SELECTOR + `[data-example-id="${exampleId}"]`)
-              .withTags(WCAG_TAGS)
-              .analyze();
+            // Build a unique selector for this example
+            // Use nth-child since data-example-id may not be on all examples
+            const nthSelector = `${EXAMPLE_SELECTOR}:nth-of-type(${i + 1})`;
             
-            // Aggregate violations
-            for (const violation of accessibilityScanResults.violations) {
-              totalViolations++;
+            // Check if element exists with this selector
+            const elementExists = await page.locator(nthSelector).count() > 0;
+            
+            if (elementExists) {
+              // Run axe-core scoped to this specific example container
+              const accessibilityScanResults = await new AxeBuilder({ page })
+                .include(nthSelector)
+                .withTags(WCAG_TAGS)
+                .analyze();
               
-              if (violation.impact === "critical") criticalViolations++;
-              if (violation.impact === "serious") seriousViolations++;
-              
-              if (!allIssues.includes(violation.id)) {
-                allIssues.push(violation.id);
+              // Process violations for this example
+              for (const violation of accessibilityScanResults.violations) {
+                exampleViolations++;
+                totalViolations++;
+                
+                if (violation.impact === "critical") criticalViolations++;
+                if (violation.impact === "serious") seriousViolations++;
+                
+                if (!exampleIssues.includes(violation.id)) {
+                  exampleIssues.push(violation.id);
+                }
+                
+                if (!allIssues.includes(violation.id)) {
+                  allIssues.push(violation.id);
+                }
               }
+            } else {
+              // Fallback: scan by data-example-id if available
+              const idSelector = `${EXAMPLE_SELECTOR}[data-example-id="${exampleId}"]`;
+              const idExists = await page.locator(idSelector).count() > 0;
               
-              allViolationDetails.push({
-                id: violation.id,
-                impact: violation.impact || "unknown",
-                description: violation.description,
-                exampleId,
-              });
-            }
-          } catch {
-            // If scoped selector fails, try scanning all examples at once
-            console.warn(`  Retrying scan for ${component.name} [${mode}] with fallback approach`);
-            
-            const accessibilityScanResults = await new AxeBuilder({ page })
-              .include(EXAMPLE_SELECTOR)
-              .withTags(WCAG_TAGS)
-              .analyze();
-            
-            for (const violation of accessibilityScanResults.violations) {
-              if (!allIssues.includes(violation.id)) {
-                allIssues.push(violation.id);
+              if (idExists) {
+                const accessibilityScanResults = await new AxeBuilder({ page })
+                  .include(idSelector)
+                  .withTags(WCAG_TAGS)
+                  .analyze();
+                
+                for (const violation of accessibilityScanResults.violations) {
+                  exampleViolations++;
+                  totalViolations++;
+                  
+                  if (violation.impact === "critical") criticalViolations++;
+                  if (violation.impact === "serious") seriousViolations++;
+                  
+                  if (!exampleIssues.includes(violation.id)) {
+                    exampleIssues.push(violation.id);
+                  }
+                  
+                  if (!allIssues.includes(violation.id)) {
+                    allIssues.push(violation.id);
+                  }
+                }
               }
             }
-            totalViolations += accessibilityScanResults.violations.length;
-            break; // Exit loop since we scanned all at once
+          } catch (err) {
+            // If individual scan fails, record as unknown
+            console.warn(`  Warning: Could not scan example "${exampleId}" for ${component.name} [${mode}]: ${err}`);
           }
+          
+          // Store per-example result
+          exampleResults[exampleId] = {
+            status: exampleViolations === 0 ? "pass" : "fail",
+            violations: exampleViolations,
+            issues: exampleIssues,
+          };
         }
         
         // Store mode result
@@ -241,21 +288,26 @@ test.describe("Component Accessibility Tests (Light + Dark Modes)", () => {
           issues: allIssues,
           examplesTested,
           examplesFound: exampleCount,
+          examples: exampleResults,
         };
         
-        // Log violations for debugging
+        // Log summary for debugging
+        const passCount = Object.values(exampleResults).filter(r => r.status === "pass").length;
+        const failCount = Object.values(exampleResults).filter(r => r.status === "fail").length;
+        
         if (totalViolations > 0) {
-          console.log(`\n${component.name} [${mode.toUpperCase()}]: ${totalViolations} violations`);
-          allViolationDetails.forEach((v) => {
-            console.log(`  - [${v.impact}] ${v.id}: ${v.description}`);
+          console.log(`\n${component.name} [${mode.toUpperCase()}]: ${failCount}/${exampleCount} examples failed, ${totalViolations} total violations`);
+          Object.entries(exampleResults).forEach(([id, result]) => {
+            if (result.status === "fail") {
+              console.log(`  ✗ ${id}: ${result.violations} violations [${result.issues.join(", ")}]`);
+            }
           });
         } else {
-          console.log(`✅ ${component.name} [${mode.toUpperCase()}]: 0 violations`);
+          console.log(`✅ ${component.name} [${mode.toUpperCase()}]: ${passCount}/${exampleCount} examples passed`);
         }
       }
       
       // Write combined result file (both modes in one file)
-      // Determine hasExamples per mode based on examplesFound
       const lightHasExamples = (modeResults.light?.examplesFound ?? 0) > 0;
       const darkHasExamples = (modeResults.dark?.examplesFound ?? 0) > 0;
       

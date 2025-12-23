@@ -1,13 +1,13 @@
 import * as React from "react";
 import { Link } from "react-router-dom";
-import { Check, AlertTriangle, X, HelpCircle, ArrowRight, Sun, Moon } from "lucide-react";
-import { useA11yCompliance, type ComplianceResult, type ModeComplianceResult } from "@/docs/hooks/useA11yCompliance";
+import { Check, AlertTriangle, X, HelpCircle, ArrowRight, Sun, Moon, ChevronDown, ChevronUp } from "lucide-react";
+import { useA11yCompliance, useA11yExampleResults, type ComplianceResult, type ModeComplianceResult, type ExampleResult } from "@/docs/hooks/useA11yCompliance";
 
 /**
  * A11yResultsSection - Lightweight accessibility results summary for component pages
  *
  * Shows a summary of accessibility test results with a link to the full dashboard.
- * Now displays results for both light and dark modes.
+ * Now displays results for both light and dark modes with per-example breakdown.
  * Uses "signal" language only - this is NOT a compliance certification.
  */
 
@@ -67,6 +67,8 @@ interface ResultsSectionProps {
 
 function ResultsSection({ compliance, registryKey }: ResultsSectionProps) {
   const { status, levelAchieved, violations, testedAt, issues, modes } = compliance;
+  const [showExamples, setShowExamples] = React.useState(false);
+  const exampleResults = useA11yExampleResults(registryKey);
 
   const statusConfig = getStatusConfig(status);
   const testedDate = testedAt ? new Date(testedAt).toLocaleDateString() : "Never";
@@ -76,6 +78,12 @@ function ResultsSection({ compliance, registryKey }: ResultsSectionProps) {
   const remainingIssuesCount = issues.length - topIssues.length;
   
   const hasModesData = modes && (modes.light || modes.dark);
+  const hasExampleResults = exampleResults.length > 0;
+  
+  // Check if any examples failed
+  const hasFailures = exampleResults.some(
+    (e) => e.light?.status === "fail" || e.dark?.status === "fail"
+  );
 
   return (
     <section className="rounded-lg border border-border bg-card p-4 mb-8">
@@ -143,6 +151,31 @@ function ResultsSection({ compliance, registryKey }: ResultsSectionProps) {
             </div>
           )}
 
+          {/* Per-example results toggle */}
+          {hasExampleResults && (
+            <button
+              onClick={() => setShowExamples(!showExamples)}
+              className="flex items-center gap-1 text-xs text-primary hover:text-primary/80 mb-3"
+            >
+              {showExamples ? (
+                <>
+                  <ChevronUp className="h-3 w-3" />
+                  Hide variant details
+                </>
+              ) : (
+                <>
+                  <ChevronDown className="h-3 w-3" />
+                  Show variant details ({exampleResults.length} examples{hasFailures && " - issues found"})
+                </>
+              )}
+            </button>
+          )}
+
+          {/* Per-example results table */}
+          {showExamples && hasExampleResults && (
+            <ExampleResultsTable exampleResults={exampleResults} />
+          )}
+
           <p className="text-[10px] text-muted-foreground mb-3">
             Tests run in both light and dark modes. WCAG level mapping based on automated ruleset coverage. This is a test signal, not a compliance certification.
           </p>
@@ -160,6 +193,119 @@ function ResultsSection({ compliance, registryKey }: ResultsSectionProps) {
   );
 }
 
+interface ExampleResultsTableProps {
+  exampleResults: Array<{
+    exampleId: string;
+    light: ExampleResult | null;
+    dark: ExampleResult | null;
+  }>;
+}
+
+function ExampleResultsTable({ exampleResults }: ExampleResultsTableProps) {
+  return (
+    <div className="mb-4 rounded border border-border overflow-hidden">
+      <table className="w-full text-xs">
+        <thead>
+          <tr className="bg-muted/50 border-b border-border">
+            <th className="text-left py-2 px-3 font-medium text-muted-foreground">Variant</th>
+            <th className="text-center py-2 px-3 font-medium text-muted-foreground">
+              <span className="flex items-center justify-center gap-1">
+                <Sun className="h-3 w-3" /> Light
+              </span>
+            </th>
+            <th className="text-center py-2 px-3 font-medium text-muted-foreground">
+              <span className="flex items-center justify-center gap-1">
+                <Moon className="h-3 w-3" /> Dark
+              </span>
+            </th>
+            <th className="text-left py-2 px-3 font-medium text-muted-foreground">Issues</th>
+          </tr>
+        </thead>
+        <tbody>
+          {exampleResults.map((result, index) => {
+            const lightStatus = result.light?.status ?? "pending";
+            const darkStatus = result.dark?.status ?? "pending";
+            
+            // Collect unique issues from both modes
+            const allIssues = [
+              ...(result.light?.issues || []),
+              ...(result.dark?.issues || []),
+            ];
+            const uniqueIssues = [...new Set(allIssues)];
+            
+            return (
+              <tr 
+                key={result.exampleId}
+                className={index % 2 === 0 ? "bg-background" : "bg-muted/20"}
+              >
+                <td className="py-2 px-3 font-mono text-foreground truncate max-w-[200px]">
+                  {formatExampleId(result.exampleId)}
+                </td>
+                <td className="py-2 px-3 text-center">
+                  <ExampleStatusIcon status={lightStatus} />
+                </td>
+                <td className="py-2 px-3 text-center">
+                  <ExampleStatusIcon status={darkStatus} />
+                </td>
+                <td className="py-2 px-3 text-muted-foreground truncate max-w-[200px]">
+                  {uniqueIssues.length > 0 ? (
+                    <span title={uniqueIssues.join(", ")}>
+                      {uniqueIssues.slice(0, 2).join(", ")}
+                      {uniqueIssues.length > 2 && ` +${uniqueIssues.length - 2}`}
+                    </span>
+                  ) : (
+                    "-"
+                  )}
+                </td>
+              </tr>
+            );
+          })}
+        </tbody>
+      </table>
+    </div>
+  );
+}
+
+function ExampleStatusIcon({ status }: { status: "pass" | "fail" | "pending" }) {
+  switch (status) {
+    case "pass":
+      return (
+        <span className="inline-flex items-center justify-center" title="Pass">
+          <Check className="h-4 w-4 text-success" />
+        </span>
+      );
+    case "fail":
+      return (
+        <span className="inline-flex items-center justify-center" title="Fail">
+          <X className="h-4 w-4 text-destructive" />
+        </span>
+      );
+    default:
+      return (
+        <span className="inline-flex items-center justify-center" title="Pending">
+          <HelpCircle className="h-3 w-3 text-muted-foreground" />
+        </span>
+      );
+  }
+}
+
+/**
+ * Format example ID for display
+ * Converts "example-0" to "Example 1", or uses the actual ID if it's descriptive
+ */
+function formatExampleId(id: string): string {
+  // If it's a generic "example-N" ID, format it nicely
+  if (id.startsWith("example-")) {
+    const num = parseInt(id.replace("example-", ""), 10);
+    return `Example ${num + 1}`;
+  }
+  // Otherwise, format the ID (e.g., "all-severities" → "All Severities")
+  return id
+    .split("-")
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(" ");
+}
+
 interface ModeResultBadgeProps {
   mode: "light" | "dark";
   result: ModeComplianceResult;
@@ -167,6 +313,11 @@ interface ModeResultBadgeProps {
 
 function ModeResultBadge({ mode, result }: ModeResultBadgeProps) {
   const config = getModeStatusConfig(result.status);
+  
+  // Show pass/fail counts if available
+  const countInfo = result.examplesPassed !== undefined && result.examplesFailed !== undefined
+    ? `${result.examplesPassed}/${result.examplesFound} passed`
+    : `${result.violations} violations`;
   
   return (
     <span className={`inline-flex items-center gap-1 px-2 py-1 text-xs rounded ${config.bgClass}`}>
@@ -178,7 +329,7 @@ function ModeResultBadge({ mode, result }: ModeResultBadgeProps) {
       <span className="capitalize text-muted-foreground">{mode}:</span>
       {config.icon}
       <span className={config.textClass}>{result.status.replace("_", " ")}</span>
-      <span className="text-muted-foreground">({result.violations})</span>
+      <span className="text-muted-foreground">({countInfo})</span>
     </span>
   );
 }

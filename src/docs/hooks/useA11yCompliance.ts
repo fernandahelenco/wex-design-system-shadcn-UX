@@ -1,7 +1,19 @@
 import complianceData from "@/docs/registry/compliance.json";
 
 /**
- * Mode-specific compliance result
+ * Result for a single example/variant in a mode
+ */
+export interface ExampleResult {
+  /** Status: pass | fail */
+  status: "pass" | "fail";
+  /** Number of violations found in this example */
+  violations: number;
+  /** Array of axe rule IDs that failed for this example */
+  issues: string[];
+}
+
+/**
+ * Mode-specific compliance result with per-example breakdown
  */
 export interface ModeComplianceResult {
   /** Status: pass | partial | fail | pending | no_examples */
@@ -14,6 +26,12 @@ export interface ModeComplianceResult {
   issues: string[];
   /** Number of example containers found on the page */
   examplesFound: number;
+  /** Number of examples that passed */
+  examplesPassed?: number;
+  /** Number of examples that failed */
+  examplesFailed?: number;
+  /** Per-example results (NEW: for pinpointing which variant failed) */
+  examples?: Record<string, ExampleResult>;
 }
 
 /**
@@ -23,6 +41,7 @@ export interface ModeComplianceResult {
  * Docs UI (sidebar, headers, guidance text) is NOT included.
  * 
  * MODES: Tests run in both light and dark modes.
+ * GRANULARITY: Each example is tested individually.
  */
 export interface ComplianceResult {
   /** Combined status: pass | partial | fail | pending | no_examples */
@@ -43,7 +62,7 @@ export interface ComplianceResult {
   scenariosTested: string[];
   /** Human-readable description of what was tested */
   subject: string;
-  /** Mode-specific results (new in dual-mode testing) */
+  /** Mode-specific results with per-example breakdown */
   modes?: {
     light: ModeComplianceResult | null;
     dark: ModeComplianceResult | null;
@@ -66,6 +85,12 @@ export interface ComplianceResult {
  * // Access mode-specific results
  * if (compliance?.modes?.dark?.status === "fail") {
  *   // Dark mode has issues
+ * }
+ * 
+ * // Access per-example results
+ * const darkExamples = compliance?.modes?.dark?.examples;
+ * if (darkExamples?.["loading-buttons"]?.status === "fail") {
+ *   // The loading-buttons example fails in dark mode
  * }
  * ```
  */
@@ -103,4 +128,37 @@ export function useA11yComplianceForMode(
   }
   
   return compliance.modes[mode] ?? null;
+}
+
+/**
+ * Get per-example results across both modes
+ * 
+ * @param registryKey - The component's registry key
+ * @returns Array of example results with mode comparison
+ */
+export function useA11yExampleResults(registryKey: string): Array<{
+  exampleId: string;
+  light: ExampleResult | null;
+  dark: ExampleResult | null;
+}> {
+  const compliance = useA11yCompliance(registryKey);
+  
+  if (!compliance?.modes) {
+    return [];
+  }
+  
+  const lightExamples = compliance.modes.light?.examples || {};
+  const darkExamples = compliance.modes.dark?.examples || {};
+  
+  // Get all unique example IDs
+  const allExampleIds = new Set([
+    ...Object.keys(lightExamples),
+    ...Object.keys(darkExamples),
+  ]);
+  
+  return Array.from(allExampleIds).map((exampleId) => ({
+    exampleId,
+    light: lightExamples[exampleId] ?? null,
+    dark: darkExamples[exampleId] ?? null,
+  }));
 }
