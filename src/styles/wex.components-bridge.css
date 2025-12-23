@@ -25,6 +25,33 @@
 
 :root {
   /* ============================================================
+     SHARED FORM CONTROL TOKENS
+     ============================================================
+     These tokens are shared across form controls to ensure 
+     consistent styling. Individual components can override these
+     but by default they inherit from these shared values.
+     
+     Components using these tokens:
+     - Input, Textarea, Select, Checkbox, Radio, Switch, InputOTP
+     ============================================================ */
+  --wex-component-form-bg: var(--wex-content-bg);
+  --wex-component-form-fg: var(--wex-text);
+  --wex-component-form-border: var(--wex-input-border);
+  --wex-component-form-border-hover: var(--wex-palette-slate-500);
+  --wex-component-form-border-focus: var(--wex-primary);
+  --wex-component-form-focus-ring: var(--wex-focus-ring-color);
+  --wex-component-form-placeholder: var(--wex-text-muted);
+  --wex-component-form-disabled-bg: var(--wex-surface-subtle);
+  --wex-component-form-disabled-fg: var(--wex-text-muted);
+  --wex-component-form-disabled-border: var(--wex-content-border);
+  --wex-component-form-disabled-opacity: 0.6;
+  --wex-component-form-invalid-border: var(--wex-destructive);
+  --wex-component-form-invalid-focus-ring: var(--wex-destructive);
+  --wex-component-form-checked-bg: var(--wex-primary);
+  --wex-component-form-checked-fg: var(--wex-primary-contrast);
+  --wex-component-form-checked-border: var(--wex-primary);
+
+  /* ============================================================
      BUTTON
      ============================================================ */
   
@@ -133,25 +160,27 @@
 
   /* ============================================================
      INPUT
+     ============================================================
+     References shared form control tokens for consistency.
      ============================================================ */
-  --wex-component-input-bg: var(--wex-content-bg);
-  --wex-component-input-fg: var(--wex-text);
-  --wex-component-input-placeholder: var(--wex-text-muted);
-  --wex-component-input-border: var(--wex-input-border);
-  --wex-component-input-border-hover: var(--wex-palette-slate-500);
-  --wex-component-input-border-focus: var(--wex-primary);
-  --wex-component-input-focus-ring: var(--wex-focus-ring-color);
-  --wex-component-input-disabled-bg: var(--wex-surface-subtle);
-  --wex-component-input-disabled-fg: var(--wex-text-muted);
-  --wex-component-input-disabled-border: var(--wex-content-border);
-  --wex-component-input-disabled-opacity: 0.6;
+  --wex-component-input-bg: var(--wex-component-form-bg);
+  --wex-component-input-fg: var(--wex-component-form-fg);
+  --wex-component-input-placeholder: var(--wex-component-form-placeholder);
+  --wex-component-input-border: var(--wex-component-form-border);
+  --wex-component-input-border-hover: var(--wex-component-form-border-hover);
+  --wex-component-input-border-focus: var(--wex-component-form-border-focus);
+  --wex-component-input-focus-ring: var(--wex-component-form-focus-ring);
+  --wex-component-input-disabled-bg: var(--wex-component-form-disabled-bg);
+  --wex-component-input-disabled-fg: var(--wex-component-form-disabled-fg);
+  --wex-component-input-disabled-border: var(--wex-component-form-disabled-border);
+  --wex-component-input-disabled-opacity: var(--wex-component-form-disabled-opacity);
   /* ----- Input: Filled variant ----- */
   --wex-component-input-filled-bg: var(--wex-surface-subtle);
   --wex-component-input-filled-border: transparent;
   --wex-component-input-filled-hover-bg: var(--wex-palette-slate-200);
   /* ----- Input: Invalid state ----- */
-  --wex-component-input-invalid-border: var(--wex-destructive);
-  --wex-component-input-invalid-focus-ring: var(--wex-destructive);
+  --wex-component-input-invalid-border: var(--wex-component-form-invalid-border);
+  --wex-component-input-invalid-focus-ring: var(--wex-component-form-invalid-focus-ring);
   /* ----- Input: Sizes ----- */
   --wex-component-input-height-sm: 2rem;
   --wex-component-input-height-md: 2.75rem;
@@ -159,16 +188,18 @@
 
   /* ============================================================
      SELECT
+     ============================================================
+     References shared form control tokens for consistency.
      ============================================================ */
-  --wex-component-select-trigger-bg: var(--wex-content-bg);
-  --wex-component-select-trigger-fg: var(--wex-text);
-  --wex-component-select-trigger-border: var(--wex-input-border);
-  --wex-component-select-trigger-focus-ring: var(--wex-focus-ring-color);
+  --wex-component-select-trigger-bg: var(--wex-component-form-bg);
+  --wex-component-select-trigger-fg: var(--wex-component-form-fg);
+  --wex-component-select-trigger-border: var(--wex-component-form-border);
+  --wex-component-select-trigger-focus-ring: var(--wex-component-form-focus-ring);
   --wex-component-select-content-bg: var(--wex-content-bg);
   --wex-component-select-item-hover-bg: var(--wex-surface-subtle);
-  --wex-component-select-item-selected-bg: var(--wex-primary);
-  --wex-component-select-item-selected-fg: var(--wex-primary-contrast);
-  --wex-component-select-disabled-opacity: 0.5;
+  --wex-component-select-item-selected-bg: var(--wex-component-form-checked-bg);
+  --wex-component-select-item-selected-fg: var(--wex-component-form-checked-fg);
+  --wex-component-select-disabled-opacity: var(--wex-component-form-disabled-opacity);
 
   /* ============================================================
      TABLE
@@ -297,32 +328,38 @@
 
   /* ============================================================
      CHECKBOX
+     ============================================================
+     References shared form control tokens for consistency.
      ============================================================ */
-  --wex-component-checkbox-bg: var(--wex-content-bg);
-  --wex-component-checkbox-border: var(--wex-primary);
-  --wex-component-checkbox-checked-bg: var(--wex-primary);
-  --wex-component-checkbox-checked-fg: var(--wex-primary-contrast);
-  --wex-component-checkbox-focus-ring: var(--wex-focus-ring-color);
-  --wex-component-checkbox-disabled-opacity: 0.5;
+  --wex-component-checkbox-bg: var(--wex-component-form-bg);
+  --wex-component-checkbox-border: var(--wex-component-form-checked-border);
+  --wex-component-checkbox-checked-bg: var(--wex-component-form-checked-bg);
+  --wex-component-checkbox-checked-fg: var(--wex-component-form-checked-fg);
+  --wex-component-checkbox-focus-ring: var(--wex-component-form-focus-ring);
+  --wex-component-checkbox-disabled-opacity: var(--wex-component-form-disabled-opacity);
 
   /* ============================================================
      RADIO GROUP
+     ============================================================
+     References shared form control tokens for consistency.
      ============================================================ */
-  --wex-component-radio-bg: var(--wex-content-bg);
-  --wex-component-radio-border: var(--wex-primary);
-  --wex-component-radio-checked-bg: var(--wex-primary);
-  --wex-component-radio-checked-fg: var(--wex-primary);
-  --wex-component-radio-focus-ring: var(--wex-focus-ring-color);
-  --wex-component-radio-disabled-opacity: 0.5;
+  --wex-component-radio-bg: var(--wex-component-form-bg);
+  --wex-component-radio-border: var(--wex-component-form-checked-border);
+  --wex-component-radio-checked-bg: var(--wex-component-form-checked-bg);
+  --wex-component-radio-checked-fg: var(--wex-component-form-checked-bg);
+  --wex-component-radio-focus-ring: var(--wex-component-form-focus-ring);
+  --wex-component-radio-disabled-opacity: var(--wex-component-form-disabled-opacity);
 
   /* ============================================================
      SWITCH
+     ============================================================
+     References shared form control tokens for consistency.
      ============================================================ */
-  --wex-component-switch-bg: var(--wex-input-border);
-  --wex-component-switch-checked-bg: var(--wex-primary);
-  --wex-component-switch-thumb: var(--wex-content-bg);
-  --wex-component-switch-focus-ring: var(--wex-focus-ring-color);
-  --wex-component-switch-disabled-opacity: 0.5;
+  --wex-component-switch-bg: var(--wex-component-form-border);
+  --wex-component-switch-checked-bg: var(--wex-component-form-checked-bg);
+  --wex-component-switch-thumb: var(--wex-component-form-bg);
+  --wex-component-switch-focus-ring: var(--wex-component-form-focus-ring);
+  --wex-component-switch-disabled-opacity: var(--wex-component-form-disabled-opacity);
 
   /* ============================================================
      SLIDER
@@ -335,23 +372,27 @@
   --wex-component-slider-disabled-opacity: 0.5;
 
   /* ============================================================
-     TEXTAREA (reuses input tokens where applicable)
+     TEXTAREA
+     ============================================================
+     References shared form control tokens for consistency.
      ============================================================ */
-  --wex-component-textarea-bg: var(--wex-component-input-bg);
-  --wex-component-textarea-fg: var(--wex-component-input-fg);
-  --wex-component-textarea-border: var(--wex-component-input-border);
-  --wex-component-textarea-placeholder: var(--wex-component-input-placeholder);
-  --wex-component-textarea-focus-ring: var(--wex-component-input-focus-ring);
-  --wex-component-textarea-disabled-opacity: var(--wex-component-input-disabled-opacity);
+  --wex-component-textarea-bg: var(--wex-component-form-bg);
+  --wex-component-textarea-fg: var(--wex-component-form-fg);
+  --wex-component-textarea-border: var(--wex-component-form-border);
+  --wex-component-textarea-placeholder: var(--wex-component-form-placeholder);
+  --wex-component-textarea-focus-ring: var(--wex-component-form-focus-ring);
+  --wex-component-textarea-disabled-opacity: var(--wex-component-form-disabled-opacity);
 
   /* ============================================================
      INPUT OTP
+     ============================================================
+     References shared form control tokens for consistency.
      ============================================================ */
-  --wex-component-inputotp-bg: var(--wex-content-bg);
-  --wex-component-inputotp-border: var(--wex-input-border);
-  --wex-component-inputotp-focus-ring: var(--wex-focus-ring-color);
-  --wex-component-inputotp-caret: var(--wex-text);
-  --wex-component-inputotp-disabled-opacity: 0.5;
+  --wex-component-inputotp-bg: var(--wex-component-form-bg);
+  --wex-component-inputotp-border: var(--wex-component-form-border);
+  --wex-component-inputotp-focus-ring: var(--wex-component-form-focus-ring);
+  --wex-component-inputotp-caret: var(--wex-component-form-fg);
+  --wex-component-inputotp-disabled-opacity: var(--wex-component-form-disabled-opacity);
 
   /* ============================================================
      PROGRESS
@@ -519,6 +560,9 @@
    ============================================================ */
 
 .dark {
+  /* ----- Shared form controls: border-hover needs explicit dark override ----- */
+  --wex-component-form-border-hover: var(--wex-palette-slate-600);
+  
   /* ----- Button: Contrast inverts in dark mode ----- */
   --wex-component-button-contrast-bg: var(--wex-palette-slate-50);
   --wex-component-button-contrast-fg: var(--wex-palette-slate-900);
@@ -528,8 +572,8 @@
   --wex-component-button-contrast-disabled-bg: var(--wex-palette-slate-50);
   --wex-component-button-contrast-disabled-fg: var(--wex-palette-slate-900);
   
-  /* ----- Input: border-hover needs explicit dark override ----- */
-  --wex-component-input-border-hover: var(--wex-palette-slate-600);
+  /* ----- Input: Filled variant dark override ----- */
+  --wex-component-input-filled-hover-bg: var(--wex-palette-slate-700);
   
   /* ----- Alert/Toast: tinted backgrounds need dark overrides ----- */
   --wex-component-alert-info-bg: var(--wex-palette-cyan-900);

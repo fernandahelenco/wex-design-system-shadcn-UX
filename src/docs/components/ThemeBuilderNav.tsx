@@ -30,8 +30,8 @@ import {
   SEMANTIC_TOKENS,
   SURFACE_TOKENS,
   TEXT_TOKENS,
-  COMPONENT_GROUPS,
-  getComponentTokens,
+  EDITABLE_COMPONENT_GROUPS,
+  getEditableTokensForGroup,
   type TokenDefinition,
   type ComponentGroup,
 } from "@/docs/data/tokenRegistry";
@@ -265,7 +265,7 @@ export function ThemeBuilderNav({
           </React.Fragment>
         ))}
 
-        {/* Layer 3 Component Tokens Section */}
+        {/* Layer 3 Component Tokens Section - EDITABLE */}
         <CollapsibleSection
           label="Component Tokens (L3)"
           isOpen={openSections.components ?? false}
@@ -273,14 +273,14 @@ export function ThemeBuilderNav({
         >
           <div className="space-y-2">
             <div className="text-[10px] text-muted-foreground px-1 mb-2">
-              Layer 3 tokens provide granular component styling. Read-only view.
+              Edit component-specific tokens. Form Controls are shared across inputs.
             </div>
-            {COMPONENT_GROUPS.map((group) => {
-              const groupTokens = getComponentTokens(group.id);
+            {EDITABLE_COMPONENT_GROUPS.filter(g => g.editable).map((group) => {
+              const groupTokens = getEditableTokensForGroup(group.id);
               if (groupTokens.length === 0) return null;
               
               return (
-                <div key={group.id} className="border-l-2 border-border/50 pl-2">
+                <div key={group.id} className="border-l-2 border-primary/30 pl-2">
                   <button
                     onClick={() => toggleComponentGroup(group.id)}
                     className="w-full flex items-center gap-1.5 py-1 text-xs font-medium text-muted-foreground hover:text-foreground transition-colors"
@@ -296,6 +296,11 @@ export function ThemeBuilderNav({
                       {groupTokens.length}
                     </span>
                   </button>
+                  {group.childGroups && group.childGroups.length > 0 && (
+                    <div className="text-[9px] text-muted-foreground pl-4 -mt-0.5 mb-1">
+                      {group.description}
+                    </div>
+                  )}
                   {openComponentGroups[group.id] && (
                     <div className="space-y-0.5 pl-4 pt-1">
                       {groupTokens.map((token) => (
@@ -305,6 +310,8 @@ export function ThemeBuilderNav({
                           isSelected={selectedToken === token.name}
                           onSelect={() => onSelectToken(token.name)}
                           editMode={editMode}
+                          value={assignments[token.name]}
+                          onChange={(value) => onAssignmentChange(token.name, value)}
                         />
                       ))}
                     </div>
@@ -633,7 +640,7 @@ function TokenRow({
 }
 
 // ============================================================================
-// Component Token Row (read-only for Layer 3)
+// Component Token Row (EDITABLE for Layer 3)
 // ============================================================================
 
 interface ComponentTokenRowProps {
@@ -641,6 +648,8 @@ interface ComponentTokenRowProps {
   isSelected: boolean;
   onSelect: () => void;
   editMode: "light" | "dark";
+  value?: string;
+  onChange?: (value: string) => void;
 }
 
 function ComponentTokenRow({
@@ -648,7 +657,10 @@ function ComponentTokenRow({
   isSelected,
   onSelect,
   editMode,
+  value,
+  onChange,
 }: ComponentTokenRowProps) {
+  const [isPopoverOpen, setIsPopoverOpen] = React.useState(false);
   const [actualColor, setActualColor] = React.useState<string | null>(null);
 
   // Read actual CSS variable value
@@ -667,18 +679,48 @@ function ComponentTokenRow({
     };
 
     readColor();
-    const interval = setInterval(readColor, 500);
-    return () => clearInterval(interval);
-  }, [token.name, editMode]);
+    const observer = new MutationObserver(readColor);
+    observer.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ['style', 'class'],
+    });
+    const interval = setInterval(readColor, 200);
+    return () => {
+      observer.disconnect();
+      clearInterval(interval);
+    };
+  }, [token.name, editMode, value]);
 
-  // Compute swatch color
+  const displayValue = value ? formatPaletteValue(value) : "—";
+
+  // Compute swatch color - prefer actual CSS, fallback to palette reference
   let swatchBgColor = "hsl(0 0% 50%)";
+  
   if (actualColor) {
-    // Check if it's an HSL value
     if (actualColor.includes("%")) {
       swatchBgColor = `hsl(${actualColor})`;
     } else {
       swatchBgColor = actualColor;
+    }
+  } else if (value) {
+    // Parse palette reference
+    if (value === "white") {
+      swatchBgColor = "hsl(0 0% 100%)";
+    } else if (value === "black") {
+      swatchBgColor = "hsl(0 0% 0%)";
+    } else {
+      const match = value.match(/^(\w+)-(\d+)$/);
+      if (match) {
+        const [, rampName, shadeStr] = match;
+        const shade = parseInt(shadeStr, 10);
+        const ramp = PALETTE_RAMPS.find((r) => r.name === rampName);
+        if (ramp) {
+          const shadeData = ramp.shades.find((s) => s.shade === shade);
+          if (shadeData) {
+            swatchBgColor = `hsl(${ramp.hue} ${ramp.saturation}% ${shadeData.lightness}%)`;
+          }
+        }
+      }
     }
   } else {
     const hsl = editMode === "light" ? token.lightValue : (token.darkValue || token.lightValue);
@@ -687,13 +729,14 @@ function ComponentTokenRow({
     }
   }
 
-  // Show reference info
-  const refInfo = token.references?.replace("--wex-", "") || "";
+  // Show reference info or current value
+  const refInfo = value ? displayValue : (token.references?.replace("--wex-", "") || "");
+  const isEditable = token.type === "color" && onChange;
 
   return (
     <div
       className={cn(
-        "flex items-center gap-2 px-1 py-1 rounded cursor-pointer transition-colors",
+        "flex items-center gap-2 px-1 py-1 rounded cursor-pointer transition-colors group",
         isSelected
           ? "bg-primary/10 ring-1 ring-primary/30"
           : "hover:bg-muted/50"
@@ -713,10 +756,40 @@ function ComponentTokenRow({
         <div className="text-[10px] font-medium truncate">{token.label}</div>
         {refInfo && (
           <div className="text-[9px] text-muted-foreground truncate">
-            → {refInfo}
+            {value ? displayValue : `→ ${refInfo}`}
           </div>
         )}
       </div>
+
+      {/* Edit button */}
+      {isEditable && (
+        <WexPopover open={isPopoverOpen} onOpenChange={setIsPopoverOpen}>
+          <WexPopover.Trigger asChild>
+            <button
+              className="opacity-0 group-hover:opacity-100 p-1 rounded hover:bg-muted transition-opacity"
+              onClick={(e) => {
+                e.stopPropagation();
+                setIsPopoverOpen(true);
+              }}
+            >
+              <Pencil className="h-2.5 w-2.5 text-muted-foreground" />
+            </button>
+          </WexPopover.Trigger>
+          <WexPopover.Content
+            side="right"
+            align="start"
+            className="w-auto p-0"
+          >
+            <PaletteSwatchPicker
+              value={value || ""}
+              onSelect={(newValue: string) => {
+                onChange(newValue);
+                setIsPopoverOpen(false);
+              }}
+            />
+          </WexPopover.Content>
+        </WexPopover>
+      )}
     </div>
   );
 }

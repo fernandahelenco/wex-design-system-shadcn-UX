@@ -18,6 +18,7 @@ import {
   SURFACE_TOKENS,
   TEXT_TOKENS,
   NEUTRAL_TOKENS,
+  COMPONENT_TOKENS,
 } from "@/docs/data/tokenRegistry";
 import { parseHSL, formatHSL } from "@/docs/utils/color-convert";
 
@@ -100,6 +101,13 @@ function generateFullCSS(overrides: { light: Record<string, string>; dark: Recor
     allTokens[token.name] = getTokenValue(token.name, token.lightValue, "light");
   });
 
+  // Layer 3 Component tokens
+  COMPONENT_TOKENS.forEach((token) => {
+    if (token.type === "color") {
+      allTokens[token.name] = getTokenValue(token.name, token.lightValue, "light");
+    }
+  });
+
   Object.entries(allTokens)
     .sort(([a], [b]) => a.localeCompare(b))
     .forEach(([token, value]) => {
@@ -132,6 +140,14 @@ function generateFullCSS(overrides: { light: Record<string, string>; dark: Recor
   TEXT_TOKENS.forEach((token) => {
     const defaultValue = token.darkValue || token.lightValue;
     darkTokens[token.name] = getTokenValue(token.name, defaultValue, "dark");
+  });
+
+  // Layer 3 Component tokens
+  COMPONENT_TOKENS.forEach((token) => {
+    if (token.type === "color") {
+      const defaultValue = token.darkValue || token.lightValue;
+      darkTokens[token.name] = getTokenValue(token.name, defaultValue, "dark");
+    }
   });
 
   if (Object.keys(darkTokens).length > 0) {
@@ -250,6 +266,19 @@ function generateFullJSON(overrides: { light: Record<string, string>; dark: Reco
         value,
         type: "color",
       });
+    });
+
+    // Layer 3 Component tokens
+    COMPONENT_TOKENS.forEach((token) => {
+      if (token.type === "color") {
+        const defaultValue = mode === "dark" ? (token.darkValue || token.lightValue) : token.lightValue;
+        const value = getTokenValue(token.name, defaultValue, mode);
+        const cleanToken = token.name.replace("--wex-", "").replace(/-/g, ".");
+        setNestedProperty(schema.wex as Record<string, unknown>, cleanToken + suffix, {
+          value,
+          type: "color",
+        });
+      }
     });
   };
 

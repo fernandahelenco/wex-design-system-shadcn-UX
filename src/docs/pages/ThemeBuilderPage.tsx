@@ -16,6 +16,7 @@ import {
   SEMANTIC_TOKENS,
   SURFACE_TOKENS,
   TEXT_TOKENS,
+  COMPONENT_TOKENS,
 } from "@/docs/data/tokenRegistry";
 import { WexAlertDialog } from "@/components/wex";
 import { ThemeBuilderNav } from "@/docs/components/ThemeBuilderNav";
@@ -53,6 +54,8 @@ export default function ThemeBuilderPage() {
       ),
       ...SURFACE_TOKENS,
       ...TEXT_TOKENS,
+      // Layer 3 Component tokens (color types only)
+      ...COMPONENT_TOKENS.filter((t) => t.type === "color"),
     ],
     []
   );

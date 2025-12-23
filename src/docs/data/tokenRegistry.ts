@@ -20,6 +20,7 @@ export type TokenCategory =
  * Component groups for Layer 3 tokens
  */
 export type ComponentGroup = 
+  | "form-controls"  // Shared form control tokens
   | "button"
   | "input"
   | "select"
@@ -54,6 +55,19 @@ export type ComponentGroup =
   | "skeleton"
   | "separator"
   | "kbd";
+
+/**
+ * Editable group configuration for Theme Builder
+ */
+export interface EditableComponentGroup {
+  id: ComponentGroup;
+  label: string;
+  description: string;
+  /** Whether this group is editable in Theme Builder */
+  editable: boolean;
+  /** Which component groups inherit from this group (for form-controls) */
+  childGroups?: ComponentGroup[];
+}
 
 export type TokenType = "color" | "size" | "font" | "number";
 
@@ -628,6 +642,129 @@ export const CHART_TOKENS: TokenDefinition[] = [
  */
 export const COMPONENT_TOKENS: TokenDefinition[] = [
   // ============================================================
+  // SHARED FORM CONTROLS
+  // ============================================================
+  // These tokens are shared across Input, Textarea, Select, Checkbox,
+  // Radio, Switch, and InputOTP. Editing these affects all form controls.
+  {
+    name: "--wex-component-form-bg",
+    label: "Background",
+    category: "component",
+    componentGroup: "form-controls",
+    type: "color",
+    lightValue: "var(--wex-content-bg)",
+    references: "--wex-content-bg",
+    usedBy: ["WexInput", "WexTextarea", "WexSelect", "WexCheckbox", "WexRadio", "WexSwitch", "WexInputOTP"],
+    tailwindUtilities: ["bg-wex-form-bg"],
+    description: "Shared form control background color",
+  },
+  {
+    name: "--wex-component-form-fg",
+    label: "Text",
+    category: "component",
+    componentGroup: "form-controls",
+    type: "color",
+    lightValue: "var(--wex-text)",
+    references: "--wex-text",
+    usedBy: ["WexInput", "WexTextarea", "WexSelect"],
+    tailwindUtilities: ["text-wex-form-fg"],
+    description: "Shared form control text color",
+  },
+  {
+    name: "--wex-component-form-border",
+    label: "Border",
+    category: "component",
+    componentGroup: "form-controls",
+    type: "color",
+    lightValue: "var(--wex-input-border)",
+    references: "--wex-input-border",
+    usedBy: ["WexInput", "WexTextarea", "WexSelect", "WexInputOTP"],
+    tailwindUtilities: ["border-wex-form-border"],
+    description: "Shared form control border color",
+  },
+  {
+    name: "--wex-component-form-border-hover",
+    label: "Border (Hover)",
+    category: "component",
+    componentGroup: "form-controls",
+    type: "color",
+    lightValue: "210 12% 50%",
+    darkValue: "210 14% 37%",
+    references: "--wex-palette-slate-500",
+    darkReferences: "--wex-palette-slate-600",
+    usedBy: ["WexInput", "WexTextarea", "WexSelect"],
+    description: "Shared form control border hover color",
+  },
+  {
+    name: "--wex-component-form-focus-ring",
+    label: "Focus Ring",
+    category: "component",
+    componentGroup: "form-controls",
+    type: "color",
+    lightValue: "var(--wex-focus-ring-color)",
+    references: "--wex-focus-ring-color",
+    usedBy: ["WexInput", "WexTextarea", "WexSelect", "WexCheckbox", "WexRadio", "WexSwitch", "WexInputOTP"],
+    tailwindUtilities: ["ring-wex-form-focus-ring"],
+    description: "Shared form control focus ring color",
+  },
+  {
+    name: "--wex-component-form-placeholder",
+    label: "Placeholder",
+    category: "component",
+    componentGroup: "form-controls",
+    type: "color",
+    lightValue: "var(--wex-text-muted)",
+    references: "--wex-text-muted",
+    usedBy: ["WexInput", "WexTextarea"],
+    description: "Shared form control placeholder text color",
+  },
+  {
+    name: "--wex-component-form-disabled-opacity",
+    label: "Disabled Opacity",
+    category: "component",
+    componentGroup: "form-controls",
+    type: "number",
+    lightValue: "0.6",
+    usedBy: ["WexInput", "WexTextarea", "WexSelect", "WexCheckbox", "WexRadio", "WexSwitch", "WexInputOTP"],
+    description: "Shared form control disabled opacity",
+  },
+  {
+    name: "--wex-component-form-checked-bg",
+    label: "Checked Background",
+    category: "component",
+    componentGroup: "form-controls",
+    type: "color",
+    lightValue: "var(--wex-primary)",
+    references: "--wex-primary",
+    usedBy: ["WexCheckbox", "WexRadio", "WexSwitch", "WexSelect (item selected)"],
+    tailwindUtilities: ["bg-wex-form-checked-bg"],
+    description: "Shared checked/selected state background",
+  },
+  {
+    name: "--wex-component-form-checked-fg",
+    label: "Checked Foreground",
+    category: "component",
+    componentGroup: "form-controls",
+    type: "color",
+    lightValue: "var(--wex-primary-contrast)",
+    references: "--wex-primary-contrast",
+    usedBy: ["WexCheckbox", "WexRadio", "WexSelect (item selected)"],
+    tailwindUtilities: ["text-wex-form-checked-fg"],
+    description: "Shared checked/selected state text color",
+  },
+  {
+    name: "--wex-component-form-invalid-border",
+    label: "Invalid Border",
+    category: "component",
+    componentGroup: "form-controls",
+    type: "color",
+    lightValue: "var(--wex-destructive)",
+    references: "--wex-destructive",
+    usedBy: ["WexInput (invalid)", "WexTextarea (invalid)", "WexSelect (invalid)"],
+    description: "Shared form control invalid state border",
+  },
+
+  // ============================================================
   // BUTTON
   // ============================================================
   {
@@ -1067,6 +1204,7 @@ export const COMPONENT_TOKENS: TokenDefinition[] = [
  * Component groups for organizing Layer 3 tokens in UI
  */
 export const COMPONENT_GROUPS: { id: ComponentGroup; label: string; description: string }[] = [
+  { id: "form-controls", label: "Form Controls", description: "Shared form control tokens" },
   { id: "button", label: "Button", description: "Button variants and states" },
   { id: "input", label: "Input", description: "Text input fields" },
   { id: "card", label: "Card", description: "Card containers" },
@@ -1078,6 +1216,70 @@ export const COMPONENT_GROUPS: { id: ComponentGroup; label: string; description:
   { id: "skeleton", label: "Skeleton", description: "Loading placeholders" },
   { id: "separator", label: "Separator", description: "Divider lines" },
 ];
+
+/**
+ * Editable component groups for Theme Builder Layer 3 editing
+ * These groups are editable in the Theme Builder UI
+ */
+export const EDITABLE_COMPONENT_GROUPS: EditableComponentGroup[] = [
+  { 
+    id: "form-controls", 
+    label: "Form Controls", 
+    description: "Shared tokens for Input, Textarea, Select, Checkbox, Radio, Switch",
+    editable: true,
+    childGroups: ["input", "textarea", "select", "checkbox", "radio", "switch", "inputotp"],
+  },
+  { 
+    id: "button", 
+    label: "Buttons", 
+    description: "Button severities and states",
+    editable: true,
+  },
+  { 
+    id: "tabs", 
+    label: "Tabs", 
+    description: "Tab trigger and indicator colors",
+    editable: true,
+  },
+  { 
+    id: "card", 
+    label: "Cards", 
+    description: "Card backgrounds and borders",
+    editable: true,
+  },
+  { 
+    id: "dialog", 
+    label: "Dialogs", 
+    description: "Dialog, Sheet, Drawer, AlertDialog overlays and backgrounds",
+    editable: true,
+    childGroups: ["sheet", "drawer", "alertdialog"],
+  },
+  { 
+    id: "badge", 
+    label: "Feedback", 
+    description: "Badge, Alert, Toast severity colors",
+    editable: true,
+    childGroups: ["alert", "toast"],
+  },
+];
+
+/**
+ * Get editable groups only
+ */
+export function getEditableGroups(): EditableComponentGroup[] {
+  return EDITABLE_COMPONENT_GROUPS.filter(g => g.editable);
+}
+
+/**
+ * Get tokens for an editable group (including child groups)
+ */
+export function getEditableTokensForGroup(groupId: ComponentGroup): TokenDefinition[] {
+  const group = EDITABLE_COMPONENT_GROUPS.find(g => g.id === groupId);
+  if (!group) return [];
+  
+  const groupIds = [groupId, ...(group.childGroups || [])];
+  return COMPONENT_TOKENS.filter(t => t.componentGroup && groupIds.includes(t.componentGroup));
+}
 
 /**
  * Get Layer 3 tokens for a specific component group
