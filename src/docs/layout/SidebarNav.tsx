@@ -3,6 +3,7 @@ import { useLocation } from "react-router-dom";
 import { DocsNavLink } from "@/docs/components/NavLink";
 import { componentRegistry } from "@/docs/registry/components";
 import { foundationRegistry } from "@/docs/registry/foundations";
+import { categoryConfig, type ComponentCategory } from "@/docs/registry/types";
 import { Home, Users, Layers, LayoutGrid, BookOpen, ChevronDown } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -14,14 +15,46 @@ import { cn } from "@/lib/utils";
  * - Level 2: Index/group pages (Home, Getting Started, Accessibility, Story, etc.)
  * - Level 3: Component/foundation pages (Button, Input, Colors, etc.)
  * 
+ * Components are grouped by category within the Components section.
  * Status badges are NOT shown in navigation - they appear on component pages.
  */
+
+// Group components by category
+function getGroupedComponents() {
+  const grouped = new Map<ComponentCategory, typeof componentRegistry>();
+  
+  // Initialize groups in order
+  const categories = Object.keys(categoryConfig) as ComponentCategory[];
+  categories.sort((a, b) => categoryConfig[a].order - categoryConfig[b].order);
+  
+  for (const category of categories) {
+    grouped.set(category, []);
+  }
+  
+  // Assign components to groups
+  for (const component of componentRegistry) {
+    const group = grouped.get(component.category);
+    if (group) {
+      group.push(component);
+    }
+  }
+  
+  // Sort components alphabetically within each group
+  for (const [, components] of grouped) {
+    components.sort((a, b) => a.name.localeCompare(b.name));
+  }
+  
+  return grouped;
+}
+
 export function SidebarNav() {
   const location = useLocation();
   
   // Auto-expand sections based on current route
   const isFoundationsRoute = location.pathname.startsWith("/foundations");
   const isComponentsRoute = location.pathname.startsWith("/components");
+  
+  const groupedComponents = React.useMemo(() => getGroupedComponents(), []);
 
   return (
     <div className="space-y-2">
@@ -52,7 +85,7 @@ export function SidebarNav() {
         ))}
       </CollapsibleNavSection>
 
-      {/* Components Section - Collapsible */}
+      {/* Components Section - Collapsible with category groupings */}
       <CollapsibleNavSection 
         title="Components" 
         icon={<LayoutGrid className="h-3.5 w-3.5" />} 
@@ -60,10 +93,21 @@ export function SidebarNav() {
         defaultOpen={isComponentsRoute}
         itemCount={componentRegistry.length}
       >
-        {componentRegistry.map((item) => (
-          <DocsNavLink key={item.route} to={item.route} level={3}>
-            {item.name}
-          </DocsNavLink>
+        {Array.from(groupedComponents.entries()).map(([category, components]) => (
+          components.length > 0 && (
+            <div key={category} className="mb-2 last:mb-0">
+              {/* Category sub-heading */}
+              <div className="px-3 py-1.5 text-[10px] font-medium uppercase tracking-wider text-muted-foreground/70">
+                {categoryConfig[category].label}
+              </div>
+              {/* Components in this category */}
+              {components.map((item) => (
+                <DocsNavLink key={item.route} to={item.route} level={3}>
+                  {item.name}
+                </DocsNavLink>
+              ))}
+            </div>
+          )
         ))}
       </CollapsibleNavSection>
 
