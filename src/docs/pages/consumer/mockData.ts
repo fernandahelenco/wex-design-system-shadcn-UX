@@ -175,7 +175,7 @@ export const paidClaimsCategoryData: CategoryData[] = [
 
 // Navigation Menu Items
 export const navigationItems = [
-  { label: "Home", href: "/consumer-experience", icon: "home", hasDropdown: false },
+  { label: "Home", href: "/", icon: "home", hasDropdown: false },
   { label: "Accounts", href: "/account-overview", icon: "wallet", hasDropdown: true },
   { label: "Claims", href: "#claims", icon: "file-text", hasDropdown: false },
   { label: "Resources", href: "#resources", icon: "life-buoy", hasDropdown: true },

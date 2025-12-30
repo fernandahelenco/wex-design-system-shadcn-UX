@@ -22,9 +22,10 @@ The Consumer Experience page demonstrates a complete health savings account (HSA
 
 ## Accessing the Page
 
-- **URL**: `/consumer-experience`
-- **Navigation**: Click "Consumer Experience" link in the main header
+- **URL**: `/` (Landing Page)
+- **Navigation**: This is now the default landing page for the application
 - **Route**: Standalone route bypassing DocsLayout for custom layout
+- **Design System**: Access via `/design-system` or the palette icon in the header
 
 ## Technical Details
 

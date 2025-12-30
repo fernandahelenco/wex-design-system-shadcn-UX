@@ -101,21 +101,21 @@ function PageLoader() {
 
 /**
  * Docs routes configuration
- * All routes wrapped in DocsLayout for consistent shell
+ * Consumer Experience is the landing page, Design System docs wrapped in DocsLayout
  */
 export function DocsRoutes() {
   return (
     <React.Suspense fallback={<PageLoader />}>
       <Routes>
-        {/* Standalone Consumer Experience route - bypasses DocsLayout */}
-        <Route path="/consumer-experience" element={<ConsumerExperiencePage />} />
+        {/* Consumer Experience is now the landing page */}
+        <Route index element={<ConsumerExperiencePage />} />
         
         {/* Standalone Account Overview route - bypasses DocsLayout */}
         <Route path="/account-overview" element={<AccountOverviewPage />} />
         
         <Route element={<DocsLayout />}>
-          {/* Static pages */}
-          <Route index element={<OverviewPage />} />
+          {/* Design System overview moved to /design-system */}
+          <Route path="design-system" element={<OverviewPage />} />
           <Route path="getting-started" element={<GettingStartedPage />} />
           <Route path="changelog" element={<ChangelogPage />} />
           <Route path="accessibility" element={<AccessibilityPage />} />

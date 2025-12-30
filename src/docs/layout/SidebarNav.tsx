@@ -60,7 +60,7 @@ export function SidebarNav() {
     <div className="space-y-2">
       {/* Overview Section - Level 2 pages (always open) */}
       <NavSection title="Overview" icon={<Home className="h-3.5 w-3.5" />} color="blue">
-        <DocsNavLink to="/" level={2}>Home</DocsNavLink>
+        <DocsNavLink to="/design-system" level={2}>Home</DocsNavLink>
         <DocsNavLink to="/getting-started" level={2}>Getting Started</DocsNavLink>
       </NavSection>
 

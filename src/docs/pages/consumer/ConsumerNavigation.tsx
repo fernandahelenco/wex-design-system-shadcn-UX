@@ -3,7 +3,7 @@ import { WexButton } from "@/components/wex/wex-button";
 import { WexAvatar } from "@/components/wex/wex-avatar";
 import { WexBadge } from "@/components/wex/wex-badge";
 import { WexSeparator } from "@/components/wex/wex-separator";
-import { Bell, User, Home, Wallet, FileText, LifeBuoy, ChevronDown, Languages } from "lucide-react";
+import { Bell, User, Home, Wallet, FileText, LifeBuoy, ChevronDown, Languages, Palette } from "lucide-react";
 import { navigationItems } from "./mockData";
 
 // Icon mapping for navigation items
@@ -29,6 +29,10 @@ export function ConsumerNavigation() {
   const isActive = (href: string) => {
     // Handle hash links (not real routes)
     if (href.startsWith("#")) return false;
+    // Handle root path - check for both "/" and empty string
+    if (href === "/") {
+      return location.pathname === "/" || location.pathname === "";
+    }
     // Check if current path matches the nav item's href
     return location.pathname === href;
   };
@@ -37,7 +41,7 @@ export function ConsumerNavigation() {
     <header className="sticky top-0 z-50 w-full border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="flex h-20 items-center justify-between px-8 bg-[var(--tw-ring-offset-color)]">
         {/* Left: Logo */}
-        <Link to="/consumer-experience" className="flex items-center gap-3 hover:opacity-80 transition-opacity">
+        <Link to="/" className="flex items-center gap-3 hover:opacity-80 transition-opacity">
           <img
             src={`${import.meta.env.BASE_URL}WEX_Logo_Red_Vector.svg`}
             alt="WEX"
@@ -75,6 +79,18 @@ export function ConsumerNavigation() {
 
         {/* Right: User Navigation */}
         <div className="flex items-center gap-2">
+          {/* Design System Link */}
+          <WexButton
+            intent="ghost"
+            size="icon"
+            asChild
+            aria-label="Design System"
+          >
+            <Link to="/design-system">
+              <Palette className="h-5 w-5" />
+            </Link>
+          </WexButton>
+
           {/* Language Icon */}
           <WexButton
             intent="ghost"
