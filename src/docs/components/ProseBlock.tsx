@@ -27,7 +27,7 @@ interface GuidanceProps {
 
 export function Guidance({ children }: GuidanceProps) {
   return (
-    <div className="rounded-md border-l-4 border-primary bg-primary/5 p-4 my-4">
+    <div className="rounded-md border-l-4 border-link bg-link/5 p-4 my-4">
       <p className="text-sm text-foreground">{children}</p>
     </div>
   );

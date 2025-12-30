@@ -189,28 +189,28 @@
 }
 
 .dark {
-  /* ===== SURFACES (dark overrides) - Now reference palette ===== */
+  /* ===== SURFACES (dark overrides) ===== */
   --wex-content-bg: var(--wex-palette-slate-900);
   --wex-content-border: var(--wex-palette-slate-700);
   --wex-surface-subtle: var(--wex-palette-slate-800);
 
-  /* ===== TEXT (dark overrides) - Now reference palette ===== */
+  /* ===== TEXT (dark overrides) ===== */
   --wex-text: var(--wex-palette-white);
   --wex-text-muted: var(--wex-palette-slate-200);
 
   /* ===== PRIMARY (dark overrides) ===== */
-  /* Note: Dark mode uses blue-600 for WCAG contrast compliance with white text */
+  /* Note: These values are used by button backgrounds - keep dark for white text contrast */
   --wex-primary: var(--wex-palette-blue-600);
-  --wex-primary-contrast: 0 0% 100%; /* White text on blue background */
+  --wex-primary-contrast: 0 0% 100%;
   --wex-primary-hover: var(--wex-palette-blue-500);
   --wex-primary-active: var(--wex-palette-blue-700);
 
-  /* ===== LINK (dark overrides) - Brighter blue for contrast on dark backgrounds ===== */
+  /* ===== LINK (dark overrides) - Brighter for text visibility ===== */
   --wex-link: var(--wex-palette-blue-400);
   --wex-link-hover: var(--wex-palette-blue-300);
   --wex-link-active: var(--wex-palette-blue-500);
 
-  /* ===== INPUT (dark override) - Now references palette ===== */
+  /* ===== INPUT (dark override) ===== */
   --wex-input-border: var(--wex-palette-slate-700);
 
   /* ===== FOCUS RING (dark override) ===== */
@@ -222,19 +222,18 @@
   --wex-destructive-hover: var(--wex-palette-red-600);
 
   /* ===== SUCCESS (dark overrides) ===== */
-  /* Note: Dark mode uses green-700 for WCAG 4.5:1 contrast with white text */
+  /* Note: These values are used by button backgrounds - keep dark for white text contrast */
   --wex-success: var(--wex-palette-green-700);
   --wex-success-foreground: 0 0% 100%;
   --wex-success-hover: var(--wex-palette-green-600);
 
   /* ===== WARNING (dark overrides) ===== */
-  /* Note: Dark mode uses amber-400 (slightly lighter) for better contrast */
   --wex-warning: var(--wex-palette-amber-400);
   --wex-warning-foreground: 0 0% 0%;
   --wex-warning-hover: var(--wex-palette-amber-500);
 
   /* ===== INFO (dark overrides) ===== */
-  /* Note: Dark mode uses cyan-700 for WCAG 4.5:1 contrast with white text */
+  /* Note: These values are used by button backgrounds - keep dark for white text contrast */
   --wex-info: var(--wex-palette-cyan-700);
   --wex-info-foreground: 0 0% 100%;
   --wex-info-hover: var(--wex-palette-cyan-500);
