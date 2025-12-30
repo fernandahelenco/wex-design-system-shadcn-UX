@@ -199,13 +199,13 @@
   --wex-text-muted: var(--wex-palette-slate-200);
 
   /* ===== PRIMARY (dark overrides) ===== */
-  /* Brighter blue for visibility on dark backgrounds (callouts, accents, text) */
-  --wex-primary: var(--wex-palette-blue-400);
-  --wex-primary-contrast: 0 0% 0%; /* Dark text on bright blue */
-  --wex-primary-hover: var(--wex-palette-blue-300);
-  --wex-primary-active: var(--wex-palette-blue-500);
+  /* Note: These values are used by button backgrounds - keep dark for white text contrast */
+  --wex-primary: var(--wex-palette-blue-600);
+  --wex-primary-contrast: 0 0% 100%;
+  --wex-primary-hover: var(--wex-palette-blue-500);
+  --wex-primary-active: var(--wex-palette-blue-700);
 
-  /* ===== LINK (dark overrides) ===== */
+  /* ===== LINK (dark overrides) - Brighter for text visibility ===== */
   --wex-link: var(--wex-palette-blue-400);
   --wex-link-hover: var(--wex-palette-blue-300);
   --wex-link-active: var(--wex-palette-blue-500);
@@ -214,19 +214,18 @@
   --wex-input-border: var(--wex-palette-slate-700);
 
   /* ===== FOCUS RING (dark override) ===== */
-  --wex-focus-ring-color: var(--wex-palette-blue-400);
+  --wex-focus-ring-color: var(--wex-palette-blue-500);
 
   /* ===== DESTRUCTIVE (dark overrides) ===== */
-  /* Brighter red for visibility on dark backgrounds */
-  --wex-destructive: var(--wex-palette-red-400);
+  --wex-destructive: var(--wex-palette-red-500);
   --wex-destructive-foreground: 0 0% 100%;
-  --wex-destructive-hover: var(--wex-palette-red-300);
+  --wex-destructive-hover: var(--wex-palette-red-600);
 
   /* ===== SUCCESS (dark overrides) ===== */
-  /* Brighter green for visibility on dark backgrounds */
-  --wex-success: var(--wex-palette-green-400);
-  --wex-success-foreground: 0 0% 0%; /* Dark text on bright green */
-  --wex-success-hover: var(--wex-palette-green-300);
+  /* Note: These values are used by button backgrounds - keep dark for white text contrast */
+  --wex-success: var(--wex-palette-green-700);
+  --wex-success-foreground: 0 0% 100%;
+  --wex-success-hover: var(--wex-palette-green-600);
 
   /* ===== WARNING (dark overrides) ===== */
   --wex-warning: var(--wex-palette-amber-400);
@@ -234,10 +233,10 @@
   --wex-warning-hover: var(--wex-palette-amber-500);
 
   /* ===== INFO (dark overrides) ===== */
-  /* Brighter cyan for visibility on dark backgrounds */
-  --wex-info: var(--wex-palette-cyan-400);
-  --wex-info-foreground: 0 0% 0%; /* Dark text on bright cyan */
-  --wex-info-hover: var(--wex-palette-cyan-300);
+  /* Note: These values are used by button backgrounds - keep dark for white text contrast */
+  --wex-info: var(--wex-palette-cyan-700);
+  --wex-info-foreground: 0 0% 100%;
+  --wex-info-hover: var(--wex-palette-cyan-500);
 
   /* ===== HIGHLIGHT (dark overrides) ===== */
   --wex-highlight-bg: 201 74% 62%;
