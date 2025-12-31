@@ -2,6 +2,7 @@ import { WexCard } from "@/components/wex/wex-card";
 import { WexInput } from "@/components/wex/wex-input";
 import { WexButton } from "@/components/wex/wex-button";
 import { Send, Mic, Sparkles } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 import { aiSuggestions } from "./mockData";
 
 /**
@@ -14,12 +15,20 @@ import { aiSuggestions } from "./mockData";
  * - Proper spacing: 24px padding, 16px gap between title/input, 12px gap between input/chips
  */
 export function AIChatSection() {
+  const navigate = useNavigate();
+
+  const handleSuggestionClick = (suggestion: string) => {
+    if (suggestion === "Enroll in HSA") {
+      navigate("/hsa-enrollment");
+    }
+  };
+
   return (
     <WexCard className="border border-border">
       <WexCard.Content className="p-6">
         <div className="flex flex-col gap-4">
           {/* Title - H5/Bold 18px */}
-          <h2 className="text-lg font-display font-bold text-foreground leading-6">
+          <h2 className="text-lg font-bold text-foreground leading-6">
             What can we help you with today?
           </h2>
 
@@ -60,14 +69,14 @@ export function AIChatSection() {
 
             {/* Suggestion Chips with overflow gradient */}
             <div className="relative overflow-hidden w-full">
-              <div className="flex gap-2 items-center overflow-x-auto scrollbar-hide py-1">
+              <div className="flex gap-2 items-center overflow-x-auto scrollbar-hide">
                 {aiSuggestions.map((suggestion, index) => (
                   <WexButton
                     key={index}
-                    intent="tinted"
-                    size="sm"
-                    rounded
-                    className="shrink-0"
+                    intent="ghost"
+                    size="md"
+                    className="rounded-[32px] bg-info/10 text-primary hover:bg-info/20 shrink-0 h-auto py-1"
+                    onClick={() => handleSuggestionClick(suggestion)}
                   >
                     {suggestion}
                   </WexButton>

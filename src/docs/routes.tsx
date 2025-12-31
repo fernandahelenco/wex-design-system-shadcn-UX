@@ -24,6 +24,39 @@ const AccountOverviewPage = React.lazy(() => import("@/docs/pages/AccountOvervie
 // Message Center page - standalone route
 const MessageCenterPage = React.lazy(() => import("@/docs/pages/consumer/MessageCenter"));
 
+// My Profile page - standalone route
+const MyProfilePage = React.lazy(() => import("@/docs/pages/consumer/MyProfile"));
+
+// Login page - standalone route
+const LoginPage = React.lazy(() => import("@/docs/pages/Login"));
+
+// Custom Components Demo page - standalone route
+const CustomComponentsDemo = React.lazy(() => import("@/docs/pages/consumer/CustomComponentsDemo"));
+
+// HSA Enrollment page - standalone route
+const HSAEnrollmentPage = React.lazy(() => import("@/docs/pages/consumer/HSAEnrollmentPage"));
+
+// HSA Eligibility Results page - standalone route
+const HSAEligibilityResults = React.lazy(() => import("@/docs/pages/consumer/HSAEligibilityResults"));
+
+// HSA Profile Review page - standalone route
+const HSAProfileReview = React.lazy(() => import("@/docs/pages/consumer/HSAProfileReview"));
+
+// HSA Dependents page - standalone route
+const HSADependentsPage = React.lazy(() => import("@/docs/pages/consumer/HSADependentsPage"));
+
+// HSA Beneficiaries page - standalone route
+const HSABeneficiariesPage = React.lazy(() => import("@/docs/pages/consumer/HSABeneficiariesPage"));
+
+// HSA Reimbursement page - standalone route
+const HSAReimbursementPage = React.lazy(() => import("@/docs/pages/consumer/HSAReimbursementPage"));
+
+// HSA Enrollment Review page - standalone route
+const HSAEnrollmentReview = React.lazy(() => import("@/docs/pages/consumer/HSAEnrollmentReview"));
+
+// HSA Enrollment Success page - standalone route
+const HSAEnrollmentSuccess = React.lazy(() => import("@/docs/pages/consumer/HSAEnrollmentSuccess"));
+
 // Foundation pages
 const TokenArchitecturePage = React.lazy(() => import("@/docs/pages/foundations/TokenArchitecturePage"));
 const ColorsPage = React.lazy(() => import("@/docs/pages/foundations/ColorsPage"));
@@ -116,10 +149,43 @@ export function DocsRoutes() {
         <Route index element={<ConsumerExperiencePage />} />
         
         {/* Standalone Account Overview route - bypasses DocsLayout */}
-        <Route path="/account-overview" element={<AccountOverviewPage />} />
+        <Route path="account-overview" element={<AccountOverviewPage />} />
         
         {/* Standalone Message Center route - bypasses DocsLayout */}
-        <Route path="/message-center" element={<MessageCenterPage />} />
+        <Route path="message-center" element={<MessageCenterPage />} />
+        
+        {/* Standalone My Profile route - bypasses DocsLayout */}
+        <Route path="my-profile" element={<MyProfilePage />} />
+        
+        {/* Standalone Login route - bypasses DocsLayout */}
+        <Route path="login" element={<LoginPage onLoginSuccess={() => window.location.href = '/'} />} />
+        
+        {/* Custom Components Demo route - bypasses DocsLayout */}
+        <Route path="/custom-components-demo" element={<CustomComponentsDemo />} />
+        
+        {/* Standalone HSA Enrollment route - bypasses DocsLayout */}
+        <Route path="hsa-enrollment" element={<HSAEnrollmentPage />} />
+        
+        {/* Standalone HSA Eligibility Results route - bypasses DocsLayout */}
+        <Route path="hsa-enrollment/results" element={<HSAEligibilityResults />} />
+        
+        {/* Standalone HSA Profile Review route - bypasses DocsLayout */}
+        <Route path="hsa-enrollment/profile" element={<HSAProfileReview />} />
+        
+        {/* Standalone HSA Dependents route - bypasses DocsLayout */}
+        <Route path="hsa-enrollment/dependents" element={<HSADependentsPage />} />
+        
+        {/* Standalone HSA Beneficiaries route - bypasses DocsLayout */}
+        <Route path="hsa-enrollment/beneficiaries" element={<HSABeneficiariesPage />} />
+        
+        {/* Standalone HSA Reimbursement route - bypasses DocsLayout */}
+        <Route path="hsa-enrollment/reimbursement" element={<HSAReimbursementPage />} />
+        
+        {/* Standalone HSA Enrollment Review route - bypasses DocsLayout */}
+        <Route path="hsa-enrollment/review" element={<HSAEnrollmentReview />} />
+        
+        {/* Standalone HSA Enrollment Success route - bypasses DocsLayout */}
+        <Route path="hsa-enrollment/success" element={<HSAEnrollmentSuccess />} />
         
         <Route element={<DocsLayout />}>
           {/* Design System overview moved to /design-system */}
