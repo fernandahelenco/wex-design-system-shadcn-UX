@@ -63,7 +63,7 @@ export default function HSAEligibilityResults() {
         <div className="flex-1 flex items-center justify-center">
           <div className="flex flex-col items-center gap-0 w-[500px]">
             {/* Success Illustration */}
-            <div className="relative w-[256px] h-[256px] shrink-0">
+            <div className="relative w-[256px] h-[225px] shrink-0">
               <img 
                 src={successIllustration} 
                 alt="Success celebration" 
