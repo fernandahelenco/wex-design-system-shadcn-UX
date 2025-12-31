@@ -3,6 +3,9 @@ import { useSearchParams } from "react-router-dom";
 import { WexButton } from "@/components/wex/wex-button";
 import { WexAlert } from "@/components/wex/wex-alert";
 import { WexEmpty } from "@/components/wex/wex-empty";
+import { WexAvatar } from "@/components/wex/wex-avatar";
+import { WexSeparator } from "@/components/wex/wex-separator";
+import { WexCard } from "@/components/wex/wex-card";
 import { ConsumerNavigation } from "./ConsumerNavigation";
 import { Pencil, Info, Plus } from "lucide-react";
 
@@ -62,17 +65,20 @@ export default function MyProfile() {
         return (
           <>
             {/* Page Header with Avatar */}
-            <div className="border-b border-gray-200 p-4">
+            <div className="p-4">
               <div className="flex items-center gap-3">
-                <div className="flex h-10 w-10 items-center justify-center rounded-full bg-gray-200">
-                  <span className="text-base font-medium">{getInitials(personalName)}</span>
-                </div>
+                <WexAvatar className="h-10 w-10">
+                  <WexAvatar.Fallback className="text-base font-medium bg-gray-200">
+                    {getInitials(personalName)}
+                  </WexAvatar.Fallback>
+                </WexAvatar>
                 <h2 className="text-2xl font-semibold text-gray-800">My profile</h2>
               </div>
+              <WexSeparator className="mt-4" />
             </div>
 
             {/* Info Banner */}
-            <div className="border-b border-gray-200 px-6 py-6">
+            <div className="px-6 py-6">
               <WexAlert intent="info" className="border border-[#bfdbfe] bg-[rgba(239,246,255,0.95)] shadow-[0px_4px_8px_0px_rgba(2,5,10,0.04)] rounded-md px-[10.5px] py-[7px] [&>svg]:h-4 [&>svg]:w-4 gap-[7px]">
                 <Info className="h-4 w-4 text-[#0058a3]" />
                 <WexAlert.Description className="text-[#0058a3] text-base leading-6 tracking-[-0.176px] m-0 whitespace-normal inline">
@@ -83,11 +89,11 @@ export default function MyProfile() {
 
             <div className="space-y-0">
               {/* Personal Information Section */}
-              <div className="border-b border-gray-200 px-6 py-6">
+              <div className="px-6 py-6">
                 <div className="mb-4 flex items-center gap-4">
                   <h3 className="text-xl font-medium text-gray-800">Personal Information</h3>
-                  <WexButton intent="ghost" size="sm" className="h-auto p-0 text-blue-600">
-                    <Pencil className="mr-1.5 h-3.5 w-3.5" />
+                  <WexButton intent="ghost" size="sm">
+                    <Pencil />
                     Edit
                   </WexButton>
                 </div>
@@ -110,12 +116,14 @@ export default function MyProfile() {
                 </div>
               </div>
 
+              <WexSeparator />
+
               {/* Contact Information Section */}
-              <div className="border-b border-gray-200 px-6 py-6">
+              <div className="px-6 py-6">
                 <div className="mb-4 flex items-center gap-4">
                   <h3 className="text-xl font-medium text-gray-800">Contact Information</h3>
-                  <WexButton intent="ghost" size="sm" className="h-auto p-0 text-blue-600">
-                    <Pencil className="mr-1.5 h-4 w-4" />
+                  <WexButton intent="ghost" size="sm">
+                    <Pencil />
                     Edit
                   </WexButton>
                 </div>
@@ -139,12 +147,14 @@ export default function MyProfile() {
                 </div>
               </div>
 
+              <WexSeparator />
+
               {/* Address Information Section */}
               <div className="px-6 py-6">
                 <div className="mb-4 flex items-center gap-4">
                   <h3 className="text-xl font-medium text-gray-800">Address Information</h3>
-                  <WexButton intent="ghost" size="sm" className="h-auto p-0 text-blue-600">
-                    <Pencil className="mr-1.5 h-4 w-4" />
+                  <WexButton intent="ghost" size="sm">
+                    <Pencil />
                     Edit
                   </WexButton>
                 </div>
@@ -182,7 +192,7 @@ export default function MyProfile() {
       case "dependents":
         return (
           <>
-            <div className="border-b border-gray-200 p-4">
+            <div className="p-4">
               <div className="flex items-center justify-between">
                 <h2 className="text-2xl font-semibold text-gray-800">Dependents</h2>
                 <WexButton
@@ -193,6 +203,7 @@ export default function MyProfile() {
                   Add New Dependent
                 </WexButton>
               </div>
+              <WexSeparator className="mt-4" />
             </div>
             <div className="flex flex-col items-center justify-center px-8 py-16">
               <WexEmpty>
@@ -208,7 +219,7 @@ export default function MyProfile() {
       case "beneficiaries":
         return (
           <>
-            <div className="border-b border-gray-200 p-4">
+            <div className="p-4">
               <div className="flex items-center justify-between">
                 <h2 className="text-2xl font-semibold text-gray-800">Beneficiaries</h2>
                 <WexButton
@@ -219,6 +230,7 @@ export default function MyProfile() {
                   Add Beneficiary
                 </WexButton>
               </div>
+              <WexSeparator className="mt-4" />
             </div>
             <div className="p-6">
               <div className="flex flex-col items-center justify-center rounded-lg p-8">
@@ -236,7 +248,7 @@ export default function MyProfile() {
       case "banking":
         return (
           <>
-            <div className="border-b border-gray-200 p-4">
+            <div className="p-4">
               <div className="flex items-center justify-between">
                 <h2 className="text-2xl font-semibold text-gray-800">Banking</h2>
                 <WexButton
@@ -247,6 +259,7 @@ export default function MyProfile() {
                   Add Bank Account
                 </WexButton>
               </div>
+              <WexSeparator className="mt-4" />
             </div>
             <div className="p-6">
               <div className="flex flex-col items-center justify-center rounded-lg p-8">
@@ -264,10 +277,11 @@ export default function MyProfile() {
       case "debit-card":
         return (
           <>
-            <div className="border-b border-gray-200 p-4">
+            <div className="p-4">
               <div className="flex items-center">
                 <h2 className="text-2xl font-semibold text-gray-800">Debit Card</h2>
               </div>
+              <WexSeparator className="mt-4" />
             </div>
             <div className="p-6">
               <div className="flex flex-col items-center justify-center rounded-lg p-8">
@@ -285,37 +299,40 @@ export default function MyProfile() {
       case "login-security":
         return (
           <>
-            <div className="border-b border-gray-200 p-4">
+            <div className="p-4">
               <div className="flex items-center">
                 <h2 className="text-2xl font-semibold text-gray-800">Login & Security</h2>
               </div>
+              <WexSeparator className="mt-4" />
             </div>
             <div className="space-y-0">
-              <div className="border-b border-gray-200 px-6 py-6">
+              <div className="px-6 py-6">
                 <div className="mb-4 flex items-center gap-4">
                   <h3 className="text-xl font-medium text-gray-800">Password</h3>
-                  <WexButton intent="ghost" size="sm" className="h-auto p-0 text-blue-600">
-                    <Pencil className="mr-1.5 h-4 w-4" />
+                  <WexButton intent="ghost" size="sm">
+                    <Pencil />
                     Change Password
                   </WexButton>
                 </div>
                 <p className="text-sm text-gray-600">Last updated: 3 months ago</p>
               </div>
-              <div className="border-b border-gray-200 px-6 py-6">
+              <WexSeparator />
+              <div className="px-6 py-6">
                 <div className="mb-4 flex items-center gap-4">
                   <h3 className="text-xl font-medium text-gray-800">Two-Factor Authentication</h3>
-                  <WexButton intent="ghost" size="sm" className="h-auto p-0 text-blue-600">
-                    <Pencil className="mr-1.5 h-4 w-4" />
+                  <WexButton intent="ghost" size="sm">
+                    <Pencil />
                     Manage
                   </WexButton>
                 </div>
                 <p className="text-sm text-gray-600">Status: Not enabled</p>
               </div>
+              <WexSeparator />
               <div className="px-6 py-6">
                 <div className="mb-4 flex items-center gap-4">
                   <h3 className="text-xl font-medium text-gray-800">Security Questions</h3>
-                  <WexButton intent="ghost" size="sm" className="h-auto p-0 text-blue-600">
-                    <Pencil className="mr-1.5 h-4 w-4" />
+                  <WexButton intent="ghost" size="sm">
+                    <Pencil />
                     Update
                   </WexButton>
                 </div>
@@ -328,17 +345,18 @@ export default function MyProfile() {
       case "communication":
         return (
           <>
-            <div className="border-b border-gray-200 p-4">
+            <div className="p-4">
               <div className="flex items-center">
                 <h2 className="text-2xl font-semibold text-gray-800">Communication Preferences</h2>
               </div>
+              <WexSeparator className="mt-4" />
             </div>
             <div className="space-y-0">
-              <div className="border-b border-gray-200 px-6 py-6">
+              <div className="px-6 py-6">
                 <div className="mb-4 flex items-center gap-4">
                   <h3 className="text-xl font-medium text-gray-800">Email Preferences</h3>
-                  <WexButton intent="ghost" size="sm" className="h-auto p-0 text-blue-600">
-                    <Pencil className="mr-1.5 h-4 w-4" />
+                  <WexButton intent="ghost" size="sm">
+                    <Pencil />
                     Edit
                   </WexButton>
                 </div>
@@ -353,11 +371,12 @@ export default function MyProfile() {
                   </div>
                 </div>
               </div>
-              <div className="border-b border-gray-200 px-6 py-6">
+              <WexSeparator />
+              <div className="px-6 py-6">
                 <div className="mb-4 flex items-center gap-4">
                   <h3 className="text-xl font-medium text-gray-800">SMS Preferences</h3>
-                  <WexButton intent="ghost" size="sm" className="h-auto p-0 text-blue-600">
-                    <Pencil className="mr-1.5 h-4 w-4" />
+                  <WexButton intent="ghost" size="sm">
+                    <Pencil />
                     Edit
                   </WexButton>
                 </div>
@@ -372,11 +391,12 @@ export default function MyProfile() {
                   </div>
                 </div>
               </div>
+              <WexSeparator />
               <div className="px-6 py-6">
                 <div className="mb-4 flex items-center gap-4">
                   <h3 className="text-xl font-medium text-gray-800">Push Notifications</h3>
-                  <WexButton intent="ghost" size="sm" className="h-auto p-0 text-blue-600">
-                    <Pencil className="mr-1.5 h-4 w-4" />
+                  <WexButton intent="ghost" size="sm">
+                    <Pencil />
                     Edit
                   </WexButton>
                 </div>
@@ -410,29 +430,30 @@ export default function MyProfile() {
 
           <div className="flex gap-0">
             {/* Left Sidebar */}
-            <div className="w-[234px] rounded-l-2xl border border-r-0 bg-white p-4">
-              <div className="space-y-2">
-                {menuItems.map((item) => (
-                  <WexButton
-                    key={item.key}
-                    intent="ghost"
-                    onClick={() => handleSubPageChange(item.key)}
-                    className={`w-full justify-start rounded px-3 py-2 text-left text-sm ${
-                      activeSubPage === item.key
-                        ? "bg-blue-600 text-white hover:bg-blue-700"
-                        : "text-gray-700 hover:bg-gray-50"
-                    }`}
-                  >
-                    {item.label}
-                  </WexButton>
-                ))}
-              </div>
-            </div>
+            <WexCard className="w-[260px] rounded-l-2xl rounded-r-none border-r-0">
+              <WexCard.Content className="px-4 py-6">
+                <div className="space-y-2">
+                  {menuItems.map((item) => (
+                    <WexButton
+                      key={item.key}
+                      intent={activeSubPage === item.key ? "primary" : "ghost"}
+                      size="md"
+                      onClick={() => handleSubPageChange(item.key)}
+                      className="w-full justify-start text-left whitespace-normal h-auto min-h-[44px] py-2"
+                    >
+                      {item.label}
+                    </WexButton>
+                  ))}
+                </div>
+              </WexCard.Content>
+            </WexCard>
 
             {/* Main Content Area */}
-            <div className="flex-1 rounded-r-2xl border border-l-0 bg-white">
-              {renderContent(activeSubPage)}
-            </div>
+            <WexCard className="flex-1 rounded-r-2xl rounded-l-none border-l-0">
+              <WexCard.Content className="p-0">
+                {renderContent(activeSubPage)}
+              </WexCard.Content>
+            </WexCard>
           </div>
         </div>
       </div>
