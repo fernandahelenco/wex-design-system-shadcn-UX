@@ -1,8 +1,8 @@
+import { useNavigate } from "react-router-dom";
 import { WexCard } from "@/components/wex/wex-card";
 import { WexInput } from "@/components/wex/wex-input";
 import { WexButton } from "@/components/wex/wex-button";
 import { Send, Mic, Sparkles } from "lucide-react";
-import { useNavigate } from "react-router-dom";
 import { aiSuggestions } from "./mockData";
 
 /**
@@ -18,9 +18,12 @@ export function AIChatSection() {
   const navigate = useNavigate();
 
   const handleSuggestionClick = (suggestion: string) => {
-    if (suggestion === "Enroll in HSA") {
+    if (suggestion === "Reimburse Myself") {
+      navigate("/reimburse");
+    } else if (suggestion === "Enroll in HSA") {
       navigate("/hsa-enrollment");
     }
+    // Add other navigation handlers here as needed
   };
 
   return (

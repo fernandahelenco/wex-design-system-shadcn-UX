@@ -1,4 +1,3 @@
-import * as React from "react";
 import { useNavigate } from "react-router-dom";
 import { WexButton } from "@/components/wex/wex-button";
 import { Printer } from "lucide-react";

@@ -1,3 +1,4 @@
+import { useNavigate } from "react-router-dom";
 import { WexCard } from "@/components/wex/wex-card";
 import { WexButton } from "@/components/wex/wex-button";
 import { AlertCircle, ChevronRight } from "lucide-react";
@@ -12,6 +13,8 @@ import { hsaData, fsaData } from "./mockData";
  * - Table layout with proper headers and dividers
  */
 export function AccountsSection() {
+  const navigate = useNavigate();
+
   return (
     <WexCard>
       <WexCard.Content className="p-6">
@@ -29,7 +32,7 @@ export function AccountsSection() {
                 View All Accounts
                 <ChevronRight className="h-4 w-4" />
               </WexButton>
-              <WexButton intent="primary" size="md">
+              <WexButton intent="primary" size="md" onClick={() => navigate("/reimburse")}>
                 Reimburse Myself
               </WexButton>
             </div>

@@ -1,3 +1,4 @@
+import { useNavigate } from "react-router-dom";
 import { WexButton } from "@/components/wex/wex-button";
 
 /**
@@ -9,6 +10,8 @@ import { WexButton } from "@/components/wex/wex-button";
  * - "Reimburse Myself" button (primary)
  */
 export function TitleBar() {
+  const navigate = useNavigate();
+
   return (
     <div className="flex items-center justify-between gap-4">
       <h1 className="text-3xl font-bold text-foreground tracking-tight">
@@ -18,7 +21,7 @@ export function TitleBar() {
         <WexButton intent="outline" size="md">
           Send a Payment
         </WexButton>
-        <WexButton intent="primary" size="md">
+        <WexButton intent="primary" size="md" onClick={() => navigate("/reimburse")}>
           Reimburse Myself
         </WexButton>
       </div>

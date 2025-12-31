@@ -363,7 +363,7 @@ export default function HSAEnrollmentPage() {
                     <WexCheckbox
                       id="certification"
                       checked={certificationChecked}
-                      onCheckedChange={setCertificationChecked}
+                      onCheckedChange={(checked) => setCertificationChecked(checked === true)}
                       className="mt-0.5"
                     />
                     <label

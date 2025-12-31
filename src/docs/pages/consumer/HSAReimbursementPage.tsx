@@ -9,17 +9,16 @@ import { WexSelect } from "@/components/wex/wex-select";
 import { Stepper } from "./components/Stepper";
 import type { Step } from "./components/Stepper";
 import { SelectCardGroup } from "./components/SelectCard";
-import { cn } from "@/lib/utils";
 
 /**
  * Stepper steps configuration
  */
 const enrollmentSteps: Step[] = [
-  { id: "eligibility", label: "Eligibility", status: "complete" },
-  { id: "profile", label: "Profile", status: "complete" },
-  { id: "dependents", label: "Dependents", status: "complete" },
-  { id: "beneficiaries", label: "Beneficiaries", status: "complete" },
-  { id: "reimbursement", label: "Reimbursement", status: "active" },
+  { id: "eligibility", label: "Eligibility" },
+  { id: "profile", label: "Profile" },
+  { id: "dependents", label: "Dependents" },
+  { id: "beneficiaries", label: "Beneficiaries" },
+  { id: "reimbursement", label: "Reimbursement" },
   { id: "review", label: "Review" },
 ];
 
@@ -119,8 +118,9 @@ export default function HSAReimbursementPage() {
   ];
 
   // Handle method selection
-  const handleMethodChange = (value: string) => {
-    setSelectedMethod(value as ReimbursementMethod);
+  const handleMethodChange = (value: string | string[]) => {
+    const stringValue = Array.isArray(value) ? value[0] : value;
+    setSelectedMethod(stringValue as ReimbursementMethod);
   };
 
   // Handle copy card number

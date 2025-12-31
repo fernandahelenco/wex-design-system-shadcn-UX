@@ -10,16 +10,15 @@ import { WexCheckbox } from "@/components/wex/wex-checkbox";
 import { Stepper } from "./components/Stepper";
 import type { Step } from "./components/Stepper";
 import { QuestionOptionCard } from "./components/QuestionOptionCard";
-import { cn } from "@/lib/utils";
 
 /**
  * Stepper steps configuration
  */
 const enrollmentSteps: Step[] = [
-  { id: "eligibility", label: "Eligibility", status: "complete" },
-  { id: "profile", label: "Profile", status: "complete" },
-  { id: "dependents", label: "Dependents", status: "complete" },
-  { id: "beneficiaries", label: "Beneficiaries", status: "active" },
+  { id: "eligibility", label: "Eligibility" },
+  { id: "profile", label: "Profile" },
+  { id: "dependents", label: "Dependents" },
+  { id: "beneficiaries", label: "Beneficiaries" },
   { id: "reimbursement", label: "Reimbursement" },
   { id: "review", label: "Review" },
 ];
