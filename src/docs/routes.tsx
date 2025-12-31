@@ -23,6 +23,9 @@ const AccountOverviewPage = React.lazy(() => import("@/docs/pages/AccountOvervie
 // Message Center page - standalone route
 const MessageCenterPage = React.lazy(() => import("@/docs/pages/consumer/MessageCenter"));
 
+// My Profile page - standalone route
+const MyProfilePage = React.lazy(() => import("@/docs/pages/consumer/MyProfile"));
+
 // Login page - standalone route
 const LoginPage = React.lazy(() => import("@/docs/pages/Login"));
 
@@ -121,6 +124,9 @@ export function DocsRoutes() {
         
         {/* Standalone Message Center route - bypasses DocsLayout */}
         <Route path="message-center" element={<MessageCenterPage />} />
+        
+        {/* Standalone My Profile route - bypasses DocsLayout */}
+        <Route path="my-profile" element={<MyProfilePage />} />
         
         {/* Standalone Login route - bypasses DocsLayout */}
         <Route path="login" element={<LoginPage onLoginSuccess={() => window.location.href = '/'} />} />
