@@ -18,7 +18,7 @@ export default function ReimburseDocs() {
   const { state, updateState } = useReimbursement();
   const [autoAnalyze, setAutoAnalyze] = useState(state.autoAnalyze ?? true);
   const [uploads, setUploads] = useState<Array<{ name: string; size: string; status: "uploaded"; date: string }>>(
-    state.uploadedFiles || []
+    (state.uploadedFiles || []).map((file) => ({ ...file, status: file.status ?? "uploaded" }))
   );
 
   const hasUploads = uploads.length > 0;
@@ -143,7 +143,7 @@ export default function ReimburseDocs() {
                 </div>
 
                 <div className="flex items-center justify-between pt-2">
-                  <WexButton intent="tertiary" onClick={() => navigate("/")}>
+                  <WexButton intent="ghost" onClick={() => navigate("/")}>
                     Cancel
                   </WexButton>
                   <div className="flex items-center gap-2">

@@ -9,7 +9,6 @@ import {
   WexCheckbox,
   WexAlert,
   WexSeparator,
-  WexBadge,
   WexLabel,
 } from "@/components/wex";
 import { Info, Pencil, ShoppingCart, CheckCircle2, X, ChevronDown, ChevronRight } from "lucide-react";
@@ -173,7 +172,7 @@ export default function ReimburseConfirm() {
                   </WexTable>
                 </div>
                 {!showSuccessBanner && (
-                  <WexButton intent="tertiary" className="w-fit">
+                  <WexButton intent="secondary" className="w-fit">
                     + Add Another
                   </WexButton>
                 )}
@@ -218,7 +217,7 @@ export default function ReimburseConfirm() {
                         <ShoppingCart className="h-4 w-4" />
                         Save for Later
                       </WexButton>
-                      <WexButton intent="tertiary" onClick={() => navigate("/")}>
+                      <WexButton intent="ghost" onClick={() => navigate("/")}>
                         Cancel
                       </WexButton>
                       <WexButton intent="primary" disabled={!acceptedTerms} onClick={handleSubmit}>

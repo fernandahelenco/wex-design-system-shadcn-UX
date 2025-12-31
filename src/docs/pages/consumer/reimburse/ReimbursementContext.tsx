@@ -1,4 +1,5 @@
-import React, { createContext, useContext, useState, ReactNode } from "react";
+import { createContext, useContext, useState } from "react";
+import type { ReactNode } from "react";
 
 /**
  * Reimbursement Flow State Interface
@@ -20,7 +21,7 @@ export interface ReimbursementState {
   paymentMethod: string;
   
   // Files
-  uploadedFiles: Array<{ name: string; size: string; date: string }>;
+  uploadedFiles: Array<{ name: string; size: string; date: string; status?: "uploaded" }>;
   autoAnalyze: boolean;
   
   // Analysis results

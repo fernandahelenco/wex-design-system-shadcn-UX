@@ -7,7 +7,6 @@ import {
   WexCard,
   WexSelect,
   WexFloatLabel,
-  WexInput,
   WexAlert,
   WexBadge,
   WexTooltip,
@@ -24,7 +23,6 @@ import {
   Wallet,
   Sparkles,
   Info,
-  Loader2,
   X,
 } from "lucide-react";
 
@@ -194,7 +192,7 @@ export default function ReimburseMyself() {
             </div>
 
             <div className="flex items-center justify-between pt-2">
-              <WexButton intent="tertiary" onClick={() => navigate("/")}>
+              <WexButton intent="ghost" onClick={() => navigate("/")}>
                 Cancel
               </WexButton>
               <WexButton
@@ -536,7 +534,7 @@ export default function ReimburseMyself() {
                         {showHelp ? "Hide help" : "Need help?"}
                       </WexButton>
                       <div className="flex gap-3">
-                        <WexButton type="button" intent="tertiary" onClick={() => navigate("/")}>
+                        <WexButton type="button" intent="ghost" onClick={() => navigate("/")}>
                           Cancel
                         </WexButton>
                         <WexButton type="submit" intent="primary" disabled={isSubmitting}>
