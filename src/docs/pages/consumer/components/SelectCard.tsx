@@ -191,7 +191,7 @@ export interface SelectCardGroupProps {
   type: "checkbox" | "radio";
   value?: string | string[];
   onValueChange?: (value: string | string[]) => void;
-  cards: Omit<SelectCardProps, "type" | "checked" | "onCheckedChange" | "id"> & { id: string }[];
+  cards: (Omit<SelectCardProps, "type" | "checked" | "onCheckedChange"> & { id: string })[];
   className?: string;
 }
 

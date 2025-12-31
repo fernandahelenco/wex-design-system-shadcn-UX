@@ -123,19 +123,6 @@ export function Stepper({ steps, currentStepId, onStepChange, className }: Stepp
 
   const allStepIds = React.useMemo(() => getAllStepIds(), [steps]);
 
-  /**
-   * Check if connector segment should be blue (from current primary to first secondary)
-   */
-  const isConnectorSegmentBlue = (primaryIndex: number, segmentIndex: number): boolean => {
-    const primaryStep = steps[primaryIndex];
-    const primaryState = getStepState(primaryStep.id, allStepIds);
-    const isPrimaryReached = isPrimaryStepReached(primaryStep.id, allStepIds);
-    const hasSecondarySteps = primaryStep.secondarySteps && primaryStep.secondarySteps.length > 0;
-    
-    // Blue segment: from current primary step to its first secondary step
-    return primaryState === "current" && hasSecondarySteps && isPrimaryReached && segmentIndex === 0;
-  };
-
   return (
     <div className={cn("relative flex flex-col gap-6", className)}>
       {/* Base connector line - gray background, positioned at 12px (center of 24px circle) */}
@@ -145,7 +132,7 @@ export function Stepper({ steps, currentStepId, onStepChange, className }: Stepp
         {steps.map((primaryStep, primaryIndex) => {
           const primaryState = getStepState(primaryStep.id, allStepIds);
           const isPrimaryReached = isPrimaryStepReached(primaryStep.id, allStepIds);
-          const showSecondarySteps = isPrimaryReached && primaryStep.secondarySteps && primaryStep.secondarySteps.length > 0;
+          const showSecondarySteps = Boolean(isPrimaryReached && primaryStep.secondarySteps && primaryStep.secondarySteps.length > 0);
           const isCurrentPrimaryWithSecondary = primaryState === "current" && showSecondarySteps;
           const stepNumber = primaryIndex + 1; // Step number (1, 2, 3, etc.)
           

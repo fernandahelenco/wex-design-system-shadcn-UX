@@ -129,7 +129,7 @@ export default function CustomComponentsDemo() {
             <SelectCardGroup
               type="checkbox"
               value={checkboxValues}
-              onValueChange={setCheckboxValues}
+              onValueChange={(value) => setCheckboxValues(value as string[])}
               cards={selectCardData}
             />
             <div className="mt-4 p-4 bg-muted rounded-md">
