@@ -23,6 +23,9 @@ const AccountOverviewPage = React.lazy(() => import("@/docs/pages/AccountOvervie
 // Message Center page - standalone route
 const MessageCenterPage = React.lazy(() => import("@/docs/pages/consumer/MessageCenter"));
 
+// Login page - standalone route
+const LoginPage = React.lazy(() => import("@/docs/pages/Login"));
+
 // Custom Components Demo page - standalone route
 const CustomComponentsDemo = React.lazy(() => import("@/docs/pages/consumer/CustomComponentsDemo"));
 
@@ -117,10 +120,13 @@ export function DocsRoutes() {
         <Route index element={<ConsumerExperiencePage />} />
         
         {/* Standalone Account Overview route - bypasses DocsLayout */}
-        <Route path="/account-overview" element={<AccountOverviewPage />} />
+        <Route path="account-overview" element={<AccountOverviewPage />} />
         
         {/* Standalone Message Center route - bypasses DocsLayout */}
-        <Route path="/message-center" element={<MessageCenterPage />} />
+        <Route path="message-center" element={<MessageCenterPage />} />
+        
+        {/* Standalone Login route - bypasses DocsLayout */}
+        <Route path="login" element={<LoginPage onLoginSuccess={() => window.location.href = '/'} />} />
         
         {/* Custom Components Demo route - bypasses DocsLayout */}
         <Route path="/custom-components-demo" element={<CustomComponentsDemo />} />
