@@ -7,7 +7,6 @@ import { WexRadioGroup } from "@/components/wex/wex-radio-group";
 import { WexCheckbox } from "@/components/wex/wex-checkbox";
 import { Stepper } from "./components/Stepper";
 import type { Step } from "./components/Stepper";
-import { cn } from "@/lib/utils";
 
 /**
  * Stepper steps configuration
