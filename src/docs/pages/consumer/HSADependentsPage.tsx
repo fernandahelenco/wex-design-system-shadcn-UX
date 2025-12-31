@@ -9,7 +9,6 @@ import { WexSelect } from "@/components/wex/wex-select";
 import { Stepper } from "./components/Stepper";
 import type { Step } from "./components/Stepper";
 import { QuestionOptionCard } from "./components/QuestionOptionCard";
-import { cn } from "@/lib/utils";
 
 /**
  * Stepper steps configuration

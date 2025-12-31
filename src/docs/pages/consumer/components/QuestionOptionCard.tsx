@@ -1,4 +1,3 @@
-import * as React from "react";
 import { WexCard } from "@/components/wex/wex-card";
 import { cn } from "@/lib/utils";
 
