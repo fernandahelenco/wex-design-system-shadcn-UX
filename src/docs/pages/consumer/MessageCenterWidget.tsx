@@ -368,28 +368,6 @@ export function MessageCenterWidget() {
             </div>
           </div>
 
-          {/* Footer */}
-          <div className="flex items-center justify-between pt-2 text-xs text-muted-foreground">
-            <span>Last updated: Just now</span>
-            <div className="flex items-center gap-4">
-              <WexButton 
-                intent="link" 
-                size="sm" 
-                className="h-auto p-0 text-xs text-muted-foreground hover:text-foreground"
-                onClick={() => navigate("/message-center")}
-              >
-                Archive
-              </WexButton>
-              <WexButton 
-                intent="link" 
-                size="sm" 
-                className="h-auto p-0 text-xs text-muted-foreground hover:text-foreground"
-                onClick={() => navigate("/message-center")}
-              >
-                Settings
-              </WexButton>
-            </div>
-          </div>
         </div>
       </WexCard.Content>
     </WexCard>
