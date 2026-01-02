@@ -325,11 +325,6 @@ export function MessageCenterWidget() {
                       className="w-full text-left py-3 px-3 -mx-3 rounded-lg transition-colors hover:bg-muted/50 cursor-pointer group"
                     >
                       <div className="flex items-start gap-3">
-                        {/* Icon */}
-                        <div className="mt-0.5 shrink-0">
-                          {getIcon(message.icon)}
-                        </div>
-
                         {/* Content */}
                         <div className="flex-1 min-w-0">
                           <div className="flex items-start gap-2 mb-1">
