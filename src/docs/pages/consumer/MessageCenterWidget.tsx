@@ -320,6 +320,13 @@ export function MessageCenterWidget() {
     setSelectedMessage(null);
   };
 
+  const handleResetMessages = () => {
+    localStorage.removeItem('messageCenter_readStatus');
+    localStorage.removeItem('messageCenter_archiveStatus');
+    localStorage.removeItem('messageCenter_unreadCount');
+    window.location.reload();
+  };
+
   // Calculate actual counts from message data
   const urgentCount = messages.filter(m => m.isBold && !m.isArchived && !m.isRead).length;
   const starredCount = messages.filter(m => m.isStarred && !m.isArchived).length;
@@ -349,15 +356,25 @@ export function MessageCenterWidget() {
                 Overview of your recent communications
               </p>
             </div>
-            <WexButton 
-              intent="link" 
-              size="sm"
-              onClick={() => navigate("/message-center")}
-              className="text-primary hover:text-primary/80"
-            >
-              View All
-              <ChevronRight className="h-4 w-4 ml-1" />
-            </WexButton>
+            <div className="flex items-center gap-2">
+              <WexButton 
+                intent="ghost" 
+                size="sm"
+                onClick={handleResetMessages}
+                className="text-xs text-muted-foreground hover:text-foreground"
+              >
+                Reset Messages
+              </WexButton>
+              <WexButton 
+                intent="link" 
+                size="sm"
+                onClick={() => navigate("/message-center")}
+                className="text-primary hover:text-primary/80"
+              >
+                View All
+                <ChevronRight className="h-4 w-4 ml-1" />
+              </WexButton>
+            </div>
           </div>
 
           {/* Stats Grid */}
