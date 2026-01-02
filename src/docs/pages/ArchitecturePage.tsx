@@ -163,9 +163,7 @@ export default function ArchitecturePage() {
 
           {/* @wex/design-tokens - Power Users */}
           <div className="p-6 rounded-lg border border-border bg-card">
-            <span className="inline-block px-2 py-0.5 text-xs font-medium bg-muted text-muted-foreground rounded mb-4">
-              Power Users
-            </span>
+            
             <div className="flex items-center gap-3 mb-4">
               <div className="p-2 rounded-lg bg-info/10">
                 <Zap className="h-5 w-5 text-info" />
@@ -193,6 +191,9 @@ export default function ArchitecturePage() {
             <p className="text-sm text-foreground font-medium">
               Best for: Existing shadcn setups or custom requirements
             </p>
+            <span className="inline-block px-2 py-0.5 text-xs font-medium bg-muted text-muted-foreground rounded mb-4">
+              Power Users
+            </span>
           </div>
         </div>
 
