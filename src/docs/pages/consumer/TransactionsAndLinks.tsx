@@ -94,8 +94,8 @@ export function TransactionsAndLinks() {
                   <WexButton
                     key={index}
                     intent="ghost"
-                    size="md"
-                    className="rounded-[32px] bg-info/10 text-primary hover:bg-info/20 shrink-0 h-auto py-1"
+                    size="sm"
+                    className="rounded-[32px] bg-info/10 text-primary hover:bg-info/20 shrink-0 h-auto py-0.5"
                   >
                     {link.label}
                   </WexButton>
