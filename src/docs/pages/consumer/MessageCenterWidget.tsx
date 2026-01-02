@@ -383,7 +383,7 @@ export function MessageCenterWidget() {
           {/* To Do Section */}
           <div className="space-y-3">
             <div className="flex items-center gap-2">
-              <h2 className="text-lg font-display font-semibold text-foreground">
+              <h2 className="text-2xl font-display font-semibold text-foreground">
                 To Do
               </h2>
               {toDoMessages.length > 0 && (
