@@ -3,6 +3,7 @@ import { Routes, Route } from "react-router-dom";
 import { DocsLayout } from "./layout/DocsLayout";
 import { ReimbursementProvider } from "./pages/consumer/reimburse/ReimbursementContext";
 import { ScrollToTop } from "./components/ScrollToTop";
+import { ProtectedRoute } from "./components/ProtectedRoute";
 
 // Lazy load pages for code splitting
 const OverviewPage = React.lazy(() => import("@/docs/pages/OverviewPage"));
@@ -151,6 +152,18 @@ function PageLoader() {
 }
 
 /**
+ * Protected DocsLayout wrapper
+ * Combines authentication check with DocsLayout
+ */
+function ProtectedDocsLayout() {
+  return (
+    <ProtectedRoute>
+      <DocsLayout />
+    </ProtectedRoute>
+  );
+}
+
+/**
  * Docs routes configuration
  * Consumer Experience is the landing page, Design System docs wrapped in DocsLayout
  */
@@ -159,41 +172,7 @@ export function DocsRoutes() {
     <React.Suspense fallback={<PageLoader />}>
       <ScrollToTop />
       <Routes>
-        {/* Consumer Experience is now the landing page */}
-        <Route index element={<ConsumerExperiencePage />} />
-        
-        {/* Standalone Account Overview route - bypasses DocsLayout */}
-        <Route path="account-overview" element={<AccountOverviewPage />} />
-        
-        {/* Standalone Message Center route - bypasses DocsLayout */}
-        <Route path="message-center" element={<MessageCenterPage />} />
-        
-        {/* Standalone My Profile route - bypasses DocsLayout */}
-        <Route path="my-profile" element={<MyProfilePage />} />
-
-        {/* Standalone Resources route - bypasses DocsLayout */}
-        <Route path="resources" element={<ResourcesPage />} />
-
-        {/* Standalone Claims route - bypasses DocsLayout */}
-        <Route path="claims" element={<ClaimsPage />} />
-
-        {/* Standalone Reimbursement flow routes - bypasses DocsLayout, wrapped with ReimbursementProvider */}
-        <Route
-          path="reimburse/*"
-          element={
-            <ReimbursementProvider>
-              <Routes>
-                <Route index element={<ReimburseMyselfPage />} />
-                <Route path="docs" element={<ReimburseDocsPage />} />
-                <Route path="analyze" element={<ReimburseAnalyzePage />} />
-                <Route path="review" element={<ReimburseReviewPage />} />
-                <Route path="confirm" element={<ReimburseConfirmPage />} />
-              </Routes>
-            </ReimbursementProvider>
-          }
-        />
-
-        {/* Standalone Login route - bypasses DocsLayout */}
+        {/* Standalone Login route - bypasses DocsLayout and protection */}
         <Route
           path="login"
           element={
@@ -204,35 +183,71 @@ export function DocsRoutes() {
             />
           }
         />
+
+        {/* All other routes are protected */}
+        <Route index element={<ProtectedRoute><ConsumerExperiencePage /></ProtectedRoute>} />
+        
+        {/* Standalone Account Overview route - bypasses DocsLayout */}
+        <Route path="account-overview" element={<ProtectedRoute><AccountOverviewPage /></ProtectedRoute>} />
+        
+        {/* Standalone Message Center route - bypasses DocsLayout */}
+        <Route path="message-center" element={<ProtectedRoute><MessageCenterPage /></ProtectedRoute>} />
+        
+        {/* Standalone My Profile route - bypasses DocsLayout */}
+        <Route path="my-profile" element={<ProtectedRoute><MyProfilePage /></ProtectedRoute>} />
+
+        {/* Standalone Resources route - bypasses DocsLayout */}
+        <Route path="resources" element={<ProtectedRoute><ResourcesPage /></ProtectedRoute>} />
+
+        {/* Standalone Claims route - bypasses DocsLayout */}
+        <Route path="claims" element={<ProtectedRoute><ClaimsPage /></ProtectedRoute>} />
+
+        {/* Standalone Reimbursement flow routes - bypasses DocsLayout, wrapped with ReimbursementProvider */}
+        <Route
+          path="reimburse/*"
+          element={
+            <ProtectedRoute>
+              <ReimbursementProvider>
+                <Routes>
+                  <Route index element={<ReimburseMyselfPage />} />
+                  <Route path="docs" element={<ReimburseDocsPage />} />
+                  <Route path="analyze" element={<ReimburseAnalyzePage />} />
+                  <Route path="review" element={<ReimburseReviewPage />} />
+                  <Route path="confirm" element={<ReimburseConfirmPage />} />
+                </Routes>
+              </ReimbursementProvider>
+            </ProtectedRoute>
+          }
+        />
         
         {/* Custom Components Demo route - bypasses DocsLayout */}
-        <Route path="/custom-components-demo" element={<CustomComponentsDemo />} />
+        <Route path="/custom-components-demo" element={<ProtectedRoute><CustomComponentsDemo /></ProtectedRoute>} />
         
         {/* Standalone HSA Enrollment route - bypasses DocsLayout */}
-        <Route path="hsa-enrollment" element={<HSAEnrollmentPage />} />
+        <Route path="hsa-enrollment" element={<ProtectedRoute><HSAEnrollmentPage /></ProtectedRoute>} />
         
         {/* Standalone HSA Eligibility Results route - bypasses DocsLayout */}
-        <Route path="hsa-enrollment/results" element={<HSAEligibilityResults />} />
+        <Route path="hsa-enrollment/results" element={<ProtectedRoute><HSAEligibilityResults /></ProtectedRoute>} />
         
         {/* Standalone HSA Profile Review route - bypasses DocsLayout */}
-        <Route path="hsa-enrollment/profile" element={<HSAProfileReview />} />
+        <Route path="hsa-enrollment/profile" element={<ProtectedRoute><HSAProfileReview /></ProtectedRoute>} />
         
         {/* Standalone HSA Dependents route - bypasses DocsLayout */}
-        <Route path="hsa-enrollment/dependents" element={<HSADependentsPage />} />
+        <Route path="hsa-enrollment/dependents" element={<ProtectedRoute><HSADependentsPage /></ProtectedRoute>} />
         
         {/* Standalone HSA Beneficiaries route - bypasses DocsLayout */}
-        <Route path="hsa-enrollment/beneficiaries" element={<HSABeneficiariesPage />} />
+        <Route path="hsa-enrollment/beneficiaries" element={<ProtectedRoute><HSABeneficiariesPage /></ProtectedRoute>} />
         
         {/* Standalone HSA Reimbursement route - bypasses DocsLayout */}
-        <Route path="hsa-enrollment/reimbursement" element={<HSAReimbursementPage />} />
+        <Route path="hsa-enrollment/reimbursement" element={<ProtectedRoute><HSAReimbursementPage /></ProtectedRoute>} />
         
         {/* Standalone HSA Enrollment Review route - bypasses DocsLayout */}
-        <Route path="hsa-enrollment/review" element={<HSAEnrollmentReview />} />
+        <Route path="hsa-enrollment/review" element={<ProtectedRoute><HSAEnrollmentReview /></ProtectedRoute>} />
         
         {/* Standalone HSA Enrollment Success route - bypasses DocsLayout */}
-        <Route path="hsa-enrollment/success" element={<HSAEnrollmentSuccess />} />
+        <Route path="hsa-enrollment/success" element={<ProtectedRoute><HSAEnrollmentSuccess /></ProtectedRoute>} />
         
-        <Route element={<DocsLayout />}>
+        <Route element={<ProtectedDocsLayout />}>
           {/* Design System overview moved to /design-system */}
           <Route path="design-system" element={<OverviewPage />} />
           <Route path="getting-started" element={<GettingStartedPage />} />
