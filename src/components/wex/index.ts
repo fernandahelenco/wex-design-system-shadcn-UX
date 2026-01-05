@@ -78,6 +78,7 @@ export { WexCarousel } from "./wex-carousel";
 export { WexEmpty } from "./wex-empty";
 export { WexItem } from "./wex-item";
 export { WexKbd } from "./wex-kbd";
+export { WexTag, wexTagVariants, type WexTagProps } from "./wex-tag";
 
 // ===== ACTION COMPONENTS =====
 export { WexToggle } from "./wex-toggle";
