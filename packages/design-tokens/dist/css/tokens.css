@@ -32,10 +32,16 @@
   /* ===== BRAND (1 token) ===== */
   --wex-brand-red: 350 85% 42%; /* #c8102e - Official WEX Logo Red */
 
-  /* ===== PRIMARY (3 tokens) ===== */
+  /* ===== PRIMARY (4 tokens) ===== */
   --wex-primary: var(--wex-palette-blue-700);
   --wex-primary-contrast: 0 0% 100%;
   --wex-primary-hover: var(--wex-palette-blue-800);
+  --wex-primary-active: var(--wex-palette-blue-900);
+
+  /* ===== LINK (3 tokens) - For text links on page backgrounds ===== */
+  --wex-link: var(--wex-palette-blue-700);
+  --wex-link-hover: var(--wex-palette-blue-800);
+  --wex-link-active: var(--wex-palette-blue-900);
 
   /* ===== INPUT (1 token) - Now references palette ===== */
   --wex-input-border: var(--wex-palette-slate-400);
@@ -49,7 +55,7 @@
   --wex-destructive-hover: var(--wex-palette-red-600);
 
   /* ===== SUCCESS (3 tokens) ===== */
-  --wex-success: var(--wex-palette-green-600);
+  --wex-success: var(--wex-palette-green-700); /* Darker for WCAG 4.5:1 text contrast */
   --wex-success-foreground: 0 0% 100%;
   --wex-success-hover: var(--wex-palette-green-700);
 
@@ -59,7 +65,7 @@
   --wex-warning-hover: var(--wex-palette-amber-600);
 
   /* ===== INFO (3 tokens) ===== */
-  --wex-info: var(--wex-palette-cyan-500);
+  --wex-info: var(--wex-palette-cyan-700); /* Darker for WCAG 4.5:1 text contrast */
   --wex-info-foreground: 0 0% 100%;
   --wex-info-hover: var(--wex-palette-cyan-600);
 
@@ -158,6 +164,18 @@
   --wex-palette-cyan-800: 198 87% 28%;
   --wex-palette-cyan-900: 198 87% 22%;
 
+  /* Purple ramp (derived from help) */
+  --wex-palette-purple-50: 270 60% 97%;
+  --wex-palette-purple-100: 270 60% 92%;
+  --wex-palette-purple-200: 270 60% 82%;
+  --wex-palette-purple-300: 270 60% 70%;
+  --wex-palette-purple-400: 270 60% 60%;
+  --wex-palette-purple-500: 270 60% 50%;
+  --wex-palette-purple-600: 270 60% 44%;
+  --wex-palette-purple-700: 270 60% 38%;
+  --wex-palette-purple-800: 270 60% 30%;
+  --wex-palette-purple-900: 270 60% 22%;
+
   /* ===== CHART (5 tokens) =====
      DESIGN GAP: These are placeholder values.
      Brand team must define official chart colors.
@@ -171,22 +189,28 @@
 }
 
 .dark {
-  /* ===== SURFACES (dark overrides) - Now reference palette ===== */
+  /* ===== SURFACES (dark overrides) ===== */
   --wex-content-bg: var(--wex-palette-slate-900);
   --wex-content-border: var(--wex-palette-slate-700);
   --wex-surface-subtle: var(--wex-palette-slate-800);
 
-  /* ===== TEXT (dark overrides) - Now reference palette ===== */
+  /* ===== TEXT (dark overrides) ===== */
   --wex-text: var(--wex-palette-white);
   --wex-text-muted: var(--wex-palette-slate-200);
 
   /* ===== PRIMARY (dark overrides) ===== */
-  /* Note: Dark mode uses blue-500 (lighter) for better contrast on dark backgrounds */
-  --wex-primary: var(--wex-palette-blue-500);
-  --wex-primary-contrast: 216 10% 90%;
-  --wex-primary-hover: var(--wex-palette-blue-600);
+  /* Note: These values are used by button backgrounds - keep dark for white text contrast */
+  --wex-primary: var(--wex-palette-blue-600);
+  --wex-primary-contrast: 0 0% 100%;
+  --wex-primary-hover: var(--wex-palette-blue-500);
+  --wex-primary-active: var(--wex-palette-blue-700);
 
-  /* ===== INPUT (dark override) - Now references palette ===== */
+  /* ===== LINK (dark overrides) - Brighter for text visibility ===== */
+  --wex-link: var(--wex-palette-blue-400);
+  --wex-link-hover: var(--wex-palette-blue-300);
+  --wex-link-active: var(--wex-palette-blue-500);
+
+  /* ===== INPUT (dark override) ===== */
   --wex-input-border: var(--wex-palette-slate-700);
 
   /* ===== FOCUS RING (dark override) ===== */
@@ -198,20 +222,19 @@
   --wex-destructive-hover: var(--wex-palette-red-600);
 
   /* ===== SUCCESS (dark overrides) ===== */
-  /* Note: Dark mode uses green-500 (slightly lighter) for better contrast */
-  --wex-success: var(--wex-palette-green-500);
+  /* Note: These values are used by button backgrounds - keep dark for white text contrast */
+  --wex-success: var(--wex-palette-green-700);
   --wex-success-foreground: 0 0% 100%;
   --wex-success-hover: var(--wex-palette-green-600);
 
   /* ===== WARNING (dark overrides) ===== */
-  /* Note: Dark mode uses amber-400 (slightly lighter) for better contrast */
   --wex-warning: var(--wex-palette-amber-400);
   --wex-warning-foreground: 0 0% 0%;
   --wex-warning-hover: var(--wex-palette-amber-500);
 
   /* ===== INFO (dark overrides) ===== */
-  /* Note: Dark mode uses cyan-400 (slightly lighter) for better contrast */
-  --wex-info: var(--wex-palette-cyan-400);
+  /* Note: These values are used by button backgrounds - keep dark for white text contrast */
+  --wex-info: var(--wex-palette-cyan-700);
   --wex-info-foreground: 0 0% 100%;
   --wex-info-hover: var(--wex-palette-cyan-500);
 
