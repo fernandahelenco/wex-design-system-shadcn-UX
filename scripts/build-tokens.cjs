@@ -4,12 +4,13 @@
  * Build Script for @wex/design-tokens
  * 
  * Reads design-tokens.json and generates all format exports:
- * - CSS (tokens.css, shadcn-bridge.css, components-bridge.css, index.css)
- * - SCSS (tokens.scss, shadcn-bridge.scss, components-bridge.scss, index.scss)
- * - TypeScript (tokens.ts)
- * - JSON (tokens.json)
+ * - CSS (design-tokens.css, shadcn-bridge.css, components-bridge.css, index.css)
+ * - SCSS (design-tokens.scss, shadcn-bridge.scss, components-bridge.scss, index.scss)
+ * - TypeScript (design-tokens.ts)
+ * - JSON (design-tokens.json)
+ * - iOS/Android (via Style Dictionary)
  * 
- * Outputs directly to package root directories: css/, scss/, ts/, json/
+ * Outputs directly to package root directories: css/, scss/, ios/, android/
  */
 
 const fs = require('fs');
@@ -19,6 +20,8 @@ const DESIGN_TOKENS_DIR = path.join(__dirname, '..', 'packages', 'design-tokens'
 const DESIGN_TOKENS_JSON_PATH = path.join(DESIGN_TOKENS_DIR, 'design-tokens.json');
 const CSS_DIR = path.join(DESIGN_TOKENS_DIR, 'css');
 const SCSS_DIR = path.join(DESIGN_TOKENS_DIR, 'scss');
+const IOS_DIR = path.join(DESIGN_TOKENS_DIR, 'ios');
+const ANDROID_DIR = path.join(DESIGN_TOKENS_DIR, 'android');
 const BRIDGES_ROOT_DIR = DESIGN_TOKENS_DIR; // Bridge files are now at root
 
 // Ensure directories exist
@@ -248,7 +251,7 @@ function generateIndexFiles() {
  * @wex/design-tokens - Complete Theme Bundle
  *
  * This file imports all WEX design token layers:
- * 1. tokens.css - Core design tokens (palette, semantics)
+ * 1. design-tokens.css - Core design tokens (palette, semantics)
  * 2. shadcn-bridge.css - shadcn/ui variable mappings
  * 3. components-bridge.css - Component-specific slot tokens
  *
@@ -256,7 +259,7 @@ function generateIndexFiles() {
  *   import '@wex/design-tokens/css';
  */
 
-@import './tokens.css';
+@import './design-tokens.css';
 @import './shadcn-bridge.css';
 @import './components-bridge.css';
 `;
@@ -266,7 +269,7 @@ function generateIndexFiles() {
  * @wex/design-tokens - Complete Theme Bundle (SCSS)
  *
  * This file imports all WEX design token layers:
- * 1. tokens.scss - Core design tokens (palette, semantics)
+ * 1. design-tokens.scss - Core design tokens (palette, semantics)
  * 2. shadcn-bridge.scss - shadcn/ui variable mappings
  * 3. components-bridge.scss - Component-specific slot tokens
  *
@@ -274,17 +277,69 @@ function generateIndexFiles() {
  *   @import '@wex/design-tokens/scss';
  */
 
-@import './tokens';
+@import './design-tokens';
 @import './shadcn-bridge';
 @import './components-bridge';
 `;
 
   fs.writeFileSync(path.join(CSS_DIR, 'index.css'), cssIndex);
   fs.writeFileSync(path.join(SCSS_DIR, 'index.scss'), scssIndex);
+  
+  // Generate root index.css as additional entry point
+  const rootIndexCSS = `/**
+ * @wex/design-tokens - Root Entry Point
+ *
+ * This file re-exports the CSS bundle from the css/ directory.
+ * Provides an additional entry point at the package root.
+ *
+ * Usage:
+ *   import '@wex/design-tokens';
+ *   import '@wex/design-tokens/index.css';
+ */
+
+@import './css/index.css';
+`;
+  fs.writeFileSync(path.join(DESIGN_TOKENS_DIR, 'index.css'), rootIndexCSS);
+}
+
+// Run Style Dictionary for iOS/Android outputs
+async function runStyleDictionary() {
+  try {
+    const configPath = path.join(DESIGN_TOKENS_DIR, 'style-dictionary.config.js');
+    
+    if (!fs.existsSync(configPath)) {
+      console.warn('  ⚠ Style Dictionary config not found, skipping iOS/Android outputs');
+      return;
+    }
+
+    // Ensure directories exist
+    ensureDir(IOS_DIR);
+    ensureDir(ANDROID_DIR);
+
+    // Use child_process to run Style Dictionary CLI directly (more reliable)
+    const { execSync } = require('child_process');
+    const originalCwd = process.cwd();
+    
+    try {
+      process.chdir(DESIGN_TOKENS_DIR);
+      execSync('npx style-dictionary build --config style-dictionary.config.js', {
+        stdio: 'pipe',
+        encoding: 'utf8'
+      });
+      console.log('  ✓ Generated iOS outputs');
+      console.log('  ✓ Generated Android outputs');
+    } finally {
+      process.chdir(originalCwd);
+    }
+  } catch (error) {
+    console.warn(`  ⚠ Style Dictionary error: ${error.message}`);
+    console.warn('  ⚠ Skipping iOS/Android outputs (this is optional)');
+    // Don't fail the build if Style Dictionary fails - it's optional for now
+  }
 }
 
 // Main build function
-function build() {
+async function build() {
   console.log('Building @wex/design-tokens...');
 
   // Ensure directories exist
@@ -295,15 +350,15 @@ function build() {
   const theme = readTheme();
   console.log(`  ✓ Read design-tokens.json (${Object.keys(theme.light).length} light tokens, ${Object.keys(theme.dark).length} dark tokens)`);
 
-  // Generate tokens.css
+  // Generate design-tokens.css (renamed from tokens.css)
   const tokensCSS = generateCSS(theme);
-  fs.writeFileSync(path.join(CSS_DIR, 'tokens.css'), tokensCSS);
-  console.log('  ✓ Generated css/tokens.css');
+  fs.writeFileSync(path.join(CSS_DIR, 'design-tokens.css'), tokensCSS);
+  console.log('  ✓ Generated css/design-tokens.css');
 
-  // Generate tokens.scss
+  // Generate design-tokens.scss (renamed from tokens.scss)
   const tokensSCSS = generateSCSS(theme);
-  fs.writeFileSync(path.join(SCSS_DIR, 'tokens.scss'), tokensSCSS);
-  console.log('  ✓ Generated scss/tokens.scss');
+  fs.writeFileSync(path.join(SCSS_DIR, 'design-tokens.scss'), tokensSCSS);
+  console.log('  ✓ Generated scss/design-tokens.scss');
 
   // Copy bridge files
   copyBridgeFiles();
@@ -313,22 +368,27 @@ function build() {
   generateIndexFiles();
   console.log('  ✓ Generated index.css and index.scss');
 
-  // Generate TypeScript
+  // Generate TypeScript (renamed from tokens.ts)
   const tokensTS = generateTypeScript(theme);
-  fs.writeFileSync(path.join(DESIGN_TOKENS_DIR, 'tokens.ts'), tokensTS);
-  console.log('  ✓ Generated tokens.ts');
+  fs.writeFileSync(path.join(DESIGN_TOKENS_DIR, 'design-tokens.ts'), tokensTS);
+  console.log('  ✓ Generated design-tokens.ts');
 
-  // Copy JSON
-  fs.writeFileSync(path.join(DESIGN_TOKENS_DIR, 'tokens.json'), JSON.stringify(theme, null, 2));
-  console.log('  ✓ Generated tokens.json');
+  // Note: design-tokens.json is the source file, we don't generate a separate output
+  // Consumers can import the source JSON directly: import '@wex/design-tokens/json'
+  console.log('  ✓ Using design-tokens.json as source (no separate JSON output needed)');
+
+  // Run Style Dictionary for iOS/Android
+  await runStyleDictionary();
 
   console.log('\n✓ Build complete!');
 }
 
 // Run build
-try {
-  build();
-} catch (error) {
-  console.error('Error building tokens:', error);
-  process.exit(1);
-}
+(async () => {
+  try {
+    await build();
+  } catch (error) {
+    console.error('Error building tokens:', error);
+    process.exit(1);
+  }
+})();

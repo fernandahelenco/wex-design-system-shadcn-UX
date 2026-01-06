@@ -15,8 +15,12 @@ dist-ssr
 packages/design-tokens/dist/
 packages/design-tokens/css/
 packages/design-tokens/scss/
-packages/design-tokens/tokens.ts
-packages/design-tokens/tokens.json
+packages/design-tokens/ios/
+packages/design-tokens/android/
+packages/design-tokens/design-tokens.ts
+packages/design-tokens/index.css
+packages/design-tokens/.style-dictionary-tokens.json
+# Note: design-tokens.json is the source file (committed), not generated
 *.local
 .vite
 
