@@ -2,6 +2,7 @@ import * as React from 'react'
 import { DocsRoutes } from '@/docs/routes'
 import { Toaster } from '@/components/ui/sonner'
 import { TooltipProvider } from '@/components/ui/tooltip'
+import { AuthProvider } from '@/docs/context/AuthContext'
 
 /**
  * Error Boundary to catch rendering errors
@@ -52,10 +53,12 @@ class ErrorBoundary extends React.Component<
 function App() {
   return (
     <ErrorBoundary>
-      <TooltipProvider>
-        <DocsRoutes />
-        <Toaster position="top-right" />
-      </TooltipProvider>
+      <AuthProvider>
+        <TooltipProvider>
+          <DocsRoutes />
+          <Toaster position="top-right" />
+        </TooltipProvider>
+      </AuthProvider>
     </ErrorBoundary>
   )
 }

@@ -5,16 +5,19 @@ import { WexCard } from "@/components/wex/wex-card"
 import { wexToast } from "@/components/wex/wex-toast"
 import { Eye, EyeOff } from "lucide-react"
 import WexLogo from "/WEX_Logo_Red_Vector.svg"
+import { useAuth } from "@/docs/context/AuthContext"
 
 interface LoginProps {
   onLoginSuccess: () => void
 }
 
 export default function Login({ onLoginSuccess }: LoginProps) {
+  const { login } = useAuth()
   const [step, setStep] = useState<1 | 2 | 3>(1)
   const [username, setUsername] = useState("")
   const [password, setPassword] = useState("")
   const [showPassword, setShowPassword] = useState(false)
+  const [passwordError, setPasswordError] = useState(false)
   const [mfaCode, setMfaCode] = useState("")
   const [resendTimer, setResendTimer] = useState(13)
   const [generatedCode, setGeneratedCode] = useState("")
@@ -52,9 +55,17 @@ export default function Login({ onLoginSuccess }: LoginProps) {
 
   const handlePasswordSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    if (password.trim()) {
-      setStep(3)
+    // Validate credentials
+    const isValidCredentials = username.trim() === "ux@wex.com" && password.trim() === "UXprototype123!"
+    
+    if (!isValidCredentials) {
+      setPasswordError(true)
+      return
     }
+    
+    // Credentials are valid, proceed to MFA step
+    setPasswordError(false)
+    setStep(3)
   }
 
   const handleMfaSubmit = (e: React.FormEvent) => {
@@ -63,6 +74,9 @@ export default function Login({ onLoginSuccess }: LoginProps) {
     if (mfaCode.trim() === generatedCode) {
       // Code matches - success
       setCodeError(false)
+      // Set authenticated state
+      login()
+      // Call success callback to redirect
       onLoginSuccess()
     } else {
       // Code doesn't match - show error
@@ -198,28 +212,39 @@ export default function Login({ onLoginSuccess }: LoginProps) {
 
                     {/* Password Input with Eye Icon */}
                     <div className="flex flex-col gap-[30px]">
-                      <WexFloatLabel
-                        label="Password"
-                        type={showPassword ? "text" : "password"}
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                        size="lg"
-                        className="text-[16px] leading-6 tracking-[-0.176px]"
-                        rightIcon={
-                          <button
-                            type="button"
-                            onClick={() => setShowPassword(!showPassword)}
-                            className="cursor-pointer hover:text-foreground transition-colors pointer-events-auto"
-                            aria-label={showPassword ? "Hide password" : "Show password"}
-                          >
-                            {showPassword ? (
-                              <EyeOff className="h-4 w-4" />
-                            ) : (
-                              <Eye className="h-4 w-4" />
-                            )}
-                          </button>
-                        }
-                      />
+                      <div className="flex flex-col gap-1">
+                        <WexFloatLabel
+                          label="Password"
+                          type={showPassword ? "text" : "password"}
+                          value={password}
+                          onChange={(e) => {
+                            setPassword(e.target.value)
+                            setPasswordError(false) // Clear error on input
+                          }}
+                          size="lg"
+                          invalid={passwordError}
+                          className="text-[16px] leading-6 tracking-[-0.176px]"
+                          rightIcon={
+                            <button
+                              type="button"
+                              onClick={() => setShowPassword(!showPassword)}
+                              className="cursor-pointer hover:text-foreground transition-colors pointer-events-auto"
+                              aria-label={showPassword ? "Hide password" : "Show password"}
+                            >
+                              {showPassword ? (
+                                <EyeOff className="h-4 w-4" />
+                              ) : (
+                                <Eye className="h-4 w-4" />
+                              )}
+                            </button>
+                          }
+                        />
+                        {passwordError && (
+                          <p className="text-[12px] text-[hsl(var(--wex-destructive))] px-3">
+                            Invalid username/email or password
+                          </p>
+                        )}
+                      </div>
 
                       {/* Forgot Password Link */}
                       <button

@@ -8,6 +8,7 @@ import { WexDropdownMenu } from "@/components/wex/wex-dropdown-menu";
 import { Bell, User, Home, Wallet, FileText, LifeBuoy, ChevronDown, Languages, Palette, LogOut } from "lucide-react";
 import { navigationItems } from "./mockData";
 import { getUnreadCount, UNREAD_COUNT_CHANGED_EVENT } from "./messageCenterUtils";
+import { useAuth } from "@/docs/context/AuthContext";
 
 // Icon mapping for navigation items
 const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
@@ -28,6 +29,7 @@ const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
 export function ConsumerNavigation() {
   const location = useLocation();
   const navigate = useNavigate();
+  const { logout } = useAuth();
   const [unreadCount, setUnreadCount] = useState<number>(getUnreadCount());
   
   // Check if a nav item is currently active based on the URL
@@ -54,8 +56,9 @@ export function ConsumerNavigation() {
     navigate(`/my-profile?subPage=${subPage}`);
   };
 
-  // Handle logout - navigate to login page
+  // Handle logout - clear auth state and navigate to login page
   const handleLogout = () => {
+    logout();
     navigate("/login");
   };
 
