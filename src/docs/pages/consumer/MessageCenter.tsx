@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { WexButton } from "@/components/wex/wex-button";
 import { WexCard } from "@/components/wex/wex-card";
@@ -22,8 +22,8 @@ import {
   FileText,
   Settings,
   Inbox,
-  Folder,
   Download,
+  Trash2,
 } from "lucide-react";
 import type { Message } from "./messageCenterUtils";
 import {
@@ -183,6 +183,587 @@ const getInitialMessages = (): Message[] => {
       isArchived: false,
       body: "Your password has been successfully changed. If you did not make this change, please contact support immediately.",
     },
+    {
+      id: "11",
+      subject: "Monthly Investment Performance Report",
+      hasAttachment: true,
+      category: "Contributions & Investments",
+      categoryColor: "#ffbca7",
+      categoryTextColor: "#66230e",
+      deliveryDate: "11/22/25 10:30AM",
+      isStarred: false,
+      isBold: true,
+      isRead: false,
+      isArchived: false,
+      body: "Your monthly investment performance report is now available. Review your portfolio performance and allocations.",
+      attachmentFileName: "Investment_Report_11_2025.pdf",
+    },
+    {
+      id: "12",
+      subject: "Account Statement Available",
+      hasAttachment: true,
+      category: "Statements & Tax Documents",
+      categoryColor: "#fff7b1",
+      categoryTextColor: "#665e18",
+      deliveryDate: "11/22/25 09:15AM",
+      isStarred: false,
+      isBold: false,
+      isRead: false,
+      isArchived: false,
+      body: "Your account statement for the previous month is now available for download.",
+      attachmentFileName: "Statement_11_2025.pdf",
+    },
+    {
+      id: "13",
+      subject: "Withdrawal Processed Successfully",
+      hasAttachment: false,
+      category: "Distributions",
+      categoryColor: "#9ddcfb",
+      categoryTextColor: "#044362",
+      deliveryDate: "11/21/25 03:45PM",
+      isStarred: false,
+      isBold: true,
+      isRead: false,
+      isArchived: false,
+      body: "Your HSA withdrawal request has been processed. Funds will be available in your linked account within 2-3 business days.",
+    },
+    {
+      id: "14",
+      subject: "Card Transaction Notification",
+      hasAttachment: false,
+      category: "Cards & Security",
+      categoryColor: "#e8a6cc",
+      categoryTextColor: "#4f0d33",
+      deliveryDate: "11/21/25 02:20PM",
+      isStarred: false,
+      isBold: true,
+      isRead: false,
+      isArchived: false,
+      body: "A transaction was made using your HSA card. Please verify this transaction is authorized.",
+    },
+    {
+      id: "15",
+      subject: "Investment Allocation Update",
+      hasAttachment: true,
+      category: "Contributions & Investments",
+      categoryColor: "#ffbca7",
+      categoryTextColor: "#66230e",
+      deliveryDate: "11/21/25 11:00AM",
+      isStarred: false,
+      isBold: false,
+      isRead: false,
+      isArchived: false,
+      body: "Your investment allocation has been updated. Review the changes in your account.",
+      attachmentFileName: "Allocation_Update_11_21.pdf",
+    },
+    {
+      id: "16",
+      subject: "HSA Account Summary (08/01/2025-08/31/2025)",
+      hasAttachment: true,
+      category: "Statements & Tax Documents",
+      categoryColor: "#fff7b1",
+      categoryTextColor: "#665e18",
+      deliveryDate: "11/20/25 04:30PM",
+      isStarred: false,
+      isBold: false,
+      isRead: false,
+      isArchived: false,
+      body: "Your monthly account summary is now available.",
+      attachmentFileName: "Account_Summary_08_2025.pdf",
+    },
+    {
+      id: "17",
+      subject: "Payment Confirmation",
+      hasAttachment: false,
+      category: "Distributions",
+      categoryColor: "#9ddcfb",
+      categoryTextColor: "#044362",
+      deliveryDate: "11/20/25 01:15PM",
+      isStarred: false,
+      isBold: true,
+      isRead: false,
+      isArchived: false,
+      body: "Your HSA payment has been confirmed and processed. The payment will be sent to the specified recipient.",
+    },
+    {
+      id: "18",
+      subject: "Security Alert: New Login Detected",
+      hasAttachment: false,
+      category: "Cards & Security",
+      categoryColor: "#e8a6cc",
+      categoryTextColor: "#4f0d33",
+      deliveryDate: "11/19/25 10:45AM",
+      isStarred: false,
+      isBold: true,
+      isRead: false,
+      isArchived: false,
+      body: "A new login was detected from an unrecognized device. If this was not you, please secure your account immediately.",
+    },
+    {
+      id: "19",
+      subject: "Quarterly Investment Summary",
+      hasAttachment: true,
+      category: "Contributions & Investments",
+      categoryColor: "#ffbca7",
+      categoryTextColor: "#66230e",
+      deliveryDate: "11/19/25 09:30AM",
+      isStarred: false,
+      isBold: false,
+      isRead: false,
+      isArchived: false,
+      body: "Your quarterly investment summary is now available. Review your portfolio performance for Q3 2025.",
+      attachmentFileName: "Q3_Investment_Summary_2025.pdf",
+    },
+    {
+      id: "20",
+      subject: "Tax Document: Form 1099-SA Available",
+      hasAttachment: true,
+      category: "Statements & Tax Documents",
+      categoryColor: "#fff7b1",
+      categoryTextColor: "#665e18",
+      deliveryDate: "11/18/25 02:00PM",
+      isStarred: false,
+      isBold: true,
+      isRead: false,
+      isArchived: false,
+      body: "Your 1099-SA tax form for the current tax year is now available for download.",
+      attachmentFileName: "1099-SA_2025.pdf",
+    },
+    {
+      id: "21",
+      subject: "HSA Contribution Received",
+      hasAttachment: false,
+      category: "Contributions & Investments",
+      categoryColor: "#ffbca7",
+      categoryTextColor: "#66230e",
+      deliveryDate: "11/18/25 11:20AM",
+      isStarred: false,
+      isBold: true,
+      isRead: false,
+      isArchived: false,
+      body: "A new contribution has been received and deposited into your HSA account. The funds are now available for use.",
+    },
+    {
+      id: "22",
+      subject: "Account Summary (07/01/2025-07/31/2025)",
+      hasAttachment: true,
+      category: "Statements & Tax Documents",
+      categoryColor: "#fff7b1",
+      categoryTextColor: "#665e18",
+      deliveryDate: "11/17/25 03:10PM",
+      isStarred: false,
+      isBold: false,
+      isRead: false,
+      isArchived: false,
+      body: "Your monthly account summary is now available.",
+      attachmentFileName: "Account_Summary_07_2025.pdf",
+    },
+    {
+      id: "23",
+      subject: "Withdrawal Request Approved",
+      hasAttachment: false,
+      category: "Distributions",
+      categoryColor: "#9ddcfb",
+      categoryTextColor: "#044362",
+      deliveryDate: "11/17/25 12:45PM",
+      isStarred: false,
+      isBold: true,
+      isRead: false,
+      isArchived: false,
+      body: "Your withdrawal request has been approved. The funds will be transferred to your linked bank account.",
+    },
+    {
+      id: "24",
+      subject: "Card Replacement Shipped",
+      hasAttachment: false,
+      category: "Cards & Security",
+      categoryColor: "#e8a6cc",
+      categoryTextColor: "#4f0d33",
+      deliveryDate: "11/16/25 10:00AM",
+      isStarred: false,
+      isBold: false,
+      isRead: false,
+      isArchived: false,
+      body: "Your replacement HSA card has been shipped. You should receive it within 7-10 business days.",
+    },
+    {
+      id: "25",
+      subject: "Investment Options Updated",
+      hasAttachment: true,
+      category: "Contributions & Investments",
+      categoryColor: "#ffbca7",
+      categoryTextColor: "#66230e",
+      deliveryDate: "11/16/25 09:15AM",
+      isStarred: false,
+      isBold: false,
+      isRead: false,
+      isArchived: false,
+      body: "New investment options have been added to your HSA account. Review the available options and update your allocations.",
+      attachmentFileName: "Investment_Options_Update_11_16.pdf",
+    },
+    {
+      id: "26",
+      subject: "Monthly Statement Ready",
+      hasAttachment: true,
+      category: "Statements & Tax Documents",
+      categoryColor: "#fff7b1",
+      categoryTextColor: "#665e18",
+      deliveryDate: "11/15/25 04:20PM",
+      isStarred: false,
+      isBold: true,
+      isRead: false,
+      isArchived: false,
+      body: "Your monthly statement is now ready for review and download.",
+      attachmentFileName: "Statement_11_15_2025.pdf",
+    },
+    {
+      id: "27",
+      subject: "HSA Payment Processed",
+      hasAttachment: false,
+      category: "Distributions",
+      categoryColor: "#9ddcfb",
+      categoryTextColor: "#044362",
+      deliveryDate: "11/15/25 01:30PM",
+      isStarred: false,
+      isBold: true,
+      isRead: false,
+      isArchived: false,
+      body: "Your HSA payment has been processed successfully. The payment will be sent to the healthcare provider.",
+    },
+    {
+      id: "28",
+      subject: "PIN Change Confirmation",
+      hasAttachment: false,
+      category: "Cards & Security",
+      categoryColor: "#e8a6cc",
+      categoryTextColor: "#4f0d33",
+      deliveryDate: "11/14/25 11:45AM",
+      isStarred: false,
+      isBold: false,
+      isRead: false,
+      isArchived: false,
+      body: "Your card PIN has been successfully changed. Please keep your new PIN secure and do not share it with anyone.",
+    },
+    {
+      id: "29",
+      subject: "Contribution Limit Reminder",
+      hasAttachment: true,
+      category: "Contributions & Investments",
+      categoryColor: "#ffbca7",
+      categoryTextColor: "#66230e",
+      deliveryDate: "11/14/25 10:10AM",
+      isStarred: false,
+      isBold: true,
+      isRead: false,
+      isArchived: false,
+      body: "You are approaching your annual HSA contribution limit. Please review your contribution amounts to avoid exceeding the limit.",
+      attachmentFileName: "Contribution_Limit_Reminder_11_14.pdf",
+    },
+    {
+      id: "30",
+      subject: "Annual Tax Summary Available",
+      hasAttachment: true,
+      category: "Statements & Tax Documents",
+      categoryColor: "#fff7b1",
+      categoryTextColor: "#665e18",
+      deliveryDate: "11/13/25 02:50PM",
+      isStarred: false,
+      isBold: true,
+      isRead: false,
+      isArchived: false,
+      body: "Your annual tax summary for 2025 is now available. This document contains important information for your tax filing.",
+      attachmentFileName: "Annual_Tax_Summary_2025.pdf",
+    },
+    {
+      id: "31",
+      subject: "Distribution Request Submitted",
+      hasAttachment: false,
+      category: "Distributions",
+      categoryColor: "#9ddcfb",
+      categoryTextColor: "#044362",
+      deliveryDate: "11/13/25 12:00PM",
+      isStarred: false,
+      isBold: false,
+      isRead: false,
+      isArchived: false,
+      body: "Your distribution request has been submitted and is being processed. You will receive a confirmation once it's complete.",
+    },
+    {
+      id: "32",
+      subject: "Fraud Alert: Suspicious Activity",
+      hasAttachment: false,
+      category: "Cards & Security",
+      categoryColor: "#e8a6cc",
+      categoryTextColor: "#4f0d33",
+      deliveryDate: "11/12/25 03:30PM",
+      isStarred: false,
+      isBold: true,
+      isRead: false,
+      isArchived: false,
+      body: "We detected suspicious activity on your account. Please verify your recent transactions and contact us if you notice any unauthorized activity.",
+    },
+    {
+      id: "33",
+      subject: "Investment Performance Update",
+      hasAttachment: true,
+      category: "Contributions & Investments",
+      categoryColor: "#ffbca7",
+      categoryTextColor: "#66230e",
+      deliveryDate: "11/12/25 09:45AM",
+      isStarred: false,
+      isBold: false,
+      isRead: false,
+      isArchived: false,
+      body: "Your investment performance has been updated. Review your portfolio gains and losses for the current period.",
+      attachmentFileName: "Performance_Update_11_12.pdf",
+    },
+    {
+      id: "34",
+      subject: "Account Summary (06/01/2025-06/30/2025)",
+      hasAttachment: true,
+      category: "Statements & Tax Documents",
+      categoryColor: "#fff7b1",
+      categoryTextColor: "#665e18",
+      deliveryDate: "11/11/25 01:20PM",
+      isStarred: false,
+      isBold: false,
+      isRead: false,
+      isArchived: false,
+      body: "Your monthly account summary is now available.",
+      attachmentFileName: "Account_Summary_06_2025.pdf",
+    },
+    {
+      id: "35",
+      subject: "Withdrawal Completed",
+      hasAttachment: false,
+      category: "Distributions",
+      categoryColor: "#9ddcfb",
+      categoryTextColor: "#044362",
+      deliveryDate: "11/11/25 10:30AM",
+      isStarred: false,
+      isBold: true,
+      isRead: false,
+      isArchived: false,
+      body: "Your withdrawal has been completed. The funds have been transferred to your linked account.",
+    },
+    {
+      id: "36",
+      subject: "Card Activation Required",
+      hasAttachment: false,
+      category: "Cards & Security",
+      categoryColor: "#e8a6cc",
+      categoryTextColor: "#4f0d33",
+      deliveryDate: "11/10/25 02:15PM",
+      isStarred: false,
+      isBold: true,
+      isRead: false,
+      isArchived: false,
+      body: "Your new HSA card requires activation. Please activate your card before first use to ensure it's ready for transactions.",
+    },
+    {
+      id: "37",
+      subject: "HSA Contribution Limit Reached",
+      hasAttachment: true,
+      category: "Contributions & Investments",
+      categoryColor: "#ffbca7",
+      categoryTextColor: "#66230e",
+      deliveryDate: "11/10/25 11:00AM",
+      isStarred: false,
+      isBold: true,
+      isRead: false,
+      isArchived: false,
+      body: "You have reached your annual HSA contribution limit. No further contributions will be accepted for this tax year.",
+      attachmentFileName: "Contribution_Limit_Reached_11_10.pdf",
+    },
+    {
+      id: "38",
+      subject: "Tax Form 1099-SA Ready for Download",
+      hasAttachment: true,
+      category: "Statements & Tax Documents",
+      categoryColor: "#fff7b1",
+      categoryTextColor: "#665e18",
+      deliveryDate: "11/09/25 03:45PM",
+      isStarred: false,
+      isBold: false,
+      isRead: false,
+      isArchived: false,
+      body: "Your 1099-SA tax form is ready for download. This form is required for your tax filing.",
+      attachmentFileName: "1099-SA_2025.pdf",
+    },
+    {
+      id: "39",
+      subject: "Payment Authorization Confirmed",
+      hasAttachment: false,
+      category: "Distributions",
+      categoryColor: "#9ddcfb",
+      categoryTextColor: "#044362",
+      deliveryDate: "11/09/25 12:30PM",
+      isStarred: false,
+      isBold: false,
+      isRead: false,
+      isArchived: false,
+      body: "Your payment authorization has been confirmed. The payment will be processed according to your instructions.",
+    },
+    {
+      id: "40",
+      subject: "Account Security Settings Updated",
+      hasAttachment: false,
+      category: "Cards & Security",
+      categoryColor: "#e8a6cc",
+      categoryTextColor: "#4f0d33",
+      deliveryDate: "11/08/25 10:15AM",
+      isStarred: false,
+      isBold: false,
+      isRead: false,
+      isArchived: false,
+      body: "Your account security settings have been updated. Review the changes to ensure they match your preferences.",
+    },
+    {
+      id: "41",
+      subject: "Investment Rebalancing Notice",
+      hasAttachment: true,
+      category: "Contributions & Investments",
+      categoryColor: "#ffbca7",
+      categoryTextColor: "#66230e",
+      deliveryDate: "11/07/25 02:00PM",
+      isStarred: false,
+      isBold: false,
+      isRead: false,
+      isArchived: false,
+      body: "Your investment portfolio has been automatically rebalanced to maintain your target allocation percentages.",
+      attachmentFileName: "Rebalancing_Notice_11_07.pdf",
+    },
+    {
+      id: "42",
+      subject: "Account Summary (05/01/2025-05/31/2025)",
+      hasAttachment: true,
+      category: "Statements & Tax Documents",
+      categoryColor: "#fff7b1",
+      categoryTextColor: "#665e18",
+      deliveryDate: "11/06/25 01:45PM",
+      isStarred: false,
+      isBold: false,
+      isRead: false,
+      isArchived: false,
+      body: "Your monthly account summary is now available.",
+      attachmentFileName: "Account_Summary_05_2025.pdf",
+    },
+    {
+      id: "43",
+      subject: "Distribution Processing",
+      hasAttachment: false,
+      category: "Distributions",
+      categoryColor: "#9ddcfb",
+      categoryTextColor: "#044362",
+      deliveryDate: "11/05/25 11:20AM",
+      isStarred: false,
+      isBold: true,
+      isRead: false,
+      isArchived: false,
+      body: "Your distribution request is currently being processed. You will receive a notification once it's complete.",
+    },
+    {
+      id: "44",
+      subject: "Two-Factor Authentication Enabled",
+      hasAttachment: false,
+      category: "Cards & Security",
+      categoryColor: "#e8a6cc",
+      categoryTextColor: "#4f0d33",
+      deliveryDate: "11/04/25 03:00PM",
+      isStarred: false,
+      isBold: false,
+      isRead: false,
+      isArchived: false,
+      body: "Two-factor authentication has been enabled on your account for enhanced security.",
+    },
+    {
+      id: "45",
+      subject: "Contribution Schedule Updated",
+      hasAttachment: true,
+      category: "Contributions & Investments",
+      categoryColor: "#ffbca7",
+      categoryTextColor: "#66230e",
+      deliveryDate: "11/03/25 10:30AM",
+      isStarred: false,
+      isBold: false,
+      isRead: false,
+      isArchived: false,
+      body: "Your contribution schedule has been updated. Review the new schedule to ensure it meets your needs.",
+      attachmentFileName: "Contribution_Schedule_Update_11_03.pdf",
+    },
+    {
+      id: "46",
+      subject: "Quarterly Statement Available",
+      hasAttachment: true,
+      category: "Statements & Tax Documents",
+      categoryColor: "#fff7b1",
+      categoryTextColor: "#665e18",
+      deliveryDate: "11/02/25 09:15AM",
+      isStarred: false,
+      isBold: true,
+      isRead: false,
+      isArchived: false,
+      body: "Your quarterly statement for Q3 2025 is now available for download.",
+      attachmentFileName: "Q3_Statement_2025.pdf",
+    },
+    {
+      id: "47",
+      subject: "Payment Reversal Notice",
+      hasAttachment: false,
+      category: "Distributions",
+      categoryColor: "#9ddcfb",
+      categoryTextColor: "#044362",
+      deliveryDate: "11/01/25 02:45PM",
+      isStarred: false,
+      isBold: true,
+      isRead: false,
+      isArchived: false,
+      body: "A payment has been reversed and the funds have been returned to your HSA account.",
+    },
+    {
+      id: "48",
+      subject: "Card Expiration Reminder",
+      hasAttachment: false,
+      category: "Cards & Security",
+      categoryColor: "#e8a6cc",
+      categoryTextColor: "#4f0d33",
+      deliveryDate: "10/31/25 01:00PM",
+      isStarred: false,
+      isBold: false,
+      isRead: false,
+      isArchived: false,
+      body: "Your HSA card will expire soon. A replacement card will be automatically sent to your registered address.",
+    },
+    {
+      id: "49",
+      subject: "Investment Fee Schedule Update",
+      hasAttachment: true,
+      category: "Contributions & Investments",
+      categoryColor: "#ffbca7",
+      categoryTextColor: "#66230e",
+      deliveryDate: "10/30/25 11:30AM",
+      isStarred: false,
+      isBold: false,
+      isRead: false,
+      isArchived: false,
+      body: "The investment fee schedule has been updated. Review the new fee structure for your investment options.",
+      attachmentFileName: "Fee_Schedule_Update_10_30.pdf",
+    },
+    {
+      id: "50",
+      subject: "Year-End Tax Preparation Guide",
+      hasAttachment: true,
+      category: "Statements & Tax Documents",
+      categoryColor: "#fff7b1",
+      categoryTextColor: "#665e18",
+      deliveryDate: "10/29/25 10:00AM",
+      isStarred: false,
+      isBold: true,
+      isRead: false,
+      isArchived: false,
+      body: "Your year-end tax preparation guide is now available. This guide will help you prepare for tax filing season.",
+      attachmentFileName: "Tax_Prep_Guide_2025.pdf",
+    },
   ];
 
   return getInitialMessagesUtil(initialMessages);
@@ -201,6 +782,9 @@ export default function MessageCenter() {
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [selectedMessage, setSelectedMessage] = useState<Message | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage, setItemsPerPage] = useState(10);
+  const [selectedMessageIds, setSelectedMessageIds] = useState<Set<string>>(new Set());
 
   const updateMessage = (id: string, updates: Partial<Message>) => {
     setMessages((prev) => {
@@ -275,12 +859,19 @@ export default function MessageCenter() {
     if (selectedCategory === "unread") {
       return "You don't have any unread messages yet";
     }
+    if (selectedCategory === "recently-viewed") {
+      return "You don't have any recently viewed messages yet";
+    }
     // Category filter
     return "You don't have any messages in this category yet";
   };
 
   const unreadCount = useMemo(() => {
     return messages.filter((message) => !message.isRead && !message.isArchived).length;
+  }, [messages]);
+
+  const recentlyViewedCount = useMemo(() => {
+    return messages.filter((message) => message.isRead && !message.isArchived).length;
   }, [messages]);
 
   const filteredMessages = useMemo(() => {
@@ -300,13 +891,29 @@ export default function MessageCenter() {
       // Unread: show only non-archived unread messages
       return messages.filter((message) => message.isRead === false && !message.isArchived);
     }
+    if (selectedCategory === "recently-viewed") {
+      // Recently Viewed: show only non-archived read messages (previously opened)
+      return messages.filter((message) => message.isRead === true && !message.isArchived);
+    }
     // Category filter: show only non-archived messages in that category
     return messages.filter((message) => message.category === selectedCategory && !message.isArchived);
   }, [selectedCategory, messages]);
 
+  // Calculate pagination
+  const totalPages = Math.ceil(filteredMessages.length / itemsPerPage);
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  const paginatedMessages = filteredMessages.slice(startIndex, endIndex);
+
+  // Reset to page 1 when filters or items per page change
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [selectedCategory, itemsPerPage]);
+
   const mobileFilterOptions = [
     { label: "All Messages", value: "all", section: "Activity" },
     { label: "Unread", value: "unread", section: "Activity" },
+    { label: "Recently Viewed", value: "recently-viewed", section: "Activity" },
     { label: "Starred", value: "starred", section: "Activity" },
     { label: "Archive", value: "archive", section: "Manage" },
     { label: "Cards & Security", value: "Cards & Security", section: "Categories" },
@@ -478,10 +1085,11 @@ export default function MessageCenter() {
                           </WexSidebar.MenuItem>
                           <WexSidebar.MenuItem>
                             <WexSidebar.MenuButton
-                              isActive={false}
-                              className="h-[31px] min-h-[31px] whitespace-normal px-3 py-[6px]"
+                              isActive={selectedCategory === "recently-viewed"}
+                              onClick={() => setSelectedCategory("recently-viewed")}
+                              className="h-[31px] min-h-[31px] whitespace-normal px-3 py-[6px] data-[active=true]:bg-sidebar-primary data-[active=true]:text-sidebar-primary-foreground data-[active=true]:font-normal"
                             >
-                              Recently Viewed
+                              Recently Viewed ({recentlyViewedCount})
                             </WexSidebar.MenuButton>
                           </WexSidebar.MenuItem>
 
@@ -572,14 +1180,23 @@ export default function MessageCenter() {
                       {filteredMessages.map((message) => (
                         <WexCard
                           key={message.id}
-                          className="shadow-sm"
-                          onClick={() => handleMessageClick(message)}
+                          className="shadow-sm cursor-pointer"
+                          onClick={(e) => {
+                            // Don't open modal if clicking on interactive elements
+                            const target = e.target as HTMLElement;
+                            if (target.closest('button') || target.closest('[role="checkbox"]') || target.closest('input[type="checkbox"]')) {
+                              return;
+                            }
+                            handleMessageClick(message);
+                          }}
                         >
                           <WexCard.Content className="space-y-3 p-4">
                             <div className="flex items-start justify-between gap-3">
                               <div className="flex flex-1 items-start gap-2">
-                                {message.hasAttachment && (
-                                  <Paperclip className="mt-0.5 h-4 w-4 text-[#0058a3]" />
+                                {message.hasAttachment ? (
+                                  <Paperclip className="mt-0.5 h-4 w-4 shrink-0 text-[#0058a3]" />
+                                ) : (
+                                  <div className="h-4 w-4 shrink-0" />
                                 )}
                                 <div className="space-y-1">
                                   <p
@@ -591,7 +1208,7 @@ export default function MessageCenter() {
                                   >
                                     {message.subject}
                                   </p>
-                                  <p className="text-xs text-[#4e5666]">{message.deliveryDate}</p>
+                                  <p className="text-xs text-[#4e5666] whitespace-nowrap">{message.deliveryDate}</p>
                                 </div>
                               </div>
                               <div className="flex items-center gap-1">
@@ -614,7 +1231,7 @@ export default function MessageCenter() {
 
                             <div className="flex flex-wrap items-center gap-2">
                               <WexBadge
-                                className="rounded-md px-2 py-1 text-xs font-bold"
+                                className="rounded-md px-2 py-1 text-xs font-bold whitespace-nowrap"
                                 style={{
                                   backgroundColor: message.categoryColor,
                                   color: message.categoryTextColor,
@@ -666,7 +1283,25 @@ export default function MessageCenter() {
                           <WexTable.Header>
                             <WexTable.Row className="border-b border-[#e4e6e9]">
                               <WexTable.Head className="w-[47px] px-3.5 py-2.5 text-left">
-                                <WexCheckbox />
+                                <WexCheckbox
+                                  checked={
+                                    paginatedMessages.length > 0 &&
+                                    paginatedMessages.every((msg) => selectedMessageIds.has(msg.id))
+                                  }
+                                  onCheckedChange={(checked) => {
+                                    if (checked) {
+                                      // Select all messages on current page
+                                      const newSelected = new Set(selectedMessageIds);
+                                      paginatedMessages.forEach((msg) => newSelected.add(msg.id));
+                                      setSelectedMessageIds(newSelected);
+                                    } else {
+                                      // Deselect all messages on current page
+                                      const newSelected = new Set(selectedMessageIds);
+                                      paginatedMessages.forEach((msg) => newSelected.delete(msg.id));
+                                      setSelectedMessageIds(newSelected);
+                                    }
+                                  }}
+                                />
                               </WexTable.Head>
                               <WexTable.Head className="w-[47px] px-3.5 py-2.5"></WexTable.Head>
                               <WexTable.Head className="w-[401px] px-3.5 py-2.5 text-left">
@@ -685,14 +1320,35 @@ export default function MessageCenter() {
                           </WexTable.Header>
                           {/* Table Body */}
                           <WexTable.Body>
-                            {filteredMessages.map((message) => (
+                            {paginatedMessages.map((message) => (
                             <WexTable.Row
                               key={message.id}
                               className="cursor-pointer border-b border-[#e4e6e9] hover:bg-gray-50"
-                              onClick={() => handleMessageClick(message)}
+                              onClick={(e) => {
+                                // Don't open modal if clicking on checkbox, star button, or dropdown menu
+                                const target = e.target as HTMLElement;
+                                if (target.closest('button') || target.closest('[role="checkbox"]') || target.closest('input[type="checkbox"]') || target.closest('[role="menu"]')) {
+                                  return;
+                                }
+                                handleMessageClick(message);
+                              }}
                             >
                               <WexTable.Cell className="px-3.5 py-2.5">
-                                <WexCheckbox />
+                                <WexCheckbox
+                                  checked={selectedMessageIds.has(message.id)}
+                                  onCheckedChange={(checked) => {
+                                    const newSelected = new Set(selectedMessageIds);
+                                    if (checked) {
+                                      newSelected.add(message.id);
+                                    } else {
+                                      newSelected.delete(message.id);
+                                    }
+                                    setSelectedMessageIds(newSelected);
+                                  }}
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                  }}
+                                />
                               </WexTable.Cell>
                               <WexTable.Cell className="px-3.5 py-2.5">
                                 <button
@@ -712,8 +1368,10 @@ export default function MessageCenter() {
                               </WexTable.Cell>
                               <WexTable.Cell className="px-3.5 py-2.5">
                                 <div className="flex items-center gap-2">
-                                  {message.hasAttachment && (
-                                    <Paperclip className="h-3.5 w-3.5 text-[#0058a3]" />
+                                  {message.hasAttachment ? (
+                                    <Paperclip className="h-4 w-4 shrink-0 text-[#0058a3]" />
+                                  ) : (
+                                    <div className="h-4 w-4 shrink-0" />
                                   )}
                                   <span
                                     className={`text-sm tracking-[-0.084px] ${
@@ -726,9 +1384,9 @@ export default function MessageCenter() {
                                   </span>
                                 </div>
                               </WexTable.Cell>
-                              <WexTable.Cell className="px-3.5 py-2.5">
+                              <WexTable.Cell className="px-3.5 py-2.5 min-w-[200px]">
                                 <WexBadge
-                                  className="rounded-md px-2 py-1 text-xs font-bold"
+                                  className="rounded-md px-2 py-1 text-xs font-bold whitespace-nowrap"
                                   style={{
                                     backgroundColor: message.categoryColor,
                                     color: message.categoryTextColor,
@@ -739,7 +1397,7 @@ export default function MessageCenter() {
                               </WexTable.Cell>
                               <WexTable.Cell className="px-3.5 py-2.5">
                                 <span
-                                  className={`text-sm tracking-[-0.084px] ${
+                                  className={`text-sm tracking-[-0.084px] whitespace-nowrap ${
                                     !message.isRead
                                       ? "font-bold text-[#243746]"
                                       : "font-normal text-[#243746]"
@@ -771,7 +1429,7 @@ export default function MessageCenter() {
                                               onClick={(e) => handleToggleReadStatus(message, e)}
                                               className="flex cursor-pointer items-center gap-[7px] rounded-[4px] px-[10.5px] py-[7px] text-sm text-[#243746] outline-none hover:bg-gray-50 focus:bg-gray-50"
                                             >
-                                              <Inbox className="h-3.5 w-3.5 shrink-0 text-[#7c858e]" />
+                                              <Inbox className="h-3.5 w-3.5 shrink-0 text-[#243746]" />
                                               <span>Mark as read</span>
                                             </WexDropdownMenu.Item>
                                           )}
@@ -780,7 +1438,7 @@ export default function MessageCenter() {
                                               onClick={(e) => handleToggleReadStatus(message, e)}
                                               className="flex cursor-pointer items-center gap-[7px] rounded-[4px] px-[10.5px] py-[7px] text-sm text-[#243746] outline-none hover:bg-gray-50 focus:bg-gray-50"
                                             >
-                                              <Inbox className="h-3.5 w-3.5 shrink-0 text-[#7c858e]" />
+                                              <Inbox className="h-3.5 w-3.5 shrink-0 text-[#243746]" />
                                               <span>Mark as unread</span>
                                             </WexDropdownMenu.Item>
                                           )}
@@ -788,7 +1446,7 @@ export default function MessageCenter() {
                                             onClick={(e) => handleArchive(message, e)}
                                             className="flex cursor-pointer items-center gap-[7px] rounded-[4px] px-[10.5px] py-[7px] text-sm text-[#243746] outline-none hover:bg-gray-50 focus:bg-gray-50"
                                           >
-                                            <Folder className="h-3.5 w-3.5 shrink-0 text-[#7c858e]" />
+                                            <Trash2 className="h-3.5 w-3.5 shrink-0 text-[#243746]" />
                                             <span>Archive</span>
                                           </WexDropdownMenu.Item>
                                         </>
@@ -821,39 +1479,78 @@ export default function MessageCenter() {
                     <WexPagination>
                       <WexPagination.Content>
                         <WexPagination.Item>
-                          <WexPagination.First href="#" />
+                          <WexPagination.First
+                            href="#"
+                            onClick={(e) => {
+                              e.preventDefault();
+                              setCurrentPage(1);
+                            }}
+                          />
                         </WexPagination.Item>
                         <WexPagination.Item>
-                          <WexPagination.Previous href="#" />
+                          <WexPagination.Previous
+                            href="#"
+                            onClick={(e) => {
+                              e.preventDefault();
+                              if (currentPage > 1) setCurrentPage(currentPage - 1);
+                            }}
+                          />
+                        </WexPagination.Item>
+                        {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
+                          let pageNum: number;
+                          if (totalPages <= 5) {
+                            pageNum = i + 1;
+                          } else if (currentPage <= 3) {
+                            pageNum = i + 1;
+                          } else if (currentPage >= totalPages - 2) {
+                            pageNum = totalPages - 4 + i;
+                          } else {
+                            pageNum = currentPage - 2 + i;
+                          }
+                          return (
+                            <WexPagination.Item key={pageNum}>
+                              <WexPagination.Link
+                                href="#"
+                                isActive={currentPage === pageNum}
+                                onClick={(e) => {
+                                  e.preventDefault();
+                                  setCurrentPage(pageNum);
+                                }}
+                              >
+                                {pageNum}
+                              </WexPagination.Link>
+                            </WexPagination.Item>
+                          );
+                        })}
+                        <WexPagination.Item>
+                          <WexPagination.Next
+                            href="#"
+                            onClick={(e) => {
+                              e.preventDefault();
+                              if (currentPage < totalPages) setCurrentPage(currentPage + 1);
+                            }}
+                          />
                         </WexPagination.Item>
                         <WexPagination.Item>
-                          <WexPagination.Link href="#" isActive>
-                            1
-                          </WexPagination.Link>
-                        </WexPagination.Item>
-                        <WexPagination.Item>
-                          <WexPagination.Link href="#">2</WexPagination.Link>
-                        </WexPagination.Item>
-                        <WexPagination.Item>
-                          <WexPagination.Link href="#">3</WexPagination.Link>
-                        </WexPagination.Item>
-                        <WexPagination.Item>
-                          <WexPagination.Link href="#">4</WexPagination.Link>
-                        </WexPagination.Item>
-                        <WexPagination.Item>
-                          <WexPagination.Link href="#">5</WexPagination.Link>
-                        </WexPagination.Item>
-                        <WexPagination.Item>
-                          <WexPagination.Next href="#" />
-                        </WexPagination.Item>
-                        <WexPagination.Item>
-                          <WexPagination.Last href="#" />
+                          <WexPagination.Last
+                            href="#"
+                            onClick={(e) => {
+                              e.preventDefault();
+                              setCurrentPage(totalPages);
+                            }}
+                          />
                         </WexPagination.Item>
                       </WexPagination.Content>
                     </WexPagination>
                     <div className="md:ml-4">
-                      <WexSelect defaultValue="10">
-                        <WexSelect.Trigger className="h-[35px] w-[60px] border-[#a5aeb4] shadow-sm">
+                      <WexSelect
+                        value={itemsPerPage.toString()}
+                        onValueChange={(value) => {
+                          setItemsPerPage(Number(value));
+                          setCurrentPage(1);
+                        }}
+                      >
+                        <WexSelect.Trigger className="h-[35px] min-w-[70px] w-[70px] border-[#a5aeb4] shadow-sm">
                           <WexSelect.Value />
                         </WexSelect.Trigger>
                         <WexSelect.Content>
