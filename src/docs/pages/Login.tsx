@@ -172,13 +172,10 @@ export default function Login({ onLoginSuccess }: LoginProps) {
   }
 
   return (
-    <div className="min-h-screen bg-[hsl(var(--wex-palette-blue-50))] relative overflow-hidden">
-      {/* Background decorative elements */}
-      <div 
-        className="absolute inset-0 overflow-hidden pointer-events-none bg-cover bg-center bg-no-repeat"
-        style={{ backgroundImage: `url(${LoginBg})` }}
-      >
-      </div>
+    <div 
+      className="min-h-screen relative overflow-hidden bg-cover bg-center bg-no-repeat"
+      style={{ backgroundImage: `url(${LoginBg})` }}
+    >
 
       {/* Main Content */}
       <div className="relative z-10 min-h-screen flex flex-col">
