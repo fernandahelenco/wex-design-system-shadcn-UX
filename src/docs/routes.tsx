@@ -176,6 +176,11 @@ export function DocsRoutes() {
     </ProtectedRoute>
   );
 
+  // Wrap public pages (e.g., login) to enforce light mode without auth gate
+  const withLightOnly = (node: React.ReactNode) => (
+    <LightModeBoundary>{node}</LightModeBoundary>
+  );
+
   return (
     <React.Suspense fallback={<PageLoader />}>
       <ScrollToTop />
@@ -183,7 +188,7 @@ export function DocsRoutes() {
         {/* Standalone Login route - bypasses DocsLayout and protection */}
         <Route
           path="login"
-          element={withConsumerLight(
+          element={withLightOnly(
             <LoginPage
               onLoginSuccess={() => {
                 window.location.href = import.meta.env.BASE_URL
