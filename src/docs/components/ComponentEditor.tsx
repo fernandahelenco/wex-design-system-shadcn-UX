@@ -13,7 +13,7 @@ import {
   type TokenDefinition,
 } from "@/docs/data/tokenRegistry";
 import { PresetReferenceWidget } from "./PresetReferenceWidget";
-import { PaletteSwatchPicker, SwatchDisplay, formatPaletteValue } from "./PaletteSwatchPicker";
+import { PaletteSwatchPicker, SwatchDisplay } from "./PaletteSwatchPicker";
 import { WexSeparator, WexTooltip } from "@/components/wex";
 import { useThemeBuilder } from "@/docs/context/ThemeBuilderContext";
 import type { MVPComponent } from "./ComponentSelector";

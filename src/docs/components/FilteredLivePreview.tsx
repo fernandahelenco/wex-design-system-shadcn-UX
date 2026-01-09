@@ -2011,10 +2011,6 @@ function AllPaletteRampsPreview({ currentValue, onValueChange, onRampChange }: A
           })();
           
           const isEditing = editingRamp === ramp.name;
-          // Use temp color if editing, otherwise use current from CSS
-          const displayHex = isEditing && tempColorValue[ramp.name] 
-            ? tempColorValue[ramp.name]
-            : hslToHex({ h: currentHsl.h, s: currentHsl.s, l: currentHsl.l });
           
           // Compute preview HSL from temp color if editing
           const previewHsl = isEditing && tempColorValue[ramp.name]
@@ -2457,7 +2453,7 @@ function RadiusPreview({ tokenName }: RadiusPreviewProps) {
 
   return (
     <div className="space-y-6">
-      <PreviewCard title="Border Radius Preview" getIssuesForCard={() => []}>
+      <PreviewCard title="Border Radius Preview">
         <div className="space-y-4">
           <div className="text-sm text-muted-foreground">
             Current value: <code className="font-mono">{radiusValue}</code>
@@ -2504,7 +2500,7 @@ function RadiusPreview({ tokenName }: RadiusPreviewProps) {
               <div className="text-xs font-medium">Badge</div>
               <WexBadge
                 style={{ borderRadius: radiusValue }}
-                variant="default"
+                intent="info"
               >
                 Badge
               </WexBadge>
@@ -2580,7 +2576,7 @@ function TypographyPreview({ tokenName }: TypographyPreviewProps) {
 
   return (
     <div className="space-y-6">
-      <PreviewCard title="Typography Preview" getIssuesForCard={() => []}>
+      <PreviewCard title="Typography Preview">
         <div className="space-y-4">
           <div className="text-sm text-muted-foreground">
             Current font: <code className="font-mono">{primaryFont}</code>
