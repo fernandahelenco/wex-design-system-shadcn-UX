@@ -42,7 +42,8 @@ export function InfoCardsSection() {
             {/* Button */}
             <div className="mt-6">
               <WexButton 
-                intent="link" 
+                intent="primary"
+                variant="link"
                 size="md"
               >
                 {card.buttonText}

@@ -23,7 +23,8 @@ export function TransactionsAndLinks() {
               Recent Transactions
             </h2>
             <WexButton 
-              intent="link" 
+              intent="primary"
+              variant="link"
               size="md"
               className="px-0"
               onClick={() => {

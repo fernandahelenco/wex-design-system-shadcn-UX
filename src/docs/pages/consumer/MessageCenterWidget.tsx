@@ -380,7 +380,8 @@ export function MessageCenterWidget() {
               </p>
             </div>
             <WexButton 
-              intent="link" 
+              intent="primary"
+              variant="link"
               size="sm"
               onClick={() => navigate("/message-center")}
               className="self-start text-primary hover:text-primary/80"
