@@ -8,11 +8,10 @@
 import * as React from "react";
 import { ColorInput } from "./ColorInput";
 import { CompactColorInput } from "./ColorInput";
-import { PALETTE_RAMPS, type PaletteRamp } from "@/docs/data/tokenRegistry";
-import { generateRampFromBase, type GeneratedRamp } from "@/docs/utils/ramp-generator";
-import { tokenToHex, parseHSL, formatHSL } from "@/docs/utils/color-convert";
+import { PALETTE_RAMPS } from "@/docs/data/tokenRegistry";
+import { generateRampFromBase } from "@/docs/utils/ramp-generator";
+import { tokenToHex, formatHSL } from "@/docs/utils/color-convert";
 import { cn } from "@/lib/utils";
-import { WexButton } from "@/components/wex";
 import { RotateCcw } from "lucide-react";
 
 interface PaletteRampEditorProps {

@@ -45,16 +45,16 @@ export default function AccountOverviewPage() {
         <div className="w-full max-w-[1440px] mx-auto px-8 py-6">
           <div className="flex flex-col md:flex-row items-center justify-between gap-4 text-sm text-muted-foreground">
             <div className="flex flex-wrap items-center justify-center gap-4">
-              <WexButton intent="link" size="sm" asChild>
+              <WexButton intent="primary" variant="link" size="sm" asChild>
                 <Link to="#">Copyright</Link>
               </WexButton>
-              <WexButton intent="link" size="sm" asChild>
+              <WexButton intent="primary" variant="link" size="sm" asChild>
                 <Link to="#">Disclaimer</Link>
               </WexButton>
-              <WexButton intent="link" size="sm" asChild>
+              <WexButton intent="primary" variant="link" size="sm" asChild>
                 <Link to="#">Privacy Policy</Link>
               </WexButton>
-              <WexButton intent="link" size="sm" asChild>
+              <WexButton intent="primary" variant="link" size="sm" asChild>
                 <Link to="#">Terms of Use</Link>
               </WexButton>
             </div>
