@@ -18,7 +18,7 @@ export function TitleBar() {
         Account Overview
       </h1>
       <div className="flex items-center gap-4">
-        <WexButton intent="outline" size="md">
+        <WexButton intent="primary" variant="outline" size="md">
           Send a Payment
         </WexButton>
         <WexButton intent="primary" size="md" onClick={() => navigate("/reimburse")}>

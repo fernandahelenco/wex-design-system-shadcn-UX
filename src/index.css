@@ -32,6 +32,11 @@
   .scrollbar-hide::-webkit-scrollbar {
     display: none;
   }
+
+  /* Hide default Radix sheet close button when a custom close is provided */
+  .hide-default-sheet-close [data-radix-dialog-close] {
+    display: none !important;
+  }
   
   /* Indeterminate progress bar animation */
   @keyframes progress-indeterminate {
