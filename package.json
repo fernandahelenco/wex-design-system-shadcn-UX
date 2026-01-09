@@ -5,6 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "bash -c 'unset npm_config_prefix && export NVM_DIR=\"$HOME/.nvm\" && [ -s \"$NVM_DIR/nvm.sh\" ] && . \"$NVM_DIR/nvm.sh\" && nvm use > /dev/null 2>&1 && vite'",
+    "dev": "bash -c 'unset npm_config_prefix && export NVM_DIR=\"$HOME/.nvm\" && [ -s \"$NVM_DIR/nvm.sh\" ] && . \"$NVM_DIR/nvm.sh\" && (nvm use > /dev/null 2>&1 || true) && vite'",
     "dev:auto": "bash scripts/dev.sh",
     "build": "node scripts/build-tokens.cjs && tsc -b && vite build",
     "lint": "eslint .",
