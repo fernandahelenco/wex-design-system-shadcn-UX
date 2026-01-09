@@ -35,7 +35,7 @@ export default function ConsumerExperiencePage() {
         {/* Welcome Header */}
         <div className="pt-2">
           <h1 className="text-3xl font-display font-semibold text-foreground leading-10">
-            Welcome back, Synthia
+            Welcome back, Crystal
           </h1>
         </div>
 

@@ -37,7 +37,7 @@ export function AccountsSection() {
                 View All Accounts
                 <ChevronRight className="h-4 w-4" />
               </WexButton>
-              <WexButton intent="primary" size="md">
+              <WexButton intent="destructive" size="md">
                 Reimburse Myself
               </WexButton>
             </div>

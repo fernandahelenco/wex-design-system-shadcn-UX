@@ -21,7 +21,7 @@ export function TitleBar() {
         <WexButton intent="outline" size="md">
           Send a Payment
         </WexButton>
-        <WexButton intent="primary" size="md" onClick={() => navigate("/reimburse")}>
+        <WexButton intent="destructive" size="md" onClick={() => navigate("/reimburse")}>
           Reimburse Myself
         </WexButton>
       </div>

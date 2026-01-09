@@ -411,7 +411,7 @@ export default function Claims() {
                 <CreditCard className="h-4 w-4" />
                 Pay provider
               </WexButton>
-              <WexButton intent="primary" onClick={() => navigate("/reimburse")}>
+              <WexButton intent="destructive" onClick={() => navigate("/reimburse")}>
                 <Wallet className="h-4 w-4" />
                 Reimburse myself
               </WexButton>
