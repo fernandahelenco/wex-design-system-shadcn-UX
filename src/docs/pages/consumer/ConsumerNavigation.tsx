@@ -117,7 +117,8 @@ export function ConsumerNavigation() {
               return (
                 <WexButton
                   key={item.label}
-                  intent={active ? "primary" : "ghost"}
+                  intent="primary"
+                  variant={active ? "solid" : "ghost"}
                   size="md"
                   asChild
                 >
@@ -135,7 +136,7 @@ export function ConsumerNavigation() {
           <div className="flex items-center gap-2">
           {/* Design System Link */}
           <WexButton
-            intent="ghost"
+            variant="ghost"
             size="icon"
             asChild
             aria-label="Design System"
@@ -147,7 +148,7 @@ export function ConsumerNavigation() {
 
           {/* Language Icon */}
           <WexButton
-            intent="ghost"
+            variant="ghost"
             size="icon"
             aria-label="Language"
           >
@@ -160,7 +161,7 @@ export function ConsumerNavigation() {
           {/* Notifications with Badge */}
           <div className="relative">
             <WexButton
-              intent="ghost"
+              variant="ghost"
               size="icon"
               asChild
               aria-label="Notifications"
@@ -185,7 +186,7 @@ export function ConsumerNavigation() {
           <WexDropdownMenu>
             <WexDropdownMenu.Trigger asChild>
               <WexButton
-                intent="ghost"
+                variant="ghost"
                 size="icon"
                 className="rounded-full"
                 aria-label="User profile"

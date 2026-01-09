@@ -88,7 +88,7 @@ export default function Resources() {
                           Documents
                         </h3>
                         <WexCollapsible.Trigger asChild>
-                          <WexButton intent="ghost" size="icon" className="h-4 w-4">
+                          <WexButton variant="ghost" size="icon" className="h-4 w-4">
                             {documentsOpen ? (
                               <ChevronUp className="h-3.5 w-3.5" />
                             ) : (
@@ -122,7 +122,7 @@ export default function Resources() {
                           Plan Summaries
                         </h3>
                         <WexCollapsible.Trigger asChild>
-                          <WexButton intent="ghost" size="icon" className="h-4 w-4">
+                          <WexButton variant="ghost" size="icon" className="h-4 w-4">
                             {planSummariesOpen ? (
                               <ChevronUp className="h-3.5 w-3.5" />
                             ) : (
@@ -145,7 +145,7 @@ export default function Resources() {
                           Rules and agreements
                         </h3>
                         <WexCollapsible.Trigger asChild>
-                          <WexButton intent="ghost" size="icon" className="h-4 w-4">
+                          <WexButton variant="ghost" size="icon" className="h-4 w-4">
                             {rulesOpen ? (
                               <ChevronUp className="h-3.5 w-3.5" />
                             ) : (
@@ -261,7 +261,7 @@ export default function Resources() {
                           External quick links
                         </h3>
                         <WexCollapsible.Trigger asChild>
-                          <WexButton intent="ghost" size="icon" className="h-4 w-4">
+                          <WexButton variant="ghost" size="icon" className="h-4 w-4">
                             {quickLinksOpen ? (
                               <ChevronUp className="h-3.5 w-3.5" />
                             ) : (
@@ -298,19 +298,19 @@ export default function Resources() {
       <footer className="border-t bg-white py-4">
         <div className="mx-auto max-w-[1440px] px-8">
           <div className="flex flex-wrap items-center justify-center gap-4 text-sm text-muted-foreground">
-            <WexButton intent="ghost" className="h-auto p-0 text-sm text-muted-foreground">
+            <WexButton variant="ghost" className="h-auto p-0 text-sm text-muted-foreground">
               Copyright
             </WexButton>
             <span>•</span>
-            <WexButton intent="ghost" className="h-auto p-0 text-sm text-muted-foreground">
+            <WexButton variant="ghost" className="h-auto p-0 text-sm text-muted-foreground">
               Disclaimer
             </WexButton>
             <span>•</span>
-            <WexButton intent="ghost" className="h-auto p-0 text-sm text-muted-foreground">
+            <WexButton variant="ghost" className="h-auto p-0 text-sm text-muted-foreground">
               Privacy Policy
             </WexButton>
             <span>•</span>
-            <WexButton intent="ghost" className="h-auto p-0 text-sm text-muted-foreground">
+            <WexButton variant="ghost" className="h-auto p-0 text-sm text-muted-foreground">
               Terms of Use
             </WexButton>
           </div>

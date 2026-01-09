@@ -943,7 +943,8 @@ export default function MessageCenter() {
               </h1>
               <div className="flex items-center gap-2">
                 <WexButton
-                  intent="outline"
+                  intent="primary"
+                  variant="outline"
                   size="icon"
                   className="h-10 w-10 border-[#0058a3] text-[#0058a3]"
                 >
@@ -967,7 +968,8 @@ export default function MessageCenter() {
               </h1>
               <div className="flex w-full flex-wrap gap-3 md:w-auto md:flex-nowrap md:gap-4">
                 <WexButton
-                  intent="outline"
+                  intent="primary"
+                  variant="outline"
                   className="flex items-center gap-2 border-[#0058a3] text-[#0058a3] md:h-[44px]"
                 >
                   <FileText className="h-4 w-4" />
@@ -1243,7 +1245,7 @@ export default function MessageCenter() {
 
                             <div className="flex flex-wrap gap-2">
                               <WexButton
-                                intent="ghost"
+                                variant="ghost"
                                 size="sm"
                                 onClick={(e) => handleToggleReadStatus(message, e)}
                                 className="px-3"
@@ -1252,7 +1254,7 @@ export default function MessageCenter() {
                               </WexButton>
                               {selectedCategory !== "archive" ? (
                                 <WexButton
-                                  intent="ghost"
+                                  variant="ghost"
                                   size="sm"
                                   onClick={(e) => handleArchive(message, e)}
                                   className="px-3"
@@ -1261,7 +1263,7 @@ export default function MessageCenter() {
                                 </WexButton>
                               ) : (
                                 <WexButton
-                                  intent="ghost"
+                                  variant="ghost"
                                   size="sm"
                                   onClick={(e) => handleUnarchive(message, e)}
                                   className="px-3"
@@ -1410,7 +1412,7 @@ export default function MessageCenter() {
                                 <WexDropdownMenu>
                                   <WexDropdownMenu.Trigger asChild>
                                     <WexButton
-                                      intent="ghost"
+                                      variant="ghost"
                                       size="icon"
                                       className="h-4 w-4"
                                     >
@@ -1637,7 +1639,7 @@ export default function MessageCenter() {
                       </p>
                     </div>
                     <WexButton
-                      intent="ghost"
+                      variant="ghost"
                       size="icon"
                       className="h-[22px] w-[22px] shrink-0"
                       aria-label="Download attachment"

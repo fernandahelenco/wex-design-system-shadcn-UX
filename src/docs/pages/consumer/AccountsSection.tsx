@@ -99,7 +99,8 @@ export function AccountsSection() {
                       </div>
                     </div>
                     <WexButton 
-                      intent="outline" 
+                      intent="primary" 
+                      variant="outline"
                       size="sm" 
                       className="w-full h-9 text-sm font-medium rounded-lg border-primary text-primary hover:bg-primary hover:text-white"
                     >
@@ -187,7 +188,8 @@ export function AccountsSection() {
                       </div>
                     </div>
                     <WexButton 
-                      intent="outline" 
+                      intent="primary" 
+                      variant="outline"
                       size="sm" 
                       className="w-full h-9 text-sm font-medium rounded-lg border-primary text-primary hover:bg-primary hover:text-white"
                     >

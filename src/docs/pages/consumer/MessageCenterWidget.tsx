@@ -494,7 +494,7 @@ export function MessageCenterWidget() {
                       </p>
                     </div>
                     <WexButton
-                      intent="ghost"
+                      variant="ghost"
                       size="icon"
                       className="h-[22px] w-[22px] shrink-0"
                       aria-label="Download attachment"

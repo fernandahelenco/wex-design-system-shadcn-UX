@@ -1443,7 +1443,8 @@ export default function MyProfile() {
           <div className="flex gap-2 justify-end p-[17.5px] pt-0">
             <WexDialog.Close asChild>
               <WexButton
-                intent="outline"
+                intent="secondary"
+                variant="outline"
                 onClick={() => {
                   resetForm();
                   setEditingDependentId(null);
@@ -1494,7 +1495,7 @@ export default function MyProfile() {
           {/* Footer */}
           <div className="flex gap-2 justify-end p-[17.5px] pt-0">
             <WexAlertDialog.Cancel asChild>
-              <WexButton intent="outline">
+              <WexButton intent="secondary" variant="outline">
                 Cancel
               </WexButton>
             </WexAlertDialog.Cancel>
@@ -1706,7 +1707,8 @@ export default function MyProfile() {
           <div className="flex gap-2 justify-end p-[17.5px] pt-0">
             <WexDialog.Close asChild>
               <WexButton
-                intent="outline"
+                intent="secondary"
+                variant="outline"
                 onClick={() => {
                   resetBeneficiaryForm();
                   setEditingBeneficiaryId(null);
@@ -1757,7 +1759,7 @@ export default function MyProfile() {
           {/* Footer */}
           <WexAlertDialog.Footer className="flex gap-2 justify-end p-[17.5px] pt-0">
             <WexAlertDialog.Cancel asChild>
-              <WexButton intent="outline">
+              <WexButton intent="secondary" variant="outline">
                 Cancel
               </WexButton>
             </WexAlertDialog.Cancel>
@@ -2043,7 +2045,8 @@ export default function MyProfile() {
                     </WexButton>
                   ) : (
                     <WexButton
-                      intent="outline"
+                      intent="secondary"
+                      variant="outline"
                       onClick={() => {
                         if (bankAccountStep !== "step1") {
                           handleBankAccountBack();
@@ -2117,7 +2120,7 @@ export default function MyProfile() {
           {/* Footer */}
           <WexAlertDialog.Footer className="flex gap-2 justify-end p-[17.5px] pt-0">
             <WexAlertDialog.Cancel asChild>
-              <WexButton intent="outline">
+              <WexButton intent="secondary" variant="outline">
                 Cancel
               </WexButton>
             </WexAlertDialog.Cancel>

@@ -61,7 +61,7 @@ export default function ReimburseConfirm() {
                   </div>
                 </div>
                 <WexButton
-                  intent="ghost"
+                  variant="ghost"
                   size="sm"
                   className="h-6 w-6 text-success hover:text-success hover:bg-success/10 shrink-0"
                   onClick={() => setShowSuccessBanner(false)}
@@ -107,7 +107,7 @@ export default function ReimburseConfirm() {
                         <WexTable.Row>
                           <WexTable.Cell>
                             <WexButton
-                              intent="ghost"
+                              variant="ghost"
                               onClick={() => toggleRow("claim-1")}
                               className="flex items-center gap-2 hover:opacity-80 transition-opacity h-auto p-0"
                             >
@@ -213,11 +213,11 @@ export default function ReimburseConfirm() {
                       Previous
                     </WexButton>
                     <div className="flex gap-3">
-                      <WexButton intent="ghost">
+                      <WexButton variant="ghost">
                         <ShoppingCart className="h-4 w-4" />
                         Save for Later
                       </WexButton>
-                      <WexButton intent="ghost" onClick={() => navigate("/")}>
+                      <WexButton variant="ghost" onClick={() => navigate("/")}>
                         Cancel
                       </WexButton>
                       <WexButton intent="primary" disabled={!acceptedTerms} onClick={handleSubmit}>

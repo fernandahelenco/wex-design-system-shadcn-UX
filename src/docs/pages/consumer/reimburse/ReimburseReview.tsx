@@ -177,7 +177,7 @@ export default function ReimburseReview() {
               </div>
 
               <div className="flex items-center justify-between pt-2">
-                <WexButton intent="ghost" onClick={() => navigate("/")}>
+                <WexButton variant="ghost" onClick={() => navigate("/")}>
                   Cancel
                 </WexButton>
                 <div className="flex gap-2">

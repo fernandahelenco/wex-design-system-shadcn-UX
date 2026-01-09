@@ -116,7 +116,7 @@ export default function ReimburseDocs() {
                               <Check className="h-3.5 w-3.5" />
                               Uploaded
                             </WexBadge>
-                            <WexButton intent="ghost" size="sm" onClick={() => handleRemove(file.name)}>
+                            <WexButton variant="ghost" size="sm" onClick={() => handleRemove(file.name)}>
                               <X className="h-4 w-4" />
                             </WexButton>
                           </div>
@@ -143,7 +143,7 @@ export default function ReimburseDocs() {
                 </div>
 
                 <div className="flex items-center justify-between pt-2">
-                  <WexButton intent="ghost" onClick={() => navigate("/")}>
+                  <WexButton variant="ghost" onClick={() => navigate("/")}>
                     Cancel
                   </WexButton>
                   <div className="flex items-center gap-2">

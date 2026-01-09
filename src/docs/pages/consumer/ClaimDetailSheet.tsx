@@ -332,7 +332,7 @@ export function ClaimDetailSheet({
                         >
                           <span className="text-sm text-foreground">{doc.name}</span>
                           {doc.url && (
-                            <WexButton intent="ghost" size="sm" asChild>
+                            <WexButton variant="ghost" size="sm" asChild>
                               <a href={doc.url} target="_blank" rel="noopener noreferrer">
                                 View
                               </a>

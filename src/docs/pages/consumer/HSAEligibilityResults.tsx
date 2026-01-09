@@ -86,7 +86,7 @@ export default function HSAEligibilityResults() {
         <div className="absolute bottom-[32px] left-[32px] right-[32px] flex items-center justify-between">
           {/* Cancel Button */}
           <WexButton
-            intent="ghost"
+            variant="ghost"
             onClick={handleCancel}
             className="px-4 py-2"
           >
@@ -96,7 +96,8 @@ export default function HSAEligibilityResults() {
           {/* Back and Continue Buttons */}
           <div className="flex gap-2 items-center">
             <WexButton
-              intent="outline"
+              intent="secondary"
+              variant="outline"
               onClick={handleBack}
               className="px-4 py-2"
             >

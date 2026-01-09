@@ -50,7 +50,7 @@ export function AIChatSection() {
                 />
                 {/* Send Icon - positioned absolutely inside input */}
                 <WexButton
-                  intent="ghost"
+                  variant="ghost"
                   size="icon"
                   className="absolute right-3 top-1/2 -translate-y-1/2 h-5 w-5"
                   aria-label="Send message"
@@ -61,7 +61,7 @@ export function AIChatSection() {
               
               {/* Mic Icon Button */}
               <WexButton
-                intent="ghost"
+                variant="ghost"
                 size="icon"
                 className="h-5 w-5"
                 aria-label="Voice input"
@@ -76,7 +76,7 @@ export function AIChatSection() {
                 {aiSuggestions.map((suggestion, index) => (
                   <WexButton
                     key={index}
-                    intent="ghost"
+                    variant="ghost"
                     size="md"
                     className="rounded-[32px] bg-info/10 text-primary hover:bg-info/20 shrink-0 h-auto py-1"
                     onClick={() => handleSuggestionClick(suggestion)}

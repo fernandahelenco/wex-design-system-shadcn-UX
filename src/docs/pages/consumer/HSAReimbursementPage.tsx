@@ -445,12 +445,12 @@ export default function HSAReimbursementPage() {
 
         {/* Action Buttons - Fixed at Bottom */}
         <div className="absolute bottom-[32px] left-[32px] right-[32px] flex items-center justify-between">
-          <WexButton intent="ghost" onClick={handleCancel} className="px-4 py-2">
+          <WexButton variant="ghost" onClick={handleCancel} className="px-4 py-2">
             Cancel
           </WexButton>
 
           <div className="flex gap-2 items-center">
-            <WexButton intent="outline" onClick={handleBack} className="px-4 py-2">
+            <WexButton intent="secondary" variant="outline" onClick={handleBack} className="px-4 py-2">
               Back
             </WexButton>
             <WexButton intent="primary" onClick={handleSaveAndContinue} className="px-4 py-2">
