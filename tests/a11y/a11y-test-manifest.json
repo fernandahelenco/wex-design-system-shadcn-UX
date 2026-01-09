@@ -1,14 +1,14 @@
 {
   "_meta": {
     "description": "A11y test manifest - defines which examples to test for color contrast",
-    "generatedAt": "2025-12-23T23:53:10.537Z",
-    "totalComponents": 57,
+    "generatedAt": "2025-12-30T19:45:41.957Z",
+    "totalComponents": 58,
     "howToUse": "Review this file, adjust 'test' flags as needed, then run tests"
   },
   "summary": {
-    "totalExamples": 242,
-    "toTest": 183,
-    "toSkip": 59,
+    "totalExamples": 268,
+    "toTest": 211,
+    "toSkip": 57,
     "untitled": 81
   },
   "components": {
@@ -169,89 +169,89 @@
           "id": "all-sizes",
           "title": "All Sizes",
           "test": false,
-          "reason": "Size modifier (same colors)"
+          "reason": "Duplicate (sizes?)"
         },
         {
           "id": "sizes-with-intents",
           "title": "Sizes with Intents",
-          "test": false,
-          "reason": "Redundant (same colors as individual intents)"
+          "test": true,
+          "reason": "Color variant"
         },
         {
           "id": "default-vs-pill",
           "title": "Default vs Pill",
-          "test": false,
-          "reason": "Shape modifier (same colors)"
+          "test": true,
+          "reason": "Default (unknown pattern)"
         },
         {
           "id": "pill-with-sizes",
           "title": "Pill with Sizes",
           "test": false,
-          "reason": "Shape/size modifier (same colors)"
+          "reason": "Duplicate (sizes?)"
         },
         {
           "id": "default",
           "title": "Default",
           "test": true,
-          "reason": "Unique color variant"
+          "reason": "Color variant"
         },
         {
           "id": "secondary",
           "title": "Secondary",
           "test": true,
-          "reason": "Unique color variant"
+          "reason": "Color variant"
         },
         {
           "id": "outline",
           "title": "Outline",
           "test": true,
-          "reason": "Unique color variant"
+          "reason": "Color variant"
         },
         {
           "id": "success",
           "title": "Success",
           "test": true,
-          "reason": "Unique color variant"
+          "reason": "Color variant"
         },
         {
           "id": "warning",
           "title": "Warning",
           "test": true,
-          "reason": "Unique color variant"
+          "reason": "Color variant"
         },
         {
           "id": "destructive",
           "title": "Destructive",
           "test": true,
-          "reason": "Unique color variant"
+          "reason": "Color variant"
         },
         {
           "id": "info",
           "title": "Info",
           "test": true,
-          "reason": "Unique color variant"
+          "reason": "Color variant"
         },
         {
           "id": "status-indicators",
           "title": "Status Indicators",
-          "test": false,
-          "reason": "Redundant (same colors as individual intents)"
+          "test": true,
+          "reason": "Color variant"
         },
         {
           "id": "counts",
           "title": "Counts",
-          "test": false,
-          "reason": "Redundant (same colors)"
+          "test": true,
+          "reason": "Default (unknown pattern)"
         },
         {
           "id": "tags",
           "title": "Tags",
-          "test": false,
-          "reason": "Redundant (uses secondary color)"
+          "test": true,
+          "reason": "Default (unknown pattern)"
         }
       ],
-      "testCount": 7,
-      "skipCount": 7
+      "testCount": 12,
+      "skipCount": 2
     },
     "breadcrumb": {
       "name": "WexBreadcrumb",
@@ -296,96 +296,180 @@
       "name": "WexButton",
       "key": "button",
       "route": "/components/button",
-      "totalExamples": 16,
+      "totalExamples": 30,
       "untitledExamples": 2,
       "examples": [
         {
           "id": "primary",
           "title": "Primary",
           "test": true,
-          "reason": "Unique color variant"
+          "reason": "Color variant"
         },
         {
           "id": "secondary",
           "title": "Secondary",
           "test": true,
-          "reason": "Unique color variant"
+          "reason": "Color variant"
         },
         {
           "id": "success",
           "title": "Success",
           "test": true,
-          "reason": "Unique color variant"
+          "reason": "Color variant"
         },
         {
           "id": "info",
           "title": "Info",
           "test": true,
-          "reason": "Unique color variant"
+          "reason": "Color variant"
         },
         {
           "id": "warning",
           "title": "Warning",
           "test": true,
-          "reason": "Unique color variant"
+          "reason": "Color variant"
         },
         {
           "id": "danger",
           "title": "Danger",
           "test": true,
-          "reason": "Unique color variant"
+          "reason": "Default (unknown pattern)"
         },
         {
           "id": "help",
           "title": "Help",
           "test": true,
-          "reason": "Unique color variant"
+          "reason": "Color variant"
         },
         {
           "id": "contrast",
           "title": "Contrast",
           "test": true,
-          "reason": "Unique color variant"
+          "reason": "Default (unknown pattern)"
         },
         {
           "id": "ghost",
           "title": "Ghost",
           "test": true,
-          "reason": "Unique style variant"
+          "reason": "Color variant"
         },
         {
           "id": "outline",
           "title": "Outline",
           "test": true,
-          "reason": "Unique style variant"
+          "reason": "Color variant"
         },
         {
           "id": "link",
           "title": "Link",
           "test": true,
-          "reason": "Unique style variant"
+          "reason": "Color variant"
         },
         {
           "id": "rounded-pill",
           "title": "Rounded (Pill)",
-          "test": false,
-          "reason": "Shape modifier (same colors)"
+          "test": true,
+          "reason": "Default (unknown pattern)"
         },
         {
           "id": "loading-buttons",
           "title": "Loading Buttons",
           "test": false,
-          "reason": "State modifier (same colors)"
+          "reason": "Duplicate (loading)"
         },
         {
           "id": "icon-size",
           "title": "Icon Size",
           "test": false,
-          "reason": "Size modifier (same colors)"
+          "reason": "Duplicate (icon sizes?)"
+        },
+        {
+          "id": "outline-primary",
+          "title": "Outline Primary",
+          "test": true,
+          "reason": "Color variant"
+        },
+        {
+          "id": "outline-secondary",
+          "title": "Outline Secondary",
+          "test": true,
+          "reason": "Color variant"
+        },
+        {
+          "id": "outline-success",
+          "title": "Outline Success",
+          "test": true,
+          "reason": "Color variant"
+        },
+        {
+          "id": "outline-info",
+          "title": "Outline Info",
+          "test": true,
+          "reason": "Color variant"
+        },
+        {
+          "id": "outline-warning",
+          "title": "Outline Warning",
+          "test": true,
+          "reason": "Color variant"
+        },
+        {
+          "id": "outline-destructive",
+          "title": "Outline Destructive",
+          "test": true,
+          "reason": "Color variant"
+        },
+        {
+          "id": "outline-help",
+          "title": "Outline Help",
+          "test": true,
+          "reason": "Color variant"
+        },
+        {
+          "id": "outline-primary-disabled",
+          "title": "Outline Primary Disabled",
+          "test": true,
+          "reason": "Color variant"
+        },
+        {
+          "id": "outline-secondary-disabled",
+          "title": "Outline Secondary Disabled",
+          "test": true,
+          "reason": "Color variant"
+        },
+        {
+          "id": "outline-success-disabled",
+          "title": "Outline Success Disabled",
+          "test": true,
+          "reason": "Color variant"
+        },
+        {
+          "id": "outline-info-disabled",
+          "title": "Outline Info Disabled",
+          "test": true,
+          "reason": "Color variant"
+        },
+        {
+          "id": "outline-warning-disabled",
+          "title": "Outline Warning Disabled",
+          "test": true,
+          "reason": "Color variant"
+        },
+        {
+          "id": "outline-destructive-disabled",
+          "title": "Outline Destructive Disabled",
+          "test": true,
+          "reason": "Color variant"
+        },
+        {
+          "id": "outline-help-disabled",
+          "title": "Outline Help Disabled",
+          "test": true,
+          "reason": "Color variant"
         }
       ],
-      "testCount": 11,
-      "skipCount": 3
+      "testCount": 26,
+      "skipCount": 2
     },
     "calendar": {
       "name": "WexCalendar",
@@ -493,7 +577,7 @@
           "id": "stats-card",
           "title": "Stats Card",
           "test": true,
-          "reason": "Uses adaptive text-wex-text-success for dark mode"
+          "reason": "Default (unknown pattern)"
         }
       ],
       "testCount": 8,
@@ -541,14 +625,14 @@
           "reason": "Default (unknown pattern)"
         },
         {
-          "id": "pie-chart",
-          "title": "Pie Chart",
+          "id": "pie-chart-custom",
+          "title": "Pie Chart (custom)",
           "test": false,
-          "reason": "Skip - Recharts SVG library (not WEX component)"
+          "reason": "Duplicate (custom)"
         }
       ],
-      "testCount": 5,
-      "skipCount": 0
+      "testCount": 4,
+      "skipCount": 1
     },
     "checkbox": {
       "name": "WexCheckbox",
@@ -862,14 +946,14 @@
       "name": "WexFloatLabel",
       "key": "float-label",
       "route": "/components/float-label",
-      "totalExamples": 7,
+      "totalExamples": 12,
       "untitledExamples": 1,
       "examples": [
         {
           "id": "all-sizes",
           "title": "All Sizes",
           "test": false,
-          "reason": "Duplicate (sizes)"
+          "reason": "Duplicate (sizes?)"
         },
         {
           "id": "email",
@@ -886,29 +970,53 @@
         {
           "id": "number",
           "title": "Number",
-          "test": false,
-          "reason": "Duplicate (input type)"
+          "test": true,
+          "reason": "Default (unknown pattern)"
+        },
+        {
+          "id": "left-icon",
+          "title": "Left Icon",
+          "test": true,
+          "reason": "Default (unknown pattern)"
+        },
+        {
+          "id": "right-icon",
+          "title": "Right Icon",
+          "test": true,
+          "reason": "Default (unknown pattern)"
+        },
+        {
+          "id": "both-icons",
+          "title": "Both Icons",
+          "test": true,
+          "reason": "Default (unknown pattern)"
         },
         {
           "id": "invalid-state",
           "title": "Invalid State",
           "test": true,
-          "reason": "Validation state"
+          "reason": "Default (unknown pattern)"
         },
         {
           "id": "disabled",
           "title": "Disabled",
-          "test": true,
-          "reason": "Disabled state"
+          "test": false,
+          "reason": "Duplicate (disabled)"
         },
         {
           "id": "controlled",
           "title": "Controlled",
           "test": false,
-          "reason": "Duplicate (stateful demo)"
+          "reason": "Duplicate (controlled)"
+        },
+        {
+          "id": "password-with-toggle",
+          "title": "Password with Toggle",
+          "test": true,
+          "reason": "Default (unknown pattern)"
         }
       ],
-      "testCount": 4,
+      "testCount": 8,
       "skipCount": 3
     },
     "form": {
@@ -1088,10 +1196,10 @@
       "testCount": 2,
       "skipCount": 2
     },
-    "input-otp": {
+    "input-o-t-p": {
       "name": "WexInputOTP",
-      "key": "input-otp",
-      "route": "/components/input-otp",
+      "key": "input-o-t-p",
+      "route": "/components/input-o-t-p",
       "totalExamples": 1,
       "untitledExamples": 0,
       "examples": [
@@ -1099,7 +1207,7 @@
           "id": "verification-code",
           "title": "Verification Code",
           "test": true,
-          "reason": "Default OTP input"
+          "reason": "Default (unknown pattern)"
         }
       ],
       "testCount": 1,
@@ -1807,8 +1915,8 @@
         {
           "id": "with-status-badges",
           "title": "With Status Badges",
-          "test": false,
-          "reason": "Skip - badges are tested separately on BadgePage"
+          "test": true,
+          "reason": "Default (unknown pattern)"
         },
         {
           "id": "selectable-rows",
@@ -1836,8 +1944,8 @@
         {
           "id": "closable-tabs",
           "title": "Closable Tabs",
-          "test": false,
-          "reason": "Skip - closable tabs use buttons inside tablist which violates aria-required-children"
+          "test": true,
+          "reason": "Default (unknown pattern)"
         },
         {
           "id": "full-width-tabs",

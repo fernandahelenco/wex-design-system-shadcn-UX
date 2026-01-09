@@ -106,7 +106,7 @@ function ResultsSection({ compliance, registryKey }: ResultsSectionProps) {
           {/* Light mode indicator */}
           <span 
             className={`inline-flex items-center gap-1 px-1.5 py-0.5 text-[10px] rounded ${
-              lightPassed ? "bg-success/10 text-success" : "bg-destructive/10 text-destructive"
+              lightPassed ? "bg-wex-text-success/10 text-wex-text-success" : "bg-wex-text-destructive/10 text-wex-text-destructive"
             }`}
             title={lightPassed ? "Light mode passes" : "Light mode has issues"}
           >
@@ -116,7 +116,7 @@ function ResultsSection({ compliance, registryKey }: ResultsSectionProps) {
           {/* Dark mode indicator */}
           <span 
             className={`inline-flex items-center gap-1 px-1.5 py-0.5 text-[10px] rounded ${
-              darkPassed ? "bg-success/10 text-success" : "bg-destructive/10 text-destructive"
+              darkPassed ? "bg-wex-text-success/10 text-wex-text-success" : "bg-wex-text-destructive/10 text-wex-text-destructive"
             }`}
             title={darkPassed ? "Dark mode passes" : "Dark mode has issues"}
           >
@@ -139,9 +139,9 @@ function ResultsSection({ compliance, registryKey }: ResultsSectionProps) {
         </div>
         <div className="text-sm">
           {(violations ?? 0) > 0 ? (
-            <span className="text-destructive font-medium">{violations} violation{violations !== 1 ? 's' : ''}</span>
+            <span className="text-wex-text-destructive font-medium">{violations} violation{violations !== 1 ? 's' : ''}</span>
           ) : (
-            <span className="text-success font-medium">No violations</span>
+            <span className="text-wex-text-success font-medium">No violations</span>
           )}
         </div>
       </div>
@@ -218,7 +218,7 @@ interface CheckIndicatorProps {
 
 function CheckIndicator({ passed, label }: CheckIndicatorProps) {
   return (
-    <span className={`inline-flex items-center gap-1.5 text-sm ${passed ? "text-success" : "text-destructive"}`}>
+    <span className={`inline-flex items-center gap-1.5 text-sm ${passed ? "text-wex-text-success" : "text-wex-text-destructive"}`}>
       {passed ? <Check className="h-4 w-4" /> : <X className="h-4 w-4" />}
       {label}
     </span>
@@ -244,7 +244,7 @@ function ContrastIndicator({ passed, pairCount, lowestRatio, lowestRating }: Con
   }
 
   return (
-    <span className={`inline-flex items-center gap-1.5 text-sm ${passed ? "text-success" : "text-destructive"}`}>
+    <span className={`inline-flex items-center gap-1.5 text-sm ${passed ? "text-wex-text-success" : "text-wex-text-destructive"}`}>
       {passed ? <Check className="h-4 w-4" /> : <X className="h-4 w-4" />}
       <span>Contrast</span>
       {lowestRatio !== null && (
@@ -269,16 +269,16 @@ function ContrastPairRow({ result }: ContrastPairRowProps) {
     <div className="flex items-center justify-between text-xs py-1">
       <div className="flex items-center gap-2">
         {passes ? (
-          <Check className="h-3 w-3 text-success" />
+          <Check className="h-3 w-3 text-wex-text-success" />
         ) : (
-          <X className="h-3 w-3 text-destructive" />
+          <X className="h-3 w-3 text-wex-text-destructive" />
         )}
-        <span className={passes ? "text-foreground" : "text-destructive"}>
+        <span className={passes ? "text-foreground" : "text-wex-text-destructive"}>
           {pair.name}
         </span>
       </div>
       <div className="flex items-center gap-2">
-        <span className={`font-mono ${passes ? "text-muted-foreground" : "text-destructive"}`}>
+        <span className={`font-mono ${passes ? "text-muted-foreground" : "text-wex-text-destructive"}`}>
           {formatRatio(ratio)}
         </span>
         <span className={`px-1.5 py-0.5 rounded text-[10px] font-medium ${ratingBadgeClass}`}>
@@ -292,13 +292,13 @@ function ContrastPairRow({ result }: ContrastPairRowProps) {
 function getRatingBadgeClass(rating: string): string {
   switch (rating) {
     case "AAA":
-      return "bg-success/10 text-success";
+      return "bg-wex-text-success/10 text-wex-text-success";
     case "AA":
-      return "bg-success/10 text-success";
+      return "bg-wex-text-success/10 text-wex-text-success";
     case "AA-large":
-      return "bg-warning/10 text-warning";
+      return "bg-wex-text-warning/10 text-wex-text-warning";
     case "Fail":
-      return "bg-destructive/10 text-destructive";
+      return "bg-wex-text-destructive/10 text-wex-text-destructive";
     default:
       return "bg-muted text-muted-foreground";
   }
@@ -313,8 +313,8 @@ function VariantChip({ name, passed }: VariantChipProps) {
   return (
     <span className={`inline-flex items-center gap-1 px-2 py-1 text-xs rounded-full ${
       passed 
-        ? "bg-success/10 text-success" 
-        : "bg-destructive/10 text-destructive"
+        ? "bg-wex-text-success/10 text-wex-text-success" 
+        : "bg-wex-text-destructive/10 text-wex-text-destructive"
     }`}>
       {passed ? (
         <Check className="h-3 w-3" />
@@ -353,25 +353,25 @@ function getStatusConfig(status: ComplianceResult["status"]): StatusConfig {
       return {
         label: "Pass",
         icon: <Check className="h-3.5 w-3.5" />,
-        badgeClass: "border border-success/50 bg-success/10 text-success",
+        badgeClass: "border border-wex-text-success/50 bg-wex-text-success/10 text-wex-text-success",
       };
     case "partial":
       return {
         label: "Partial",
         icon: <AlertTriangle className="h-3.5 w-3.5" />,
-        badgeClass: "border border-warning/50 bg-warning/10 text-warning",
+        badgeClass: "border border-wex-text-warning/50 bg-wex-text-warning/10 text-wex-text-warning",
       };
     case "fail":
       return {
         label: "Fail",
         icon: <X className="h-3.5 w-3.5" />,
-        badgeClass: "border border-destructive/50 bg-destructive/10 text-destructive",
+        badgeClass: "border border-wex-text-destructive/50 bg-wex-text-destructive/10 text-wex-text-destructive",
       };
     case "no_examples":
       return {
         label: "No Examples",
         icon: <AlertTriangle className="h-3.5 w-3.5" />,
-        badgeClass: "border border-warning/50 bg-warning/10 text-warning",
+        badgeClass: "border border-wex-text-warning/50 bg-wex-text-warning/10 text-wex-text-warning",
       };
     case "pending":
     default:

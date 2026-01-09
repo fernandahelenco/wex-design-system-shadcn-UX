@@ -8,7 +8,6 @@ import {
   ArrowRight,
   Layers,
   Accessibility,
-  Sparkles,
 } from "lucide-react";
 
 /**
@@ -25,11 +24,6 @@ export default function OverviewPage() {
         {/* Hero Section: Clean, Airy, and Professional */}
         <header className="relative pt-10 pb-16">
           <div className="max-w-3xl">
-          <div className="mb-6 inline-flex items-center gap-2 rounded-full bg-brand-red/10 px-4 py-1 text-xs font-bold uppercase tracking-widest text-brand-red">
-            <Sparkles className="h-3.5 w-3.5" />
-            v0.6.0 Hardening Pass
-          </div>
-          
           <h1 className="mb-6 text-5xl font-display font-bold tracking-tight text-foreground md:text-7xl">
             Design, develop, 
             <br />
@@ -53,7 +47,7 @@ export default function OverviewPage() {
                 <ArrowRight className="ml-2 h-5 w-5 transition-transform group-hover:translate-x-1" />
               </Link>
             </WexButton>
-            <WexButton intent="outline" size="lg" asChild className="backdrop-blur-sm border-white/20">
+            <WexButton variant="outline" size="lg" asChild className="backdrop-blur-sm border-white/20">
               <Link to="/story">
                 Our philosophy
               </Link>

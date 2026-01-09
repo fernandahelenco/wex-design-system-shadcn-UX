@@ -5,7 +5,21 @@ import { ExampleCard } from "@/docs/components/ExampleCard";
 import { CodeBlock } from "@/docs/components/CodeBlock";
 import { Guidance } from "@/docs/components/ProseBlock";
 import { TokenReference, type TokenRow } from "@/docs/components/TokenReference";
+import { PropsTable, SubComponentProps, type PropDefinition } from "@/docs/components/PropsTable";
 import { WexSheet, WexButton, WexInput, WexLabel } from "@/components/wex";
+
+// Props documentation for WexSheet
+const sheetRootProps: PropDefinition[] = [
+  { name: "open", type: "boolean", description: "Controlled open state" },
+  { name: "onOpenChange", type: "(open: boolean) => void", description: "Callback when open state changes" },
+  { name: "modal", type: "boolean", default: "true", description: "Whether to render as modal" },
+];
+
+const sheetContentProps: PropDefinition[] = [
+  { name: "side", type: '"top" | "right" | "bottom" | "left"', default: '"right"', description: "Edge to slide from" },
+  { name: "size", type: '"sm" | "md" | "lg" | "xl" | "full"', default: '"md"', description: "Width/height of the sheet" },
+  { name: "className", type: "string", description: "Additional CSS classes" },
+];
 
 // Token mappings for Sheet
 // Layer 3 component tokens
@@ -30,7 +44,7 @@ export default function SheetPage() {
         <ExampleCard>
           <WexSheet>
             <WexSheet.Trigger asChild>
-              <WexButton intent="outline">Open Sheet</WexButton>
+              <WexButton variant="outline">Open Sheet</WexButton>
             </WexSheet.Trigger>
             <WexSheet.Content>
               <WexSheet.Header>
@@ -57,7 +71,7 @@ export default function SheetPage() {
           {(["sm", "md", "lg", "xl", "full"] as const).map((size) => (
             <WexSheet key={size}>
               <WexSheet.Trigger asChild>
-                <WexButton intent="outline" className="capitalize">{size}</WexButton>
+                <WexButton variant="outline" className="capitalize">{size}</WexButton>
               </WexSheet.Trigger>
               <WexSheet.Content size={size}>
                 <WexSheet.Header>
@@ -93,7 +107,7 @@ export default function SheetPage() {
           {(["top", "right", "bottom", "left"] as const).map((side) => (
             <WexSheet key={side}>
               <WexSheet.Trigger asChild>
-                <WexButton intent="outline" className="capitalize">{side}</WexButton>
+                <WexButton variant="outline" className="capitalize">{side}</WexButton>
               </WexSheet.Trigger>
               <WexSheet.Content side={side}>
                 <WexSheet.Header>
@@ -120,7 +134,7 @@ export default function SheetPage() {
         <ExampleCard>
           <WexSheet>
             <WexSheet.Trigger asChild>
-              <WexButton intent="outline">Open Menu</WexButton>
+              <WexButton variant="outline">Open Menu</WexButton>
             </WexSheet.Trigger>
             <WexSheet.Content side="left" size="sm">
               <WexSheet.Header>
@@ -152,7 +166,7 @@ export default function SheetPage() {
         <ExampleCard>
           <WexSheet>
             <WexSheet.Trigger asChild>
-              <WexButton intent="outline">Edit Profile</WexButton>
+              <WexButton variant="outline">Edit Profile</WexButton>
             </WexSheet.Trigger>
             <WexSheet.Content size="md">
               <WexSheet.Header>
@@ -173,7 +187,7 @@ export default function SheetPage() {
               </div>
               <WexSheet.Footer>
                 <WexSheet.Close asChild>
-                  <WexButton intent="outline">Cancel</WexButton>
+                  <WexButton variant="outline">Cancel</WexButton>
                 </WexSheet.Close>
                 <WexButton>Save changes</WexButton>
               </WexSheet.Footer>
@@ -188,7 +202,7 @@ export default function SheetPage() {
       <Section title="Controlled" description="Programmatically control open state.">
         <ExampleCard>
           <div className="flex gap-2">
-            <WexButton intent="outline" onClick={() => setOpen(true)}>
+            <WexButton variant="outline" onClick={() => setOpen(true)}>
               Open via State
             </WexButton>
             <WexSheet open={open} onOpenChange={setOpen}>
@@ -259,13 +273,11 @@ export default function SheetPage() {
 <WexSheet.Content side="top">...</WexSheet.Content>
 <WexSheet.Content side="bottom">...</WexSheet.Content>`}
         />
-        <div className="mt-4 text-sm text-muted-foreground">
-          <p><strong>SheetContent Props:</strong></p>
-          <ul className="list-disc list-inside mt-2 space-y-1">
-            <li><code className="bg-muted px-1 rounded">side</code>: "top" | "right" | "bottom" | "left"</li>
-            <li><code className="bg-muted px-1 rounded">size</code>: "sm" | "md" | "lg" | "xl" | "full"</li>
-          </ul>
-        </div>
+      </Section>
+
+      <Section title="API Reference">
+        <PropsTable props={sheetRootProps} title="WexSheet" />
+        <SubComponentProps name="WexSheet.Content" props={sheetContentProps} />
       </Section>
 
       <TokenReference tokens={sheetTokens} className="mt-12" />

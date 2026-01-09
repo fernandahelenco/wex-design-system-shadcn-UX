@@ -8,7 +8,7 @@
       "light",
       "dark"
     ],
-    "lastUpdated": "2025-12-29T20:43:34.100Z",
+    "lastUpdated": "2025-12-30T19:49:02.893Z",
     "totalComponents": 57
   },
   "accordion": {
@@ -16,7 +16,7 @@
     "levelAchieved": "AA",
     "violations": 0,
     "issues": [],
-    "testedAt": "2025-12-29T20:42:27.584Z",
+    "testedAt": "2025-12-30T19:47:54.165Z",
     "scope": "manifest-driven",
     "examplesFound": 2,
     "scenariosTested": [
@@ -86,7 +86,7 @@
     "levelAchieved": "AA",
     "violations": 0,
     "issues": [],
-    "testedAt": "2025-12-29T20:42:30.720Z",
+    "testedAt": "2025-12-30T19:47:57.236Z",
     "scope": "manifest-driven",
     "examplesFound": 2,
     "scenariosTested": [
@@ -156,7 +156,7 @@
     "levelAchieved": "AA",
     "violations": 0,
     "issues": [],
-    "testedAt": "2025-12-29T20:42:35.218Z",
+    "testedAt": "2025-12-30T19:48:01.898Z",
     "scope": "manifest-driven",
     "examplesFound": 5,
     "scenariosTested": [
@@ -271,7 +271,7 @@
     "levelAchieved": "AA",
     "violations": 0,
     "issues": [],
-    "testedAt": "2025-12-29T20:42:39.611Z",
+    "testedAt": "2025-12-30T19:48:06.297Z",
     "scope": "manifest-driven",
     "examplesFound": 3,
     "scenariosTested": [
@@ -362,17 +362,22 @@
     "levelAchieved": "AA",
     "violations": 0,
     "issues": [],
-    "testedAt": "2025-12-29T20:42:45.197Z",
+    "testedAt": "2025-12-30T19:48:14.584Z",
     "scope": "manifest-driven",
-    "examplesFound": 7,
+    "examplesFound": 12,
     "scenariosTested": [
+      "sizes-with-intents",
+      "default-vs-pill",
       "default",
       "secondary",
       "outline",
       "success",
       "warning",
       "destructive",
-      "info"
+      "info",
+      "status-indicators",
+      "counts",
+      "tags"
     ],
     "subject": "Component examples for WexBadge",
     "modes": {
@@ -381,9 +386,19 @@
         "levelAchieved": "AA",
         "violations": 0,
         "issues": [],
-        "examplesFound": 7,
+        "examplesFound": 12,
         "failingElements": [],
         "examples": {
+          "sizes-with-intents": {
+            "status": "pass",
+            "violations": 0,
+            "issues": []
+          },
+          "default-vs-pill": {
+            "status": "pass",
+            "violations": 0,
+            "issues": []
+          },
           "default": {
             "status": "pass",
             "violations": 0,
@@ -418,27 +433,42 @@
             "status": "pass",
             "violations": 0,
             "issues": []
+          },
+          "status-indicators": {
+            "status": "pass",
+            "violations": 0,
+            "issues": []
+          },
+          "counts": {
+            "status": "pass",
+            "violations": 0,
+            "issues": []
+          },
+          "tags": {
+            "status": "pass",
+            "violations": 0,
+            "issues": []
           }
         },
         "examplesTested": [
+          "sizes-with-intents",
+          "default-vs-pill",
           "default",
           "secondary",
           "outline",
           "success",
           "warning",
           "destructive",
-          "info"
-        ],
-        "examplesSkipped": [
-          "all-sizes",
-          "sizes-with-intents",
-          "default-vs-pill",
-          "pill-with-sizes",
+          "info",
           "status-indicators",
           "counts",
           "tags"
         ],
-        "examplesPassed": 7,
+        "examplesSkipped": [
+          "all-sizes",
+          "pill-with-sizes"
+        ],
+        "examplesPassed": 12,
         "examplesFailed": 0
       },
       "dark": {
@@ -446,9 +476,19 @@
         "levelAchieved": "AA",
         "violations": 0,
         "issues": [],
-        "examplesFound": 7,
+        "examplesFound": 12,
         "failingElements": [],
         "examples": {
+          "sizes-with-intents": {
+            "status": "pass",
+            "violations": 0,
+            "issues": []
+          },
+          "default-vs-pill": {
+            "status": "pass",
+            "violations": 0,
+            "issues": []
+          },
           "default": {
             "status": "pass",
             "violations": 0,
@@ -483,27 +523,42 @@
             "status": "pass",
             "violations": 0,
             "issues": []
+          },
+          "status-indicators": {
+            "status": "pass",
+            "violations": 0,
+            "issues": []
+          },
+          "counts": {
+            "status": "pass",
+            "violations": 0,
+            "issues": []
+          },
+          "tags": {
+            "status": "pass",
+            "violations": 0,
+            "issues": []
           }
         },
         "examplesTested": [
+          "sizes-with-intents",
+          "default-vs-pill",
           "default",
           "secondary",
           "outline",
           "success",
           "warning",
           "destructive",
-          "info"
-        ],
-        "examplesSkipped": [
-          "all-sizes",
-          "sizes-with-intents",
-          "default-vs-pill",
-          "pill-with-sizes",
+          "info",
           "status-indicators",
           "counts",
           "tags"
         ],
-        "examplesPassed": 7,
+        "examplesSkipped": [
+          "all-sizes",
+          "pill-with-sizes"
+        ],
+        "examplesPassed": 12,
         "examplesFailed": 0
       }
     }
@@ -513,7 +568,7 @@
     "levelAchieved": "AA",
     "violations": 0,
     "issues": [],
-    "testedAt": "2025-12-29T20:42:47.663Z",
+    "testedAt": "2025-12-30T19:48:17.159Z",
     "scope": "manifest-driven",
     "examplesFound": 2,
     "scenariosTested": [
@@ -570,7 +625,7 @@
     "levelAchieved": "AA",
     "violations": 0,
     "issues": [],
-    "testedAt": "2025-12-29T20:42:51.392Z",
+    "testedAt": "2025-12-30T19:48:20.835Z",
     "scope": "manifest-driven",
     "examplesFound": 3,
     "scenariosTested": [
@@ -653,9 +708,9 @@
     "levelAchieved": "AA",
     "violations": 0,
     "issues": [],
-    "testedAt": "2025-12-29T20:42:59.215Z",
+    "testedAt": "2025-12-30T19:48:36.183Z",
     "scope": "manifest-driven",
-    "examplesFound": 11,
+    "examplesFound": 26,
     "scenariosTested": [
       "primary",
       "secondary",
@@ -667,7 +722,22 @@
       "contrast",
       "ghost",
       "outline",
-      "link"
+      "link",
+      "rounded-pill",
+      "outline-primary",
+      "outline-secondary",
+      "outline-success",
+      "outline-info",
+      "outline-warning",
+      "outline-destructive",
+      "outline-help",
+      "outline-primary-disabled",
+      "outline-secondary-disabled",
+      "outline-success-disabled",
+      "outline-info-disabled",
+      "outline-warning-disabled",
+      "outline-destructive-disabled",
+      "outline-help-disabled"
     ],
     "subject": "Component examples for WexButton",
     "modes": {
@@ -676,7 +746,7 @@
         "levelAchieved": "AA",
         "violations": 0,
         "issues": [],
-        "examplesFound": 11,
+        "examplesFound": 26,
         "failingElements": [],
         "examples": {
           "primary": {
@@ -733,6 +803,81 @@
             "status": "pass",
             "violations": 0,
             "issues": []
+          },
+          "rounded-pill": {
+            "status": "pass",
+            "violations": 0,
+            "issues": []
+          },
+          "outline-primary": {
+            "status": "pass",
+            "violations": 0,
+            "issues": []
+          },
+          "outline-secondary": {
+            "status": "pass",
+            "violations": 0,
+            "issues": []
+          },
+          "outline-success": {
+            "status": "pass",
+            "violations": 0,
+            "issues": []
+          },
+          "outline-info": {
+            "status": "pass",
+            "violations": 0,
+            "issues": []
+          },
+          "outline-warning": {
+            "status": "pass",
+            "violations": 0,
+            "issues": []
+          },
+          "outline-destructive": {
+            "status": "pass",
+            "violations": 0,
+            "issues": []
+          },
+          "outline-help": {
+            "status": "pass",
+            "violations": 0,
+            "issues": []
+          },
+          "outline-primary-disabled": {
+            "status": "pass",
+            "violations": 0,
+            "issues": []
+          },
+          "outline-secondary-disabled": {
+            "status": "pass",
+            "violations": 0,
+            "issues": []
+          },
+          "outline-success-disabled": {
+            "status": "pass",
+            "violations": 0,
+            "issues": []
+          },
+          "outline-info-disabled": {
+            "status": "pass",
+            "violations": 0,
+            "issues": []
+          },
+          "outline-warning-disabled": {
+            "status": "pass",
+            "violations": 0,
+            "issues": []
+          },
+          "outline-destructive-disabled": {
+            "status": "pass",
+            "violations": 0,
+            "issues": []
+          },
+          "outline-help-disabled": {
+            "status": "pass",
+            "violations": 0,
+            "issues": []
           }
         },
         "examplesTested": [
@@ -746,14 +891,28 @@
           "contrast",
           "ghost",
           "outline",
-          "link"
+          "link",
+          "rounded-pill",
+          "outline-primary",
+          "outline-secondary",
+          "outline-success",
+          "outline-info",
+          "outline-warning",
+          "outline-destructive",
+          "outline-help",
+          "outline-primary-disabled",
+          "outline-secondary-disabled",
+          "outline-success-disabled",
+          "outline-info-disabled",
+          "outline-warning-disabled",
+          "outline-destructive-disabled",
+          "outline-help-disabled"
         ],
         "examplesSkipped": [
-          "rounded-pill",
           "loading-buttons",
           "icon-size"
         ],
-        "examplesPassed": 11,
+        "examplesPassed": 26,
         "examplesFailed": 0
       },
       "dark": {
@@ -761,7 +920,7 @@
         "levelAchieved": "AA",
         "violations": 0,
         "issues": [],
-        "examplesFound": 11,
+        "examplesFound": 26,
         "failingElements": [],
         "examples": {
           "primary": {
@@ -818,6 +977,81 @@
             "status": "pass",
             "violations": 0,
             "issues": []
+          },
+          "rounded-pill": {
+            "status": "pass",
+            "violations": 0,
+            "issues": []
+          },
+          "outline-primary": {
+            "status": "pass",
+            "violations": 0,
+            "issues": []
+          },
+          "outline-secondary": {
+            "status": "pass",
+            "violations": 0,
+            "issues": []
+          },
+          "outline-success": {
+            "status": "pass",
+            "violations": 0,
+            "issues": []
+          },
+          "outline-info": {
+            "status": "pass",
+            "violations": 0,
+            "issues": []
+          },
+          "outline-warning": {
+            "status": "pass",
+            "violations": 0,
+            "issues": []
+          },
+          "outline-destructive": {
+            "status": "pass",
+            "violations": 0,
+            "issues": []
+          },
+          "outline-help": {
+            "status": "pass",
+            "violations": 0,
+            "issues": []
+          },
+          "outline-primary-disabled": {
+            "status": "pass",
+            "violations": 0,
+            "issues": []
+          },
+          "outline-secondary-disabled": {
+            "status": "pass",
+            "violations": 0,
+            "issues": []
+          },
+          "outline-success-disabled": {
+            "status": "pass",
+            "violations": 0,
+            "issues": []
+          },
+          "outline-info-disabled": {
+            "status": "pass",
+            "violations": 0,
+            "issues": []
+          },
+          "outline-warning-disabled": {
+            "status": "pass",
+            "violations": 0,
+            "issues": []
+          },
+          "outline-destructive-disabled": {
+            "status": "pass",
+            "violations": 0,
+            "issues": []
+          },
+          "outline-help-disabled": {
+            "status": "pass",
+            "violations": 0,
+            "issues": []
           }
         },
         "examplesTested": [
@@ -831,14 +1065,28 @@
           "contrast",
           "ghost",
           "outline",
-          "link"
+          "link",
+          "rounded-pill",
+          "outline-primary",
+          "outline-secondary",
+          "outline-success",
+          "outline-info",
+          "outline-warning",
+          "outline-destructive",
+          "outline-help",
+          "outline-primary-disabled",
+          "outline-secondary-disabled",
+          "outline-success-disabled",
+          "outline-info-disabled",
+          "outline-warning-disabled",
+          "outline-destructive-disabled",
+          "outline-help-disabled"
         ],
         "examplesSkipped": [
-          "rounded-pill",
           "loading-buttons",
           "icon-size"
         ],
-        "examplesPassed": 11,
+        "examplesPassed": 26,
         "examplesFailed": 0
       }
     }
@@ -848,7 +1096,7 @@
     "levelAchieved": "AA",
     "violations": 0,
     "issues": [],
-    "testedAt": "2025-12-29T20:43:08.110Z",
+    "testedAt": "2025-12-30T19:48:44.298Z",
     "scope": "manifest-driven",
     "examplesFound": 6,
     "scenariosTested": [
@@ -974,7 +1222,7 @@
     "levelAchieved": "AA",
     "violations": 0,
     "issues": [],
-    "testedAt": "2025-12-29T20:43:13.617Z",
+    "testedAt": "2025-12-30T19:48:49.758Z",
     "scope": "manifest-driven",
     "examplesFound": 8,
     "scenariosTested": [
@@ -1122,7 +1370,7 @@
     "levelAchieved": "AA",
     "violations": 0,
     "issues": [],
-    "testedAt": "2025-12-29T20:43:15.928Z",
+    "testedAt": "2025-12-30T19:48:52.019Z",
     "scope": "manifest-driven",
     "examplesFound": 1,
     "scenariosTested": [
@@ -1179,7 +1427,7 @@
     "levelAchieved": "AA",
     "violations": 0,
     "issues": [],
-    "testedAt": "2025-12-29T20:43:19.977Z",
+    "testedAt": "2025-12-30T19:48:56.036Z",
     "scope": "manifest-driven",
     "examplesFound": 4,
     "scenariosTested": [
@@ -1226,7 +1474,7 @@
           "area-chart"
         ],
         "examplesSkipped": [
-          "pie-chart"
+          "pie-chart-custom"
         ],
         "examplesPassed": 4,
         "examplesFailed": 0
@@ -1267,7 +1515,7 @@
           "area-chart"
         ],
         "examplesSkipped": [
-          "pie-chart"
+          "pie-chart-custom"
         ],
         "examplesPassed": 4,
         "examplesFailed": 0
@@ -1279,7 +1527,7 @@
     "levelAchieved": "AA",
     "violations": 0,
     "issues": [],
-    "testedAt": "2025-12-29T20:42:28.526Z",
+    "testedAt": "2025-12-30T19:47:55.176Z",
     "scope": "manifest-driven",
     "examplesFound": 4,
     "scenariosTested": [
@@ -1381,7 +1629,7 @@
     "levelAchieved": "AA",
     "violations": 0,
     "issues": [],
-    "testedAt": "2025-12-29T20:42:31.054Z",
+    "testedAt": "2025-12-30T19:47:57.734Z",
     "scope": "manifest-driven",
     "examplesFound": 1,
     "scenariosTested": [
@@ -1438,7 +1686,7 @@
     "levelAchieved": "AA",
     "violations": 0,
     "issues": [],
-    "testedAt": "2025-12-29T20:42:33.473Z",
+    "testedAt": "2025-12-30T19:48:00.190Z",
     "scope": "manifest-driven",
     "examplesFound": 1,
     "scenariosTested": [
@@ -1501,7 +1749,7 @@
     "levelAchieved": "AA",
     "violations": 0,
     "issues": [],
-    "testedAt": "2025-12-29T20:42:35.995Z",
+    "testedAt": "2025-12-30T19:48:02.637Z",
     "scope": "manifest-driven",
     "examplesFound": 1,
     "scenariosTested": [
@@ -1558,7 +1806,7 @@
     "levelAchieved": "AA",
     "violations": 0,
     "issues": [],
-    "testedAt": "2025-12-29T20:42:38.444Z",
+    "testedAt": "2025-12-30T19:48:05.099Z",
     "scope": "manifest-driven",
     "examplesFound": 2,
     "scenariosTested": [
@@ -1615,7 +1863,7 @@
     "levelAchieved": "AA",
     "violations": 0,
     "issues": [],
-    "testedAt": "2025-12-29T20:42:41.291Z",
+    "testedAt": "2025-12-30T19:48:07.857Z",
     "scope": "manifest-driven",
     "examplesFound": 1,
     "scenariosTested": [
@@ -1672,7 +1920,7 @@
     "levelAchieved": "AA",
     "violations": 0,
     "issues": [],
-    "testedAt": "2025-12-29T20:42:44.752Z",
+    "testedAt": "2025-12-30T19:48:11.425Z",
     "scope": "manifest-driven",
     "examplesFound": 3,
     "scenariosTested": [
@@ -1759,7 +2007,7 @@
     "levelAchieved": "AA",
     "violations": 0,
     "issues": [],
-    "testedAt": "2025-12-29T20:42:47.203Z",
+    "testedAt": "2025-12-30T19:48:13.948Z",
     "scope": "manifest-driven",
     "examplesFound": 4,
     "scenariosTested": [
@@ -1816,7 +2064,7 @@
     "levelAchieved": "AA",
     "violations": 0,
     "issues": [],
-    "testedAt": "2025-12-29T20:42:50.599Z",
+    "testedAt": "2025-12-30T19:48:17.712Z",
     "scope": "manifest-driven",
     "examplesFound": 3,
     "scenariosTested": [
@@ -1903,7 +2151,7 @@
     "levelAchieved": "AA",
     "violations": 0,
     "issues": [],
-    "testedAt": "2025-12-29T20:42:55.245Z",
+    "testedAt": "2025-12-30T19:48:22.318Z",
     "scope": "manifest-driven",
     "examplesFound": 5,
     "scenariosTested": [
@@ -2016,7 +2264,7 @@
     "levelAchieved": "AA",
     "violations": 0,
     "issues": [],
-    "testedAt": "2025-12-29T20:42:58.184Z",
+    "testedAt": "2025-12-30T19:48:25.256Z",
     "scope": "manifest-driven",
     "examplesFound": 2,
     "scenariosTested": [
@@ -2086,7 +2334,7 @@
     "levelAchieved": "AA",
     "violations": 0,
     "issues": [],
-    "testedAt": "2025-12-29T20:43:02.253Z",
+    "testedAt": "2025-12-30T19:48:29.297Z",
     "scope": "manifest-driven",
     "examplesFound": 4,
     "scenariosTested": [
@@ -2182,14 +2430,18 @@
     "levelAchieved": "AA",
     "violations": 0,
     "issues": [],
-    "testedAt": "2025-12-29T20:42:28.730Z",
+    "testedAt": "2025-12-30T19:47:57.790Z",
     "scope": "manifest-driven",
-    "examplesFound": 4,
+    "examplesFound": 8,
     "scenariosTested": [
       "email",
       "password",
+      "number",
+      "left-icon",
+      "right-icon",
+      "both-icons",
       "invalid-state",
-      "disabled"
+      "password-with-toggle"
     ],
     "subject": "Component examples for WexFloatLabel",
     "modes": {
@@ -2198,7 +2450,7 @@
         "levelAchieved": "AA",
         "violations": 0,
         "issues": [],
-        "examplesFound": 4,
+        "examplesFound": 8,
         "failingElements": [],
         "examples": {
           "email": {
@@ -2211,12 +2463,32 @@
             "violations": 0,
             "issues": []
           },
+          "number": {
+            "status": "pass",
+            "violations": 0,
+            "issues": []
+          },
+          "left-icon": {
+            "status": "pass",
+            "violations": 0,
+            "issues": []
+          },
+          "right-icon": {
+            "status": "pass",
+            "violations": 0,
+            "issues": []
+          },
+          "both-icons": {
+            "status": "pass",
+            "violations": 0,
+            "issues": []
+          },
           "invalid-state": {
             "status": "pass",
             "violations": 0,
             "issues": []
           },
-          "disabled": {
+          "password-with-toggle": {
             "status": "pass",
             "violations": 0,
             "issues": []
@@ -2225,15 +2497,19 @@
         "examplesTested": [
           "email",
           "password",
+          "number",
+          "left-icon",
+          "right-icon",
+          "both-icons",
           "invalid-state",
-          "disabled"
+          "password-with-toggle"
         ],
         "examplesSkipped": [
           "all-sizes",
-          "number",
+          "disabled",
           "controlled"
         ],
-        "examplesPassed": 4,
+        "examplesPassed": 8,
         "examplesFailed": 0
       },
       "dark": {
@@ -2241,7 +2517,7 @@
         "levelAchieved": "AA",
         "violations": 0,
         "issues": [],
-        "examplesFound": 4,
+        "examplesFound": 8,
         "failingElements": [],
         "examples": {
           "email": {
@@ -2254,12 +2530,32 @@
             "violations": 0,
             "issues": []
           },
+          "number": {
+            "status": "pass",
+            "violations": 0,
+            "issues": []
+          },
+          "left-icon": {
+            "status": "pass",
+            "violations": 0,
+            "issues": []
+          },
+          "right-icon": {
+            "status": "pass",
+            "violations": 0,
+            "issues": []
+          },
+          "both-icons": {
+            "status": "pass",
+            "violations": 0,
+            "issues": []
+          },
           "invalid-state": {
             "status": "pass",
             "violations": 0,
             "issues": []
           },
-          "disabled": {
+          "password-with-toggle": {
             "status": "pass",
             "violations": 0,
             "issues": []
@@ -2268,15 +2564,19 @@
         "examplesTested": [
           "email",
           "password",
+          "number",
+          "left-icon",
+          "right-icon",
+          "both-icons",
           "invalid-state",
-          "disabled"
+          "password-with-toggle"
         ],
         "examplesSkipped": [
           "all-sizes",
-          "number",
+          "disabled",
           "controlled"
         ],
-        "examplesPassed": 4,
+        "examplesPassed": 8,
         "examplesFailed": 0
       }
     }
@@ -2286,7 +2586,7 @@
     "levelAchieved": "AA",
     "violations": 0,
     "issues": [],
-    "testedAt": "2025-12-29T20:42:36.712Z",
+    "testedAt": "2025-12-30T19:48:05.889Z",
     "scope": "manifest-driven",
     "examplesFound": 11,
     "scenariosTested": [
@@ -2485,7 +2785,7 @@
     "levelAchieved": "AA",
     "violations": 0,
     "issues": [],
-    "testedAt": "2025-12-29T20:42:40.297Z",
+    "testedAt": "2025-12-30T19:48:09.363Z",
     "scope": "manifest-driven",
     "examplesFound": 3,
     "scenariosTested": [
@@ -2572,7 +2872,7 @@
     "levelAchieved": "AA",
     "violations": 0,
     "issues": [],
-    "testedAt": "2025-12-29T20:42:43.309Z",
+    "testedAt": "2025-12-30T19:48:12.390Z",
     "scope": "manifest-driven",
     "examplesFound": 2,
     "scenariosTested": [
@@ -2643,17 +2943,15 @@
       }
     }
   },
-  "input-otp": {
+  "input-o-t-p": {
     "status": "pass",
     "levelAchieved": "AA",
     "violations": 0,
     "issues": [],
-    "testedAt": "2025-12-29T20:42:45.796Z",
+    "testedAt": "2025-12-30T19:48:14.176Z",
     "scope": "manifest-driven",
-    "examplesFound": 1,
-    "scenariosTested": [
-      "verification-code"
-    ],
+    "examplesFound": 0,
+    "scenariosTested": [],
     "subject": "Component examples for WexInputOTP",
     "modes": {
       "light": {
@@ -2661,20 +2959,12 @@
         "levelAchieved": "AA",
         "violations": 0,
         "issues": [],
-        "examplesFound": 1,
+        "examplesFound": 0,
         "failingElements": [],
-        "examples": {
-          "verification-code": {
-            "status": "pass",
-            "violations": 0,
-            "issues": []
-          }
-        },
-        "examplesTested": [
-          "verification-code"
-        ],
+        "examples": {},
+        "examplesTested": [],
         "examplesSkipped": [],
-        "examplesPassed": 1,
+        "examplesPassed": 0,
         "examplesFailed": 0
       },
       "dark": {
@@ -2682,20 +2972,12 @@
         "levelAchieved": "AA",
         "violations": 0,
         "issues": [],
-        "examplesFound": 1,
+        "examplesFound": 0,
         "failingElements": [],
-        "examples": {
-          "verification-code": {
-            "status": "pass",
-            "violations": 0,
-            "issues": []
-          }
-        },
-        "examplesTested": [
-          "verification-code"
-        ],
+        "examples": {},
+        "examplesTested": [],
         "examplesSkipped": [],
-        "examplesPassed": 1,
+        "examplesPassed": 0,
         "examplesFailed": 0
       }
     }
@@ -2705,7 +2987,7 @@
     "levelAchieved": "AA",
     "violations": 0,
     "issues": [],
-    "testedAt": "2025-12-29T20:42:54.086Z",
+    "testedAt": "2025-12-30T19:48:22.909Z",
     "scope": "manifest-driven",
     "examplesFound": 12,
     "scenariosTested": [
@@ -2917,7 +3199,7 @@
     "levelAchieved": "AA",
     "violations": 0,
     "issues": [],
-    "testedAt": "2025-12-29T20:42:57.206Z",
+    "testedAt": "2025-12-30T19:48:25.945Z",
     "scope": "manifest-driven",
     "examplesFound": 2,
     "scenariosTested": [
@@ -2991,7 +3273,7 @@
     "levelAchieved": "AA",
     "violations": 0,
     "issues": [],
-    "testedAt": "2025-12-29T20:43:00.601Z",
+    "testedAt": "2025-12-30T19:48:29.316Z",
     "scope": "manifest-driven",
     "examplesFound": 3,
     "scenariosTested": [
@@ -3074,7 +3356,7 @@
     "levelAchieved": "AA",
     "violations": 0,
     "issues": [],
-    "testedAt": "2025-12-29T20:43:03.556Z",
+    "testedAt": "2025-12-30T19:48:32.326Z",
     "scope": "manifest-driven",
     "examplesFound": 2,
     "scenariosTested": [
@@ -3144,7 +3426,7 @@
     "levelAchieved": "AA",
     "violations": 0,
     "issues": [],
-    "testedAt": "2025-12-29T20:43:05.889Z",
+    "testedAt": "2025-12-30T19:48:34.719Z",
     "scope": "manifest-driven",
     "examplesFound": 2,
     "scenariosTested": [
@@ -3201,7 +3483,7 @@
     "levelAchieved": "AA",
     "violations": 0,
     "issues": [],
-    "testedAt": "2025-12-29T20:43:08.224Z",
+    "testedAt": "2025-12-30T19:48:37.008Z",
     "scope": "manifest-driven",
     "examplesFound": 1,
     "scenariosTested": [
@@ -3258,7 +3540,7 @@
     "levelAchieved": "AA",
     "violations": 0,
     "issues": [],
-    "testedAt": "2025-12-29T20:43:10.755Z",
+    "testedAt": "2025-12-30T19:48:39.527Z",
     "scope": "manifest-driven",
     "examplesFound": 6,
     "scenariosTested": [
@@ -3315,7 +3597,7 @@
     "levelAchieved": "AA",
     "violations": 0,
     "issues": [],
-    "testedAt": "2025-12-29T20:42:28.610Z",
+    "testedAt": "2025-12-30T19:47:55.263Z",
     "scope": "manifest-driven",
     "examplesFound": 4,
     "scenariosTested": [
@@ -3411,7 +3693,7 @@
     "levelAchieved": "AA",
     "violations": 0,
     "issues": [],
-    "testedAt": "2025-12-29T20:42:33.425Z",
+    "testedAt": "2025-12-30T19:48:00.244Z",
     "scope": "manifest-driven",
     "examplesFound": 5,
     "scenariosTested": [
@@ -3526,7 +3808,7 @@
     "levelAchieved": "AA",
     "violations": 0,
     "issues": [],
-    "testedAt": "2025-12-29T20:42:35.972Z",
+    "testedAt": "2025-12-30T19:48:02.823Z",
     "scope": "manifest-driven",
     "examplesFound": 1,
     "scenariosTested": [
@@ -3587,7 +3869,7 @@
     "levelAchieved": "AA",
     "violations": 0,
     "issues": [],
-    "testedAt": "2025-12-29T20:42:38.432Z",
+    "testedAt": "2025-12-30T19:48:05.397Z",
     "scope": "manifest-driven",
     "examplesFound": 1,
     "scenariosTested": [
@@ -3644,7 +3926,7 @@
     "levelAchieved": "AA",
     "violations": 0,
     "issues": [],
-    "testedAt": "2025-12-29T20:42:41.118Z",
+    "testedAt": "2025-12-30T19:48:07.923Z",
     "scope": "manifest-driven",
     "examplesFound": 1,
     "scenariosTested": [
@@ -3701,7 +3983,7 @@
     "levelAchieved": "AA",
     "violations": 0,
     "issues": [],
-    "testedAt": "2025-12-29T20:42:45.219Z",
+    "testedAt": "2025-12-30T19:48:12.046Z",
     "scope": "manifest-driven",
     "examplesFound": 4,
     "scenariosTested": [
@@ -3805,7 +4087,7 @@
     "levelAchieved": "AA",
     "violations": 0,
     "issues": [],
-    "testedAt": "2025-12-29T20:42:48.167Z",
+    "testedAt": "2025-12-30T19:48:14.906Z",
     "scope": "manifest-driven",
     "examplesFound": 2,
     "scenariosTested": [
@@ -3875,7 +4157,7 @@
     "levelAchieved": "AA",
     "violations": 0,
     "issues": [],
-    "testedAt": "2025-12-29T20:42:50.753Z",
+    "testedAt": "2025-12-30T19:48:17.378Z",
     "scope": "manifest-driven",
     "examplesFound": 4,
     "scenariosTested": [
@@ -3932,7 +4214,7 @@
     "levelAchieved": "AA",
     "violations": 0,
     "issues": [],
-    "testedAt": "2025-12-29T20:42:53.473Z",
+    "testedAt": "2025-12-30T19:48:20.064Z",
     "scope": "manifest-driven",
     "examplesFound": 2,
     "scenariosTested": [
@@ -3989,7 +4271,7 @@
     "levelAchieved": "AA",
     "violations": 0,
     "issues": [],
-    "testedAt": "2025-12-29T20:43:01.228Z",
+    "testedAt": "2025-12-30T19:48:27.945Z",
     "scope": "manifest-driven",
     "examplesFound": 12,
     "scenariosTested": [
@@ -4189,7 +4471,7 @@
     "levelAchieved": "AA",
     "violations": 0,
     "issues": [],
-    "testedAt": "2025-12-29T20:43:05.158Z",
+    "testedAt": "2025-12-30T19:48:32.114Z",
     "scope": "manifest-driven",
     "examplesFound": 4,
     "scenariosTested": [
@@ -4291,7 +4573,7 @@
     "levelAchieved": "AA",
     "violations": 0,
     "issues": [],
-    "testedAt": "2025-12-29T20:43:07.562Z",
+    "testedAt": "2025-12-30T19:48:34.531Z",
     "scope": "manifest-driven",
     "examplesFound": 5,
     "scenariosTested": [
@@ -4348,7 +4630,7 @@
     "levelAchieved": "AA",
     "violations": 0,
     "issues": [],
-    "testedAt": "2025-12-29T20:42:27.016Z",
+    "testedAt": "2025-12-30T19:47:53.731Z",
     "scope": "manifest-driven",
     "examplesFound": 1,
     "scenariosTested": [
@@ -4411,7 +4693,7 @@
     "levelAchieved": "AA",
     "violations": 0,
     "issues": [],
-    "testedAt": "2025-12-29T20:42:29.922Z",
+    "testedAt": "2025-12-30T19:47:56.884Z",
     "scope": "manifest-driven",
     "examplesFound": 2,
     "scenariosTested": [
@@ -4487,15 +4769,16 @@
     "levelAchieved": "AA",
     "violations": 0,
     "issues": [],
-    "testedAt": "2025-12-29T20:42:35.449Z",
+    "testedAt": "2025-12-30T19:48:02.777Z",
     "scope": "manifest-driven",
-    "examplesFound": 6,
+    "examplesFound": 7,
     "scenariosTested": [
       "striped-table",
       "table-with-gridlines",
       "striped-with-gridlines",
       "small",
       "large",
+      "with-status-badges",
       "selectable-rows"
     ],
     "subject": "Component examples for WexTable",
@@ -4505,7 +4788,7 @@
         "levelAchieved": "AA",
         "violations": 0,
         "issues": [],
-        "examplesFound": 6,
+        "examplesFound": 7,
         "failingElements": [],
         "examples": {
           "striped-table": {
@@ -4533,6 +4816,11 @@
             "violations": 0,
             "issues": []
           },
+          "with-status-badges": {
+            "status": "pass",
+            "violations": 0,
+            "issues": []
+          },
           "selectable-rows": {
             "status": "pass",
             "violations": 0,
@@ -4545,12 +4833,11 @@
           "striped-with-gridlines",
           "small",
           "large",
+          "with-status-badges",
           "selectable-rows"
         ],
-        "examplesSkipped": [
-          "with-status-badges"
-        ],
-        "examplesPassed": 6,
+        "examplesSkipped": [],
+        "examplesPassed": 7,
         "examplesFailed": 0
       },
       "dark": {
@@ -4558,7 +4845,7 @@
         "levelAchieved": "AA",
         "violations": 0,
         "issues": [],
-        "examplesFound": 6,
+        "examplesFound": 7,
         "failingElements": [],
         "examples": {
           "striped-table": {
@@ -4586,6 +4873,11 @@
             "violations": 0,
             "issues": []
           },
+          "with-status-badges": {
+            "status": "pass",
+            "violations": 0,
+            "issues": []
+          },
           "selectable-rows": {
             "status": "pass",
             "violations": 0,
@@ -4598,12 +4890,11 @@
           "striped-with-gridlines",
           "small",
           "large",
+          "with-status-badges",
           "selectable-rows"
         ],
-        "examplesSkipped": [
-          "with-status-badges"
-        ],
-        "examplesPassed": 6,
+        "examplesSkipped": [],
+        "examplesPassed": 7,
         "examplesFailed": 0
       }
     }
@@ -4613,11 +4904,12 @@
     "levelAchieved": "AA",
     "violations": 0,
     "issues": [],
-    "testedAt": "2025-12-29T20:42:39.465Z",
+    "testedAt": "2025-12-30T19:48:07.388Z",
     "scope": "manifest-driven",
-    "examplesFound": 3,
+    "examplesFound": 4,
     "scenariosTested": [
       "scrollable-tab-list",
+      "closable-tabs",
       "full-width-tabs",
       "tabs-in-card"
     ],
@@ -4628,10 +4920,15 @@
         "levelAchieved": "AA",
         "violations": 0,
         "issues": [],
-        "examplesFound": 3,
+        "examplesFound": 4,
         "failingElements": [],
         "examples": {
           "scrollable-tab-list": {
+            "status": "pass",
+            "violations": 0,
+            "issues": []
+          },
+          "closable-tabs": {
             "status": "pass",
             "violations": 0,
             "issues": []
@@ -4649,15 +4946,15 @@
         },
         "examplesTested": [
           "scrollable-tab-list",
+          "closable-tabs",
           "full-width-tabs",
           "tabs-in-card"
         ],
         "examplesSkipped": [
-          "closable-tabs",
           "disabled-tab",
           "controlled-tabs"
         ],
-        "examplesPassed": 3,
+        "examplesPassed": 4,
         "examplesFailed": 0
       },
       "dark": {
@@ -4665,10 +4962,15 @@
         "levelAchieved": "AA",
         "violations": 0,
         "issues": [],
-        "examplesFound": 3,
+        "examplesFound": 4,
         "failingElements": [],
         "examples": {
           "scrollable-tab-list": {
+            "status": "pass",
+            "violations": 0,
+            "issues": []
+          },
+          "closable-tabs": {
             "status": "pass",
             "violations": 0,
             "issues": []
@@ -4686,15 +4988,15 @@
         },
         "examplesTested": [
           "scrollable-tab-list",
+          "closable-tabs",
           "full-width-tabs",
           "tabs-in-card"
         ],
         "examplesSkipped": [
-          "closable-tabs",
           "disabled-tab",
           "controlled-tabs"
         ],
-        "examplesPassed": 3,
+        "examplesPassed": 4,
         "examplesFailed": 0
       }
     }
@@ -4704,7 +5006,7 @@
     "levelAchieved": "AA",
     "violations": 0,
     "issues": [],
-    "testedAt": "2025-12-29T20:42:44.485Z",
+    "testedAt": "2025-12-30T19:48:12.455Z",
     "scope": "manifest-driven",
     "examplesFound": 6,
     "scenariosTested": [
@@ -4832,7 +5134,7 @@
     "levelAchieved": "AA",
     "violations": 0,
     "issues": [],
-    "testedAt": "2025-12-29T20:42:49.451Z",
+    "testedAt": "2025-12-30T19:48:17.970Z",
     "scope": "manifest-driven",
     "examplesFound": 6,
     "scenariosTested": [
@@ -4960,7 +5262,7 @@
     "levelAchieved": "AA",
     "violations": 0,
     "issues": [],
-    "testedAt": "2025-12-29T20:42:52.653Z",
+    "testedAt": "2025-12-30T19:48:20.946Z",
     "scope": "manifest-driven",
     "examplesFound": 2,
     "scenariosTested": [
@@ -5030,7 +5332,7 @@
     "levelAchieved": "AA",
     "violations": 0,
     "issues": [],
-    "testedAt": "2025-12-29T20:42:59.416Z",
+    "testedAt": "2025-12-30T19:48:27.747Z",
     "scope": "manifest-driven",
     "examplesFound": 9,
     "scenariosTested": [
@@ -5188,7 +5490,7 @@
     "levelAchieved": "AA",
     "violations": 0,
     "issues": [],
-    "testedAt": "2025-12-29T20:43:02.962Z",
+    "testedAt": "2025-12-30T19:48:31.334Z",
     "scope": "manifest-driven",
     "examplesFound": 3,
     "scenariosTested": [

@@ -78,7 +78,7 @@ export function ThemeToggle() {
 
   return (
     <WexButton
-      intent="ghost"
+      variant="ghost"
       size="sm"
       onClick={handleToggle}
       aria-label={`Switch to ${currentTheme === "dark" ? "light" : "dark"} mode`}

@@ -62,6 +62,7 @@ export function SidebarNav() {
       <NavSection title="Overview" icon={<Home className="h-3.5 w-3.5" />} color="blue">
         <DocsNavLink to="/design-system" level={2}>Home</DocsNavLink>
         <DocsNavLink to="/getting-started" level={2}>Getting Started</DocsNavLink>
+        <DocsNavLink to="/architecture" level={2}>Architecture</DocsNavLink>
       </NavSection>
 
       {/* About Section - First-class pages (always open) */}
@@ -113,7 +114,7 @@ export function SidebarNav() {
 
       {/* Resources Section - Level 2 pages (always open) */}
       <NavSection title="Resources" icon={<BookOpen className="h-3.5 w-3.5" />} color="rose">
-        <DocsNavLink to="/architecture" level={2}>Architecture</DocsNavLink>
+      
         <DocsNavLink to="/contributing" level={2}>Contributing</DocsNavLink>
         <DocsNavLink to="/theme-builder" level={2}>Theme Builder</DocsNavLink>
         <DocsNavLink to="/unit-tests" level={2}>Unit Tests</DocsNavLink>

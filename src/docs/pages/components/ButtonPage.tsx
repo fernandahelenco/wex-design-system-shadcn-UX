@@ -4,8 +4,22 @@ import { ExampleCard } from "@/docs/components/ExampleCard";
 import { CodeBlock } from "@/docs/components/CodeBlock";
 import { Guidance } from "@/docs/components/ProseBlock";
 import { TokenReference, type TokenRow } from "@/docs/components/TokenReference";
+import { PropsTable, type PropDefinition } from "@/docs/components/PropsTable";
 import { WexButton } from "@/components/wex";
 import { Plus, Settings, Download } from "lucide-react";
+
+// Props documentation for WexButton
+const buttonProps: PropDefinition[] = [
+  { name: "intent", type: '"primary" | "secondary" | "success" | "info" | "warning" | "destructive" | "help" | "contrast"', default: '"primary"', description: "Semantic intent/severity for the button" },
+  { name: "variant", type: '"solid" | "outline" | "ghost" | "link"', default: '"solid"', description: "Visual style variant (solid filled, outline bordered, ghost transparent, link text)" },
+  { name: "size", type: '"sm" | "md" | "lg" | "icon"', default: '"md"', description: "Button size. Icon size is square for icon-only buttons" },
+  { name: "rounded", type: "boolean", default: "false", description: "Applies pill-shaped rounded corners" },
+  { name: "loading", type: "boolean", default: "false", description: "Shows loading spinner and disables the button" },
+  { name: "asChild", type: "boolean", default: "false", description: "Render as child element (polymorphic)" },
+  { name: "disabled", type: "boolean", default: "false", description: "Disables the button" },
+  { name: "className", type: "string", description: "Additional CSS classes to apply" },
+  { name: "children", type: "ReactNode", required: true, description: "Button content" },
+];
 
 // Token mappings for WexButton variants - using Layer 3 component tokens
 const buttonTokens: TokenRow[] = [
@@ -101,13 +115,13 @@ export default function ButtonPage() {
       <Section title="Text Variants" description="Outline, ghost, and link styles for subtle actions.">
         <div className="grid grid-cols-3 gap-4">
           <ExampleCard title="Ghost">
-            <WexButton intent="ghost">Ghost</WexButton>
+            <WexButton variant="ghost">Ghost</WexButton>
           </ExampleCard>
           <ExampleCard title="Outline">
-            <WexButton intent="outline">Outline</WexButton>
+            <WexButton variant="outline">Outline</WexButton>
           </ExampleCard>
           <ExampleCard title="Link">
-            <WexButton intent="link">Learn More</WexButton>
+            <WexButton variant="link">Learn More</WexButton>
           </ExampleCard>
         </div>
         <Guidance>
@@ -173,7 +187,7 @@ export default function ButtonPage() {
             <WexButton intent="secondary" size="icon" aria-label="Settings">
               <Settings className="h-4 w-4" />
             </WexButton>
-            <WexButton intent="ghost" size="icon" aria-label="Download">
+            <WexButton variant="ghost" size="icon" aria-label="Download">
               <Download className="h-4 w-4" />
             </WexButton>
           </div>
@@ -181,21 +195,21 @@ export default function ButtonPage() {
       </Section>
 
       {/* ============================================================
-          ALL VARIANTS TABLE
+          ALL INTENTS TABLE (Solid variant)
           ============================================================ */}
-      <Section title="All Variants at a Glance" description="Complete overview of all button intents.">
+      <Section title="All Intents at a Glance" description="Complete overview of all semantic button intents (solid variant).">
         <div className="overflow-x-auto">
           <table className="w-full border-collapse text-sm">
             <thead>
               <tr className="border-b border-border">
                 <th className="text-left py-3 px-4 font-medium text-muted-foreground">Intent</th>
-                <th className="text-left py-3 px-4 font-medium text-muted-foreground">Default</th>
+                <th className="text-left py-3 px-4 font-medium text-muted-foreground">Solid</th>
                 <th className="text-left py-3 px-4 font-medium text-muted-foreground">Rounded</th>
                 <th className="text-left py-3 px-4 font-medium text-muted-foreground">Disabled</th>
               </tr>
             </thead>
             <tbody>
-              {(["primary", "secondary", "success", "info", "warning", "destructive", "help", "contrast", "ghost", "outline", "link"] as const).map((intent) => (
+              {(["primary", "secondary", "success", "info", "warning", "destructive", "help", "contrast"] as const).map((intent) => (
                 <tr key={intent} className="border-b border-border/50">
                   <td className="py-3 px-4 font-medium capitalize">{intent}</td>
                   <td className="py-3 px-4"><WexButton intent={intent} size="sm">{intent}</WexButton></td>
@@ -206,6 +220,65 @@ export default function ButtonPage() {
             </tbody>
           </table>
         </div>
+      </Section>
+
+      {/* ============================================================
+          OUTLINE SEVERITIES - New feature!
+          Each outline button is in its own ExampleCard for a11y testing
+          ============================================================ */}
+      <Section title="Outline Severities" description="Outline variant available for all semantic intents with tinted hover states.">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <ExampleCard title="Outline Primary" exampleId="outline-primary">
+            <WexButton intent="primary" variant="outline">Primary</WexButton>
+          </ExampleCard>
+          <ExampleCard title="Outline Secondary" exampleId="outline-secondary">
+            <WexButton intent="secondary" variant="outline">Secondary</WexButton>
+          </ExampleCard>
+          <ExampleCard title="Outline Success" exampleId="outline-success">
+            <WexButton intent="success" variant="outline">Success</WexButton>
+          </ExampleCard>
+          <ExampleCard title="Outline Info" exampleId="outline-info">
+            <WexButton intent="info" variant="outline">Info</WexButton>
+          </ExampleCard>
+          <ExampleCard title="Outline Warning" exampleId="outline-warning">
+            <WexButton intent="warning" variant="outline">Warning</WexButton>
+          </ExampleCard>
+          <ExampleCard title="Outline Destructive" exampleId="outline-destructive">
+            <WexButton intent="destructive" variant="outline">Destructive</WexButton>
+          </ExampleCard>
+          <ExampleCard title="Outline Help" exampleId="outline-help">
+            <WexButton intent="help" variant="outline">Help</WexButton>
+          </ExampleCard>
+        </div>
+        
+        <div className="mt-6 grid grid-cols-2 md:grid-cols-4 gap-4">
+          <ExampleCard title="Outline Primary Disabled" exampleId="outline-primary-disabled">
+            <WexButton intent="primary" variant="outline" disabled>Disabled</WexButton>
+          </ExampleCard>
+          <ExampleCard title="Outline Secondary Disabled" exampleId="outline-secondary-disabled">
+            <WexButton intent="secondary" variant="outline" disabled>Disabled</WexButton>
+          </ExampleCard>
+          <ExampleCard title="Outline Success Disabled" exampleId="outline-success-disabled">
+            <WexButton intent="success" variant="outline" disabled>Disabled</WexButton>
+          </ExampleCard>
+          <ExampleCard title="Outline Info Disabled" exampleId="outline-info-disabled">
+            <WexButton intent="info" variant="outline" disabled>Disabled</WexButton>
+          </ExampleCard>
+          <ExampleCard title="Outline Warning Disabled" exampleId="outline-warning-disabled">
+            <WexButton intent="warning" variant="outline" disabled>Disabled</WexButton>
+          </ExampleCard>
+          <ExampleCard title="Outline Destructive Disabled" exampleId="outline-destructive-disabled">
+            <WexButton intent="destructive" variant="outline" disabled>Disabled</WexButton>
+          </ExampleCard>
+          <ExampleCard title="Outline Help Disabled" exampleId="outline-help-disabled">
+            <WexButton intent="help" variant="outline" disabled>Disabled</WexButton>
+          </ExampleCard>
+        </div>
+        
+        <Guidance>
+          Outline buttons use transparent backgrounds with colored borders and text matching the intent.
+          On hover, they show a subtle tinted background for visual feedback.
+        </Guidance>
       </Section>
 
       <Section title="Accessibility">
@@ -249,9 +322,9 @@ export default function ButtonPage() {
 <WexButton intent="contrast">Contrast</WexButton>
 
 // Text variants
-<WexButton intent="ghost">Ghost</WexButton>
-<WexButton intent="outline">Outline</WexButton>
-<WexButton intent="link">Link</WexButton>
+<WexButton variant="ghost">Ghost</WexButton>
+<WexButton variant="outline">Outline</WexButton>
+<WexButton variant="link">Link</WexButton>
 
 // Modifiers
 <WexButton rounded>Pill Button</WexButton>
@@ -269,16 +342,10 @@ export default function ButtonPage() {
   <Plus className="h-4 w-4" />
 </WexButton>`}
         />
-        <div className="mt-4 text-sm text-muted-foreground">
-          <p><strong>Props:</strong></p>
-          <ul className="list-disc list-inside mt-2 space-y-1">
-            <li><code className="bg-muted px-1 rounded">intent</code>: "primary" | "secondary" | "success" | "info" | "warning" | "destructive" | "help" | "contrast" | "ghost" | "outline" | "link"</li>
-            <li><code className="bg-muted px-1 rounded">size</code>: "sm" | "md" | "lg" | "icon"</li>
-            <li><code className="bg-muted px-1 rounded">rounded</code>: boolean - Pill shape</li>
-            <li><code className="bg-muted px-1 rounded">loading</code>: boolean - Shows spinner, disables button</li>
-            <li><code className="bg-muted px-1 rounded">asChild</code>: boolean - Render as child element</li>
-          </ul>
-        </div>
+      </Section>
+
+      <Section title="API Reference">
+        <PropsTable props={buttonProps} />
       </Section>
 
       <TokenReference tokens={buttonTokens} className="mt-12" />

@@ -4,8 +4,19 @@ import { ExampleCard } from "@/docs/components/ExampleCard";
 import { CodeBlock } from "@/docs/components/CodeBlock";
 import { Guidance } from "@/docs/components/ProseBlock";
 import { TokenReference, type TokenRow } from "@/docs/components/TokenReference";
+import { PropsTable, type PropDefinition } from "@/docs/components/PropsTable";
 import { WexButton } from "@/components/wex";
 import { toast } from "sonner";
+
+// Props documentation (using Sonner's toast function)
+const toastFunctionProps: PropDefinition[] = [
+  { name: "message", type: "string | ReactNode", required: true, description: "Toast message content" },
+  { name: "description", type: "string | ReactNode", description: "Additional description" },
+  { name: "duration", type: "number", default: "4000", description: "Duration in ms (Infinity to persist)" },
+  { name: "position", type: '"top-left" | "top-center" | "top-right" | "bottom-left" | "bottom-center" | "bottom-right"', default: '"bottom-right"', description: "Toast position" },
+  { name: "action", type: "{ label: string; onClick: () => void }", description: "Action button config" },
+  { name: "cancel", type: "{ label: string; onClick: () => void }", description: "Cancel button config" },
+];
 
 // Layer 3 component tokens for Toast (Sonner) variants
 const toastTokens: TokenRow[] = [
@@ -50,13 +61,13 @@ export default function ToastPage() {
         </div>
         <ExampleCard>
           <div className="flex flex-wrap gap-2">
-            <WexButton intent="outline" onClick={() => toast("Event has been created")}>
+            <WexButton variant="outline" onClick={() => toast("Event has been created")}>
               Default Toast
             </WexButton>
-            <WexButton intent="outline" onClick={() => toast.success("Successfully saved!")}>
+            <WexButton variant="outline" onClick={() => toast.success("Successfully saved!")}>
               Success
             </WexButton>
-            <WexButton intent="outline" onClick={() => toast.error("Something went wrong")}>
+            <WexButton variant="outline" onClick={() => toast.error("Something went wrong")}>
               Error
             </WexButton>
           </div>
@@ -70,38 +81,38 @@ export default function ToastPage() {
       <Section title="Toast Types" description="Different toast variants for different scenarios.">
         <div className="space-y-4">
           <ExampleCard title="Default" description="General notifications.">
-            <WexButton intent="outline" onClick={() => toast("Your changes have been saved")}>
+            <WexButton variant="outline" onClick={() => toast("Your changes have been saved")}>
               Show Default
             </WexButton>
           </ExampleCard>
 
           <ExampleCard title="Success" description="Positive confirmations.">
-            <WexButton intent="outline" onClick={() => toast.success("Profile updated successfully")}>
+            <WexButton variant="outline" onClick={() => toast.success("Profile updated successfully")}>
               Show Success
             </WexButton>
           </ExampleCard>
 
           <ExampleCard title="Error" description="Error messages.">
-            <WexButton intent="outline" onClick={() => toast.error("Failed to save changes")}>
+            <WexButton variant="outline" onClick={() => toast.error("Failed to save changes")}>
               Show Error
             </WexButton>
           </ExampleCard>
 
           <ExampleCard title="Warning" description="Caution messages.">
-            <WexButton intent="outline" onClick={() => toast.warning("Session expires in 5 minutes")}>
+            <WexButton variant="outline" onClick={() => toast.warning("Session expires in 5 minutes")}>
               Show Warning
             </WexButton>
           </ExampleCard>
 
           <ExampleCard title="Info" description="Informational messages.">
-            <WexButton intent="outline" onClick={() => toast.info("New version available")}>
+            <WexButton variant="outline" onClick={() => toast.info("New version available")}>
               Show Info
             </WexButton>
           </ExampleCard>
 
           <ExampleCard title="With Description" description="Toast with additional context.">
             <WexButton
-              intent="outline"
+              variant="outline"
               onClick={() =>
                 toast("Event Created", {
                   description: "Your event has been scheduled for tomorrow at 3pm.",
@@ -114,7 +125,7 @@ export default function ToastPage() {
 
           <ExampleCard title="With Action" description="Toast with action button.">
             <WexButton
-              intent="outline"
+              variant="outline"
               onClick={() =>
                 toast("Message sent", {
                   action: {
@@ -130,7 +141,7 @@ export default function ToastPage() {
 
           <ExampleCard title="Loading" description="For async operations.">
             <WexButton
-              intent="outline"
+              variant="outline"
               onClick={() => {
                 const id = toast.loading("Saving...");
                 setTimeout(() => {
@@ -227,6 +238,13 @@ wexToast.success("Done!", { id });
 wexToast.dismiss(); // All
 wexToast.dismiss(id); // Specific`}
         />
+      </Section>
+
+      <Section title="API Reference">
+        <p className="text-sm text-muted-foreground mb-4">
+          Toast is called as a function: <code className="text-sm">toast("Message")</code> or <code className="text-sm">toast.success("Message")</code>
+        </p>
+        <PropsTable props={toastFunctionProps} />
       </Section>
 
       <TokenReference tokens={toastTokens} className="mt-12" />

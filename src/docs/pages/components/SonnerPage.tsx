@@ -4,8 +4,21 @@ import { ExampleCard } from "@/docs/components/ExampleCard";
 import { CodeBlock } from "@/docs/components/CodeBlock";
 import { Guidance } from "@/docs/components/ProseBlock";
 import { TokenReference, type TokenRow } from "@/docs/components/TokenReference";
+import { PropsTable, type PropDefinition } from "@/docs/components/PropsTable";
 import { WexButton, wexToast } from "@/components/wex";
 import { AccessibilitySection } from "@/docs/components/AccessibilitySection";
+
+// Props documentation for wexToast function
+const wexToastProps: PropDefinition[] = [
+  { name: "message", type: "string | ReactNode", required: true, description: "Toast message content" },
+  { name: "description", type: "string | ReactNode", description: "Additional description" },
+  { name: "duration", type: "number", default: "4000", description: "Duration in ms" },
+  { name: "position", type: '"top-left" | "top-center" | "top-right" | "bottom-left" | "bottom-center" | "bottom-right"', default: '"top-center"', description: "Toast position" },
+  { name: "action", type: "{ label: string; onClick: () => void }", description: "Action button config" },
+  { name: "cancel", type: "{ label: string; onClick: () => void }", description: "Cancel button config" },
+  { name: "id", type: "string | number", description: "Unique ID for deduplication" },
+  { name: "dismissible", type: "boolean", default: "true", description: "Show close button" },
+];
 
 // Token mappings for WexSonner (Toast)
 const sonnerTokens: TokenRow[] = [
@@ -42,7 +55,7 @@ export default function SonnerPage() {
       <Section title="Overview">
         <ExampleCard>
           <WexButton
-            intent="outline"
+            variant="outline"
             onClick={() =>
               wexToast("Event has been created", {
                 position: sonnerPosition,
@@ -86,7 +99,7 @@ wexToast("Event has been created");`}
         <ExampleCard>
           <div className="flex flex-wrap gap-2">
             <WexButton
-              intent="outline"
+              variant="outline"
               onClick={() =>
                 wexToast("Event has been created", {
                   position: sonnerPosition,
@@ -97,7 +110,7 @@ wexToast("Event has been created");`}
             </WexButton>
 
             <WexButton
-              intent="outline"
+              variant="outline"
               onClick={() =>
                 wexToast.success("Event has been created", {
                   position: sonnerPosition,
@@ -108,7 +121,7 @@ wexToast("Event has been created");`}
             </WexButton>
 
             <WexButton
-              intent="outline"
+              variant="outline"
               onClick={() =>
                 wexToast.info("Be at the area 10 minutes before the event time", {
                   position: sonnerPosition,
@@ -119,7 +132,7 @@ wexToast("Event has been created");`}
             </WexButton>
 
             <WexButton
-              intent="outline"
+              variant="outline"
               onClick={() =>
                 wexToast.warning("Event start time cannot be earlier than 8am", {
                   position: sonnerPosition,
@@ -130,7 +143,7 @@ wexToast("Event has been created");`}
             </WexButton>
 
             <WexButton
-              intent="outline"
+              variant="outline"
               onClick={() =>
                 wexToast.error("Event has not been created", {
                   position: sonnerPosition,
@@ -141,7 +154,7 @@ wexToast("Event has been created");`}
             </WexButton>
 
             <WexButton
-              intent="outline"
+              variant="outline"
               onClick={() =>
                 wexToast.promise(
                   new Promise<{ name: string }>((resolve) =>
@@ -195,7 +208,7 @@ wexToast.promise(saveData(), {
       <Section title="With Description" description="Add additional context to your toast.">
         <ExampleCard>
           <WexButton
-            intent="outline"
+            variant="outline"
             onClick={() =>
               wexToast("Event has been created", {
                 description: "Sunday, December 03, 2023 at 9:00 AM",
@@ -219,7 +232,7 @@ wexToast.promise(saveData(), {
       <Section title="With Action" description="Add an action button to your toast.">
         <ExampleCard>
           <WexButton
-            intent="outline"
+            variant="outline"
             onClick={() =>
               wexToast("Event has been created", {
                 description: "Sunday, December 03, 2023 at 9:00 AM",
@@ -251,7 +264,7 @@ wexToast.promise(saveData(), {
       <Section title="Loading State" description="Show a loading toast that updates when complete.">
         <ExampleCard>
           <WexButton
-            intent="outline"
+            variant="outline"
             onClick={() => {
               const toastId = wexToast.loading("Saving changes...", { position: sonnerPosition });
               setTimeout(() => {
@@ -320,6 +333,13 @@ wexToast.error("Failed to save", { id: toastId });`}
             </ul>
           </div>
         </div>
+      </Section>
+
+      <Section title="API Reference">
+        <p className="text-sm text-muted-foreground mb-4">
+          Use the <code className="text-sm">wexToast</code> function: <code className="text-sm">wexToast("Message")</code> or <code className="text-sm">wexToast.success("Message")</code>
+        </p>
+        <PropsTable props={wexToastProps} />
       </Section>
 
       <TokenReference tokens={sonnerTokens} className="mt-12" />

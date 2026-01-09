@@ -1,6 +1,7 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
-import path from 'path'
+import path from 'node:path'
+import { tokensCSSPlugin } from './vite-plugins/tokens-css'
 
 // https://vite.dev/config/
 export default defineConfig(({ mode }) => ({
@@ -8,7 +9,10 @@ export default defineConfig(({ mode }) => ({
   // Local development will work at root path
   // Note: GitHub Pages paths are case-sensitive; match the repo name exactly (CXR-UX).
   base: mode === 'production' ? '/CXR-UX/' : '/',
-  plugins: [react()],
+  plugins: [
+    react(),
+    tokensCSSPlugin(), // Generate CSS from JSON at build time
+  ],
   server: {
     port: 5174,
     strictPort: true, // Fail if port is already in use
@@ -23,6 +27,7 @@ export default defineConfig(({ mode }) => ({
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),
+      "@wex/design-tokens/tailwind-preset": path.resolve(__dirname, "./packages/design-tokens/tailwind-preset.js"),
     },
   },
   build: {

@@ -5,9 +5,24 @@ import { ExampleCard } from "@/docs/components/ExampleCard";
 import { CodeBlock } from "@/docs/components/CodeBlock";
 import { Guidance } from "@/docs/components/ProseBlock";
 import { TokenReference, type TokenRow } from "@/docs/components/TokenReference";
+import { PropsTable, SubComponentProps, type PropDefinition } from "@/docs/components/PropsTable";
 import { WexPopover, WexButton, WexInput, WexLabel, WexCalendar } from "@/components/wex";
 import { format } from "date-fns";
 import { CalendarIcon, Settings, User } from "lucide-react";
+
+// Props documentation for WexPopover
+const popoverRootProps: PropDefinition[] = [
+  { name: "open", type: "boolean", description: "Controlled open state" },
+  { name: "onOpenChange", type: "(open: boolean) => void", description: "Callback when open state changes" },
+  { name: "modal", type: "boolean", default: "false", description: "Whether to render as modal" },
+];
+
+const popoverContentProps: PropDefinition[] = [
+  { name: "side", type: '"top" | "right" | "bottom" | "left"', default: '"bottom"', description: "Preferred side to render" },
+  { name: "align", type: '"start" | "center" | "end"', default: '"center"', description: "Alignment along the side" },
+  { name: "sideOffset", type: "number", default: "4", description: "Offset from the trigger" },
+  { name: "className", type: "string", description: "Additional CSS classes" },
+];
 
 // Token mappings for WexPopover
 // Layer 3 component tokens
@@ -31,7 +46,7 @@ export default function PopoverPage() {
         <ExampleCard>
           <WexPopover>
             <WexPopover.Trigger asChild>
-              <WexButton intent="outline">Open Popover</WexButton>
+              <WexButton variant="outline">Open Popover</WexButton>
             </WexPopover.Trigger>
             <WexPopover.Content className="w-80">
               <div className="grid gap-4">
@@ -66,7 +81,7 @@ export default function PopoverPage() {
           <ExampleCard title="Simple Content" description="Basic popover with text.">
             <WexPopover>
               <WexPopover.Trigger asChild>
-                <WexButton intent="outline">Info</WexButton>
+                <WexButton variant="outline">Info</WexButton>
               </WexPopover.Trigger>
               <WexPopover.Content className="w-64">
                 <p className="text-sm">
@@ -81,7 +96,7 @@ export default function PopoverPage() {
             <WexPopover>
               <WexPopover.Trigger asChild>
                 <WexButton
-                  intent="outline"
+                  variant="outline"
                   className="w-[240px] justify-start text-left font-normal"
                 >
                   <CalendarIcon className="mr-2 h-4 w-4" />
@@ -102,7 +117,7 @@ export default function PopoverPage() {
           <ExampleCard title="With Form" description="Popover containing form fields.">
             <WexPopover>
               <WexPopover.Trigger asChild>
-                <WexButton intent="outline">
+                <WexButton variant="outline">
                   <Settings className="mr-2 h-4 w-4" />
                   Settings
                 </WexButton>
@@ -134,7 +149,7 @@ export default function PopoverPage() {
           <ExampleCard title="User Card" description="Popover showing user details.">
             <WexPopover>
               <WexPopover.Trigger asChild>
-                <WexButton intent="outline" className="gap-2">
+                <WexButton variant="outline" className="gap-2">
                   <User className="h-4 w-4" />
                   @johndoe
                 </WexButton>
@@ -174,7 +189,7 @@ export default function PopoverPage() {
             {(["top", "right", "bottom", "left"] as const).map((side) => (
               <WexPopover key={side}>
                 <WexPopover.Trigger asChild>
-                  <WexButton intent="outline" className="capitalize">
+                  <WexButton variant="outline" className="capitalize">
                     {side}
                   </WexButton>
                 </WexPopover.Trigger>
@@ -195,7 +210,7 @@ export default function PopoverPage() {
             {(["start", "center", "end"] as const).map((align) => (
               <WexPopover key={align}>
                 <WexPopover.Trigger asChild>
-                  <WexButton intent="outline" className="capitalize">
+                  <WexButton variant="outline" className="capitalize">
                     Align {align}
                   </WexButton>
                 </WexPopover.Trigger>
@@ -252,19 +267,20 @@ export default function PopoverPage() {
 // As date picker
 <WexPopover>
   <WexPopover.Trigger asChild>
-    <WexButton intent="outline">
+    <WexButton variant="outline">
       {date ? format(date, "PPP") : "Pick a date"}
     </WexButton>
   </WexPopover.Trigger>
   <WexPopover.Content className="w-auto p-0">
-    <WexCalendar
-      mode="single"
-      selected={date}
-      onSelect={setDate}
-    />
+    <Calendar mode="single" selected={date} onSelect={setDate} />
   </WexPopover.Content>
 </WexPopover>`}
         />
+      </Section>
+
+      <Section title="API Reference">
+        <PropsTable props={popoverRootProps} title="WexPopover" />
+        <SubComponentProps name="WexPopover.Content" props={popoverContentProps} />
       </Section>
 
       <TokenReference tokens={popoverTokens} className="mt-12" />

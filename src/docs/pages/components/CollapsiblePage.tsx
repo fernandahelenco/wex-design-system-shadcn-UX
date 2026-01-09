@@ -4,8 +4,17 @@ import { Section } from "@/docs/components/Section";
 import { ExampleCard } from "@/docs/components/ExampleCard";
 import { CodeBlock } from "@/docs/components/CodeBlock";
 import { TokenReference, type TokenRow } from "@/docs/components/TokenReference";
+import { PropsTable, type PropDefinition } from "@/docs/components/PropsTable";
 import { WexCollapsible, WexButton } from "@/components/wex";
 import { ChevronsUpDown } from "lucide-react";
+
+// Props documentation
+const collapsibleProps: PropDefinition[] = [
+  { name: "open", type: "boolean", description: "Controlled open state" },
+  { name: "defaultOpen", type: "boolean", default: "false", description: "Default open state" },
+  { name: "onOpenChange", type: "(open: boolean) => void", description: "Callback when open state changes" },
+  { name: "disabled", type: "boolean", default: "false", description: "Disables the collapsible" },
+];
 
 // Token mappings for WexCollapsible
 const collapsibleTokens: TokenRow[] = [
@@ -35,7 +44,7 @@ export default function CollapsiblePage() {
                 @radix-ui/primitives
               </h4>
               <WexCollapsible.Trigger asChild>
-                <WexButton intent="ghost" size="sm" className="w-9 p-0">
+                <WexButton variant="ghost" size="sm" className="w-9 p-0">
                   <ChevronsUpDown className="h-4 w-4" />
                   <span className="sr-only">Toggle</span>
                 </WexButton>
@@ -92,7 +101,7 @@ const [isOpen, setIsOpen] = useState(false);
   <div className="flex items-center justify-between">
     <h4>Title</h4>
     <WexCollapsible.Trigger asChild>
-      <WexButton intent="ghost" size="sm">
+      <WexButton variant="ghost" size="sm">
         <ChevronsUpDown className="h-4 w-4" />
       </WexButton>
     </WexCollapsible.Trigger>
@@ -102,6 +111,16 @@ const [isOpen, setIsOpen] = useState(false);
     Hidden content that expands
   </WexCollapsible.Content>
 </WexCollapsible>`}
+        />
+      </Section>
+
+      <Section title="API Reference">
+        <PropsTable 
+          props={collapsibleProps} 
+          subComponents={[
+            { name: "WexCollapsible.Trigger", props: [{ name: "asChild", type: "boolean", default: "false", description: "Merge with child element" }] },
+            { name: "WexCollapsible.Content", props: [{ name: "forceMount", type: "boolean", description: "Force mount for animation" }] },
+          ]}
         />
       </Section>
 
