@@ -41,6 +41,7 @@ const ReimburseDocsPage = React.lazy(() => import("@/docs/pages/consumer/reimbur
 const ReimburseAnalyzePage = React.lazy(() => import("@/docs/pages/consumer/reimburse/ReimburseAnalyze"));
 const ReimburseReviewPage = React.lazy(() => import("@/docs/pages/consumer/reimburse/ReimburseReview"));
 const ReimburseConfirmPage = React.lazy(() => import("@/docs/pages/consumer/reimburse/ReimburseConfirm"));
+const MobileUploadPage = React.lazy(() => import("@/docs/pages/consumer/reimburse/MobileUpload"));
 
 // Login page - standalone route
 const LoginPage = React.lazy(() => import("@/docs/pages/Login"));
@@ -214,6 +215,7 @@ export function DocsRoutes() {
                   <Route path="analyze" element={<ReimburseAnalyzePage />} />
                   <Route path="review" element={<ReimburseReviewPage />} />
                   <Route path="confirm" element={<ReimburseConfirmPage />} />
+                  <Route path="upload-mobile" element={<MobileUploadPage />} />
                 </Routes>
               </ReimbursementProvider>
             </ProtectedRoute>

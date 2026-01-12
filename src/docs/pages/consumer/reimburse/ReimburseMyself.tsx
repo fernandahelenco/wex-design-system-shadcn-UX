@@ -1,5 +1,6 @@
-import { type FormEvent, useMemo, useState } from "react";
+import { type FormEvent, useMemo, useState, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
+import { QRCodeSVG } from "qrcode.react";
 import { ConsumerNavigation } from "../ConsumerNavigation";
 import { useReimbursement } from "./ReimbursementContext";
 import {
@@ -32,6 +33,13 @@ export default function ReimburseMyself() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [variant, setVariant] = useState<"mvp" | "vision">(state.variant || "mvp");
+  const [sessionId, setSessionId] = useState<string>("");
+
+  // Generate session ID on mount
+  useEffect(() => {
+    const id = crypto.randomUUID();
+    setSessionId(id);
+  }, []);
 
   // Vision workflow specific state
   const [uploadedFile, setUploadedFile] = useState<{ name: string; size: string; preview?: string } | null>(null);
@@ -77,7 +85,7 @@ export default function ReimburseMyself() {
     });
   };
 
-  const handleFileUpload = (file: File) => {
+  const handleFileUpload = useCallback((file: File) => {
     const fileData = {
       name: file.name,
       size: `${(file.size / 1024).toFixed(0)} KB`,
@@ -105,7 +113,46 @@ export default function ReimburseMyself() {
       // Hide success message after 3 seconds
       setTimeout(() => setAutoFillComplete(false), 3000);
     }, 2500);
-  };
+  }, [updateState]);
+
+  // Poll for mobile uploads when upload zone is visible (only in Vision mode)
+  useEffect(() => {
+    if (variant !== "vision" || !sessionId) return;
+    
+    // Stop polling if form fields are already shown
+    const showFormFields = uploadedFile || manualEntryMode || isAnalyzing;
+    if (showFormFields) return;
+
+    const storageKey = `reimburse-upload-${sessionId}`;
+    const pollInterval = setInterval(() => {
+      const storedData = sessionStorage.getItem(storageKey);
+      if (storedData) {
+        try {
+          const fileData = JSON.parse(storedData);
+          
+          // Convert base64 back to File
+          const byteCharacters = atob(fileData.data.split(",")[1]);
+          const byteNumbers = new Array(byteCharacters.length);
+          for (let i = 0; i < byteCharacters.length; i++) {
+            byteNumbers[i] = byteCharacters.charCodeAt(i);
+          }
+          const byteArray = new Uint8Array(byteNumbers);
+          const blob = new Blob([byteArray], { type: fileData.type });
+          const file = new File([blob], fileData.name, { type: fileData.type });
+
+          // Process the uploaded file
+          handleFileUpload(file);
+
+          // Clear sessionStorage
+          sessionStorage.removeItem(storageKey);
+        } catch (error) {
+          console.error("Failed to process mobile upload:", error);
+        }
+      }
+    }, 1500); // Poll every 1.5 seconds
+
+    return () => clearInterval(pollInterval);
+  }, [sessionId, uploadedFile, manualEntryMode, isAnalyzing, variant, handleFileUpload]);
 
   const handleManualEntry = () => {
     setManualEntryMode(true);
@@ -158,10 +205,10 @@ export default function ReimburseMyself() {
                   value={formData.account || undefined}
                   onValueChange={(value) => handleChange("account", value)}
                 >
-                  <WexSelect.Trigger className="h-10">
+                  <WexSelect.Trigger className="h-10 w-full max-w-[520px]">
                     <WexSelect.Value placeholder="Select an account" />
                   </WexSelect.Trigger>
-                  <WexSelect.Content>
+                  <WexSelect.Content className="w-[var(--radix-select-trigger-width)]">
                     <WexSelect.Item value="medical-fsa">Medical FSA</WexSelect.Item>
                     <WexSelect.Item value="dependent-care-fsa">Dependent Care FSA</WexSelect.Item>
                     <WexSelect.Item value="hsa">HSA</WexSelect.Item>
@@ -175,10 +222,10 @@ export default function ReimburseMyself() {
                   value={formData.category || undefined}
                   onValueChange={(value) => handleChange("category", value)}
                 >
-                  <WexSelect.Trigger className="h-10">
+                  <WexSelect.Trigger className="h-10 w-full max-w-[520px]">
                     <WexSelect.Value placeholder="Select recipient" />
                   </WexSelect.Trigger>
-                  <WexSelect.Content>
+                  <WexSelect.Content className="w-[var(--radix-select-trigger-width)]">
                     <WexSelect.Item value="me">Me</WexSelect.Item>
                     <WexSelect.Item value="provider">Provider</WexSelect.Item>
                     <WexSelect.Item value="dependent">Dependent</WexSelect.Item>
@@ -263,38 +310,69 @@ export default function ReimburseMyself() {
                       </WexTooltip>
                     </div>
 
-                    <div
-                      className="relative rounded-xl border-2 border-dashed border-primary/30 bg-gradient-to-br from-primary/5 to-muted/50 p-16 transition-all hover:border-primary/50 hover:shadow-md cursor-pointer"
-                      onDragOver={(e) => {
-                        e.preventDefault();
-                        e.stopPropagation();
-                      }}
-                      onDrop={(e) => {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        const file = e.dataTransfer.files[0];
-                        if (file) handleFileUpload(file);
-                      }}
-                      onClick={() => {
-                        const input = document.createElement("input");
-                        input.type = "file";
-                        input.accept = "image/*,.pdf";
-                        input.onchange = (e) => {
-                          const file = (e.target as HTMLInputElement).files?.[0];
+                    {/* Upload Zone and QR Code - Side by side on desktop, stacked on mobile */}
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                      {/* Desktop Upload Zone */}
+                      <div
+                        className="relative rounded-xl border-2 border-dashed border-primary/30 bg-gradient-to-br from-primary/5 to-muted/50 p-16 transition-all hover:border-primary/50 hover:shadow-md cursor-pointer"
+                        onDragOver={(e) => {
+                          e.preventDefault();
+                          e.stopPropagation();
+                        }}
+                        onDrop={(e) => {
+                          e.preventDefault();
+                          e.stopPropagation();
+                          const file = e.dataTransfer.files[0];
                           if (file) handleFileUpload(file);
-                        };
-                        input.click();
-                      }}
-                    >
-                      <div className="flex flex-col items-center justify-center gap-5 text-center">
-                        <div className="flex h-20 w-20 items-center justify-center rounded-full bg-primary/10 shadow-sm">
-                          <Upload className="h-10 w-10 text-primary" />
-                        </div>
-                        <div>
-                          <p className="text-base font-semibold text-foreground">Click or drag to upload</p>
-                          <p className="text-sm text-muted-foreground mt-2">PDF, JPG, or PNG up to 10MB</p>
+                        }}
+                        onClick={() => {
+                          const input = document.createElement("input");
+                          input.type = "file";
+                          input.accept = "image/*,.pdf";
+                          input.onchange = (e) => {
+                            const file = (e.target as HTMLInputElement).files?.[0];
+                            if (file) handleFileUpload(file);
+                          };
+                          input.click();
+                        }}
+                      >
+                        <div className="flex flex-col items-center justify-center gap-5 text-center">
+                          <div className="flex h-20 w-20 items-center justify-center rounded-full bg-primary/10 shadow-sm">
+                            <Upload className="h-10 w-10 text-primary" />
+                          </div>
+                          <div>
+                            <p className="text-base font-semibold text-foreground">Click or drag to upload</p>
+                            <p className="text-sm text-muted-foreground mt-2">PDF, JPG, or PNG up to 10MB</p>
+                          </div>
                         </div>
                       </div>
+
+                      {/* QR Code for Mobile Upload */}
+                      {sessionId && (
+                        <WexCard className="border-primary/20 bg-primary/5">
+                          <WexCard.Content className="p-6 flex flex-col items-center justify-center space-y-4">
+                            <div className="text-center space-y-2">
+                              <h3 className="text-base font-semibold text-foreground">Scan to upload from phone</h3>
+                              <p className="text-xs text-muted-foreground">
+                                Take a photo of your receipt with your phone
+                              </p>
+                            </div>
+                            <div className="flex items-center justify-center p-4 bg-white rounded-lg border border-border">
+                              {sessionId && typeof window !== "undefined" && (
+                                <QRCodeSVG
+                                  value={`${window.location.origin}${import.meta.env.BASE_URL.replace(/\/$/, "")}/reimburse/upload-mobile?session=${sessionId}`}
+                                  size={200}
+                                  level="M"
+                                  includeMargin={false}
+                                />
+                              )}
+                            </div>
+                            <p className="text-xs text-center text-muted-foreground">
+                              Scan this code with your phone camera
+                            </p>
+                          </WexCard.Content>
+                        </WexCard>
+                      )}
                     </div>
 
                     {/* Skip Option */}

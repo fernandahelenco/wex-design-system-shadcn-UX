@@ -37,7 +37,11 @@ export function AccountsSection() {
                 View All Accounts
                 <ChevronRight className="h-4 w-4" />
               </WexButton>
-              <WexButton intent="primary" size="md">
+              <WexButton 
+                intent="primary" 
+                size="md"
+                onClick={() => navigate("/reimburse")}
+              >
                 Reimburse Myself
               </WexButton>
             </div>

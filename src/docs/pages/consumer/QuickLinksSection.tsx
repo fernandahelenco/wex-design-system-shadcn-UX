@@ -1,3 +1,4 @@
+import { useNavigate } from "react-router-dom";
 import { WexCard } from "@/components/wex/wex-card";
 import { WexButton } from "@/components/wex/wex-button";
 import { quickLinksData } from "./mockData";
@@ -8,6 +9,15 @@ import { quickLinksData } from "./mockData";
  * Displays quick action links in a pill-style button layout
  */
 export function QuickLinksSection() {
+  const navigate = useNavigate();
+
+  const handleLinkClick = (label: string) => {
+    if (label === "Reimburse Myself") {
+      navigate("/reimburse");
+    }
+    // Add other navigation handlers here as needed
+  };
+
   return (
     <WexCard className="h-full">
       <WexCard.Content className="p-6 h-full">
@@ -25,6 +35,7 @@ export function QuickLinksSection() {
                 intent="ghost"
                 size="md"
                 className="rounded-[32px] bg-info/10 text-primary hover:bg-info/20 shrink-0 h-auto py-1"
+                onClick={() => handleLinkClick(link.label)}
               >
                 {link.label}
               </WexButton>
