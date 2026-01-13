@@ -10,10 +10,10 @@ import { WexAccordion } from "@/components/wex/wex-accordion";
 import {
   Bell,
   User,
-  Home,
+  House,
   Wallet,
+  Receipt,
   FileText,
-  LifeBuoy,
   ChevronDown,
   Languages,
   Palette,
@@ -27,10 +27,10 @@ import { useAuth } from "@/docs/context/AuthContext";
 
 // Icon mapping for navigation items
 const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
-  "home": Home,
+  "home": House,
   "wallet": Wallet,
+  "receipt": Receipt,
   "file-text": FileText,
-  "life-buoy": LifeBuoy,
 };
 
 /**
@@ -129,39 +129,68 @@ export function ConsumerNavigation() {
 
           <WexSheet.Content
             side="left"
-            className="w-[315px] p-0 [&>button.absolute]:hidden"
+            className="w-[315px] p-0"
             aria-label="Mobile navigation"
           >
-            <div className="flex items-center justify-between px-4 py-4">
+            <div className="flex items-center px-4 py-4">
               <span className="text-lg font-semibold text-foreground">Menu</span>
-              <WexSheet.Close asChild>
-                <WexButton
-                  variant="ghost"
-                  size="icon"
-                  aria-label="Close navigation"
-                >
-                  <X className="h-5 w-5" />
-                </WexButton>
-              </WexSheet.Close>
             </div>
 
-            <nav className="flex flex-col gap-1 px-4 py-3">
+            <nav className="flex flex-col gap-1 px-2 py-3">
               {navigationItems.map((item) => {
                 const Icon = iconMap[item.icon];
                 const active = isActive(item.href);
+                const hasSubItems = item.subItems && item.subItems.length > 0;
+                
+                if (hasSubItems) {
+                  return (
+                    <WexAccordion key={item.label} type="single" collapsible className="w-full">
+                      <WexAccordion.Item value={item.label.toLowerCase()} className="border-none">
+                        <WexAccordion.Trigger className="py-3 text-base font-semibold text-foreground px-2 rounded-md hover:bg-muted w-full">
+                          <div className="flex items-center gap-2 w-full">
+                            {Icon && <Icon className="h-[15.75px] w-[15.75px]" />}
+                            <span className="truncate">{item.label}</span>
+                          </div>
+                        </WexAccordion.Trigger>
+                        <WexAccordion.Content className="pb-0">
+                          <div className="flex flex-col gap-2 px-4 py-2">
+                            {item.subItems?.map((subItem) => {
+                              const subActive = isActive(subItem.href);
+                              return (
+                                <WexSheet.Close asChild key={subItem.label}>
+                                  <WexButton
+                                    intent="primary"
+                                    variant={subActive ? "solid" : "ghost"}
+                                    size="lg"
+                                    className="justify-start w-full px-2"
+                                    asChild
+                                  >
+                                    <Link to={subItem.href} className="flex items-center gap-2">
+                                      <span className="truncate">{subItem.label}</span>
+                                    </Link>
+                                  </WexButton>
+                                </WexSheet.Close>
+                              );
+                            })}
+                          </div>
+                        </WexAccordion.Content>
+                      </WexAccordion.Item>
+                    </WexAccordion>
+                  );
+                }
+                
                 return (
                   <WexSheet.Close asChild key={item.label}>
                     <WexButton
                       intent="primary"
                       variant={active ? "solid" : "ghost"}
                       size="lg"
-                      className="justify-start w-full"
+                      className="justify-start w-full px-2"
                       asChild
                     >
                       <Link to={item.href} className="flex items-center gap-2">
-                        {Icon && <Icon className="h-4 w-4" />}
+                        {Icon && <Icon className="h-[15.75px] w-[15.75px]" />}
                         <span className="truncate">{item.label}</span>
-                        {item.hasDropdown && <ChevronDown className="h-3 w-3 ml-auto" />}
                       </Link>
                     </WexButton>
                   </WexSheet.Close>
@@ -169,11 +198,11 @@ export function ConsumerNavigation() {
               })}
 
               <div className="mt-2 border-t border-border pt-3 space-y-2">
-                <WexAccordion type="single" collapsible defaultValue="language">
+                <WexAccordion type="single" collapsible>
                   <WexAccordion.Item value="language" className="border-none">
                     <WexAccordion.Trigger className="py-3 text-base font-semibold text-foreground px-2 rounded-md hover:bg-muted">
                       <div className="flex items-center gap-2">
-                        <Languages className="h-5 w-5" />
+                        <Languages className="h-[15.75px] w-[15.75px]" />
                         <span>{language}</span>
                       </div>
                     </WexAccordion.Trigger>
@@ -199,12 +228,12 @@ export function ConsumerNavigation() {
                   <WexButton
                     variant="ghost"
                     size="lg"
-                    className="justify-start w-full"
+                    className="justify-start w-full px-2"
                     asChild
                     aria-label="Design System"
                   >
                     <Link to="/design-system" className="flex items-center gap-2">
-                      <Palette className="h-5 w-5" />
+                      <Palette className="h-[15.75px] w-[15.75px]" />
                       Design System
                     </Link>
                   </WexButton>
@@ -234,7 +263,46 @@ export function ConsumerNavigation() {
           <nav className="hidden lg:flex items-center gap-4">
             {navigationItems.map((item) => {
               const Icon = iconMap[item.icon];
-              const active = isActive(item.href);
+              const hasSubItems = item.subItems && item.subItems.length > 0;
+              const active = hasSubItems 
+                ? item.subItems?.some(subItem => isActive(subItem.href)) || false
+                : isActive(item.href);
+              
+              if (hasSubItems) {
+                return (
+                  <WexDropdownMenu key={item.label}>
+                    <WexDropdownMenu.Trigger asChild>
+                      <WexButton
+                        intent="primary"
+                        variant={active ? "solid" : "ghost"}
+                        size="md"
+                      >
+                        <div className="flex items-center gap-1.5">
+                          {Icon && <Icon className="h-4 w-4" />}
+                          {item.label}
+                          <ChevronDown className="h-3 w-3 ml-0.5" />
+                        </div>
+                      </WexButton>
+                    </WexDropdownMenu.Trigger>
+                    <WexDropdownMenu.Content align="start">
+                      {item.subItems?.map((subItem) => {
+                        const subActive = isActive(subItem.href);
+                        return (
+                          <WexDropdownMenu.Item
+                            key={subItem.label}
+                            asChild
+                            className={subActive ? "bg-muted" : ""}
+                          >
+                            <Link to={subItem.href} className="flex items-center">
+                              {subItem.label}
+                            </Link>
+                          </WexDropdownMenu.Item>
+                        );
+                      })}
+                    </WexDropdownMenu.Content>
+                  </WexDropdownMenu>
+                );
+              }
               
               return (
                 <WexButton
@@ -247,7 +315,6 @@ export function ConsumerNavigation() {
                   <Link to={item.href} className="flex items-center gap-1.5">
                     {Icon && <Icon className="h-4 w-4" />}
                     {item.label}
-                    {item.hasDropdown && <ChevronDown className="h-3 w-3 ml-0.5" />}
                   </Link>
                 </WexButton>
               );
