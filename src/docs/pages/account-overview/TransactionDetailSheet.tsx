@@ -1,3 +1,4 @@
+import { useEffect, useRef } from "react";
 import { WexSheet } from "@/components/wex/wex-sheet";
 import { WexButton } from "@/components/wex/wex-button";
 import { WexSeparator } from "@/components/wex/wex-separator";
@@ -26,10 +27,35 @@ export function TransactionDetailSheet({
   onOpenChange, 
   transaction 
 }: TransactionDetailSheetProps) {
+  const contentRef = useRef<HTMLDivElement | null>(null);
   // Get the detail data for this transaction
   const detail: TransactionDetail | undefined = transaction 
     ? transactionDetailData[transaction.id] 
     : undefined;
+
+  useEffect(() => {
+    if (!open || !contentRef.current || !transaction || !detail) return;
+    const closeEls = contentRef.current.querySelectorAll("[data-radix-dialog-close]");
+    const className = contentRef.current.className;
+    // #region agent log
+    fetch("http://127.0.0.1:7242/ingest/0f2d92c4-4c76-48a6-a34a-0a7a7699a103", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        sessionId: "debug-session",
+        runId: "run1",
+        hypothesisId: "H1",
+        location: "TransactionDetailSheet.tsx:contentRef",
+        message: "Close elements detected in sheet content",
+        data: {
+          className,
+          closeCount: closeEls.length,
+        },
+        timestamp: Date.now(),
+      }),
+    }).catch(() => {});
+    // #endregion
+  }, [open]);
 
   if (!transaction || !detail) {
     return null;
@@ -37,11 +63,15 @@ export function TransactionDetailSheet({
 
   return (
     <WexSheet open={open} onOpenChange={onOpenChange}>
-      <WexSheet.Content side="right" className="w-[480px] max-w-[90vw] p-0">
+      <WexSheet.Content
+        side="right"
+        className="w-[480px] max-w-[90vw] p-0"
+        ref={contentRef}
+      >
         <WexScrollArea className="h-full">
           <div className="p-6 space-y-4">
             {/* Header */}
-            <WexSheet.Header className="space-y-1">
+            <WexSheet.Header className="space-y-1 relative">
               <WexSheet.Title className="text-[30px] font-bold tracking-tight leading-10">
                 Plan details
               </WexSheet.Title>
@@ -87,11 +117,21 @@ export function TransactionDetailSheet({
             </div>
 
             {/* Action Buttons */}
-            <div className="flex items-center justify-center gap-4 pt-8 pb-4">
-              <WexButton intent="outline" size="md">
+            <div className="flex items-center justify-end gap-4 pt-8 pb-4">
+              <WexButton
+                intent="primary"
+                variant="outline"
+                size="md"
+                className="text-primary border-primary hover:bg-primary/10 active:bg-primary/20"
+              >
                 View Transactions
               </WexButton>
-              <WexButton intent="outline" size="md">
+              <WexButton
+                intent="primary"
+                variant="outline"
+                size="md"
+                className="text-primary border-primary hover:bg-primary/10 active:bg-primary/20"
+              >
                 View Claims
               </WexButton>
             </div>

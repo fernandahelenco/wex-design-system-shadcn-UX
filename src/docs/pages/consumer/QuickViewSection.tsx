@@ -63,7 +63,8 @@ export function QuickViewSection() {
               Quick View
             </h2>
             <WexButton 
-              intent="link" 
+              intent="primary"
+              variant="link"
               size="md"
               onClick={() => {
                 navigate("/account-overview");

@@ -4,8 +4,24 @@ import { ExampleCard } from "@/docs/components/ExampleCard";
 import { CodeBlock } from "@/docs/components/CodeBlock";
 import { Guidance } from "@/docs/components/ProseBlock";
 import { TokenReference, type TokenRow } from "@/docs/components/TokenReference";
+import { PropsTable, type PropDefinition } from "@/docs/components/PropsTable";
 import { WexHoverCard, WexButton, WexAvatar } from "@/components/wex";
 import { CalendarDays, ExternalLink, Github, Mail } from "lucide-react";
+
+// Props documentation
+const hoverCardRootProps: PropDefinition[] = [
+  { name: "open", type: "boolean", description: "Controlled open state" },
+  { name: "defaultOpen", type: "boolean", default: "false", description: "Default open state" },
+  { name: "onOpenChange", type: "(open: boolean) => void", description: "Callback when open changes" },
+  { name: "openDelay", type: "number", default: "700", description: "Delay before opening (ms)" },
+  { name: "closeDelay", type: "number", default: "300", description: "Delay before closing (ms)" },
+];
+
+const hoverCardContentProps: PropDefinition[] = [
+  { name: "side", type: '"top" | "right" | "bottom" | "left"', default: '"bottom"', description: "Preferred side" },
+  { name: "align", type: '"start" | "center" | "end"', default: '"center"', description: "Alignment" },
+  { name: "sideOffset", type: "number", default: "4", description: "Offset from trigger" },
+];
 
 // Token mappings for WexHoverCard
 // Layer 3 component tokens
@@ -27,7 +43,7 @@ export default function HoverCardPage() {
         <ExampleCard>
           <WexHoverCard>
             <WexHoverCard.Trigger asChild>
-              <WexButton intent="ghost" className="text-link underline underline-offset-4">@wexinc</WexButton>
+              <WexButton variant="ghost" className="text-link underline underline-offset-4">@wexinc</WexButton>
             </WexHoverCard.Trigger>
             <WexHoverCard.Content className="w-80">
               <div className="flex justify-between space-x-4">
@@ -62,7 +78,7 @@ export default function HoverCardPage() {
           <ExampleCard title="User Profile" description="Preview user information on hover.">
             <WexHoverCard>
               <WexHoverCard.Trigger asChild>
-                <WexButton intent="ghost" className="text-link underline underline-offset-4">View Profile</WexButton>
+                <WexButton variant="ghost" className="text-link underline underline-offset-4">View Profile</WexButton>
               </WexHoverCard.Trigger>
               <WexHoverCard.Content className="w-80">
                 <div className="flex justify-between space-x-4">
@@ -140,7 +156,7 @@ export default function HoverCardPage() {
             <div className="flex gap-4">
               <WexHoverCard>
                 <WexHoverCard.Trigger asChild>
-                  <WexButton intent="outline" size="sm">Align Start</WexButton>
+                  <WexButton variant="outline" size="sm">Align Start</WexButton>
                 </WexHoverCard.Trigger>
                 <WexHoverCard.Content align="start" className="w-64">
                   <p className="text-sm">Content aligned to start.</p>
@@ -149,7 +165,7 @@ export default function HoverCardPage() {
 
               <WexHoverCard>
                 <WexHoverCard.Trigger asChild>
-                  <WexButton intent="outline" size="sm">Align Center</WexButton>
+                  <WexButton variant="outline" size="sm">Align Center</WexButton>
                 </WexHoverCard.Trigger>
                 <WexHoverCard.Content align="center" className="w-64">
                   <p className="text-sm">Content aligned to center.</p>
@@ -158,7 +174,7 @@ export default function HoverCardPage() {
 
               <WexHoverCard>
                 <WexHoverCard.Trigger asChild>
-                  <WexButton intent="outline" size="sm">Align End</WexButton>
+                  <WexButton variant="outline" size="sm">Align End</WexButton>
                 </WexHoverCard.Trigger>
                 <WexHoverCard.Content align="end" className="w-64">
                   <p className="text-sm">Content aligned to end.</p>
@@ -228,7 +244,7 @@ export default function HoverCardPage() {
 // Basic hover card
 <WexHoverCard>
   <WexHoverCard.Trigger asChild>
-    <WexButton intent="link">@username</WexButton>
+    <WexButton variant="link">@username</WexButton>
   </WexHoverCard.Trigger>
   <WexHoverCard.Content className="w-80">
     <div className="flex justify-between space-x-4">
@@ -252,6 +268,16 @@ export default function HoverCardPage() {
     Preview content
   </WexHoverCard.Content>
 </WexHoverCard>`}
+        />
+      </Section>
+
+      <Section title="API Reference">
+        <PropsTable 
+          props={hoverCardRootProps}
+          subComponents={[
+            { name: "WexHoverCard.Trigger", props: [{ name: "asChild", type: "boolean", default: "false", description: "Merge with child element" }] },
+            { name: "WexHoverCard.Content", props: hoverCardContentProps },
+          ]}
         />
       </Section>
 

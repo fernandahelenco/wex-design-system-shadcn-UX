@@ -4,6 +4,7 @@ import { WexCard } from "@/components/wex/wex-card";
 import { WexSeparator } from "@/components/wex/wex-separator";
 import { WexCollapsible } from "@/components/wex/wex-collapsible";
 import { ConsumerNavigation } from "./ConsumerNavigation";
+import { ConsumerFooter } from "./Footer";
 import {
   FileText,
   Download,
@@ -88,7 +89,7 @@ export default function Resources() {
                           Documents
                         </h3>
                         <WexCollapsible.Trigger asChild>
-                          <WexButton intent="ghost" size="icon" className="h-4 w-4">
+                          <WexButton variant="ghost" size="icon" className="h-4 w-4">
                             {documentsOpen ? (
                               <ChevronUp className="h-3.5 w-3.5" />
                             ) : (
@@ -103,7 +104,8 @@ export default function Resources() {
                             <div key={doc.id} className="flex items-center gap-2">
                               <FileText className="h-3.5 w-3.5 text-primary shrink-0" />
                               <WexButton
-                                intent="link"
+                                intent="primary"
+                                variant="link"
                                 className="flex-1 justify-start text-sm tracking-[-0.084px] h-auto p-0"
                               >
                                 {doc.name}
@@ -122,7 +124,7 @@ export default function Resources() {
                           Plan Summaries
                         </h3>
                         <WexCollapsible.Trigger asChild>
-                          <WexButton intent="ghost" size="icon" className="h-4 w-4">
+                          <WexButton variant="ghost" size="icon" className="h-4 w-4">
                             {planSummariesOpen ? (
                               <ChevronUp className="h-3.5 w-3.5" />
                             ) : (
@@ -145,7 +147,7 @@ export default function Resources() {
                           Rules and agreements
                         </h3>
                         <WexCollapsible.Trigger asChild>
-                          <WexButton intent="ghost" size="icon" className="h-4 w-4">
+                          <WexButton variant="ghost" size="icon" className="h-4 w-4">
                             {rulesOpen ? (
                               <ChevronUp className="h-3.5 w-3.5" />
                             ) : (
@@ -182,7 +184,8 @@ export default function Resources() {
                         <div key={video.id} className="flex items-center gap-2">
                           <Video className="h-3.5 w-3.5 text-primary shrink-0" />
                           <WexButton
-                            intent="link"
+                            intent="primary"
+                            variant="link"
                             className="justify-start text-sm tracking-[-0.084px] h-auto p-0"
                           >
                             {video.name}
@@ -235,7 +238,8 @@ export default function Resources() {
                         <div key={link.id} className="flex items-center gap-2">
                           <ExternalLink className="h-3.5 w-3.5 text-primary shrink-0" />
                           <WexButton
-                            intent="link"
+                            intent="primary"
+                            variant="link"
                             className="justify-start text-sm tracking-[-0.084px] h-auto p-0"
                           >
                             {link.name}
@@ -261,7 +265,7 @@ export default function Resources() {
                           External quick links
                         </h3>
                         <WexCollapsible.Trigger asChild>
-                          <WexButton intent="ghost" size="icon" className="h-4 w-4">
+                          <WexButton variant="ghost" size="icon" className="h-4 w-4">
                             {quickLinksOpen ? (
                               <ChevronUp className="h-3.5 w-3.5" />
                             ) : (
@@ -276,7 +280,8 @@ export default function Resources() {
                             <div key={link.id} className="flex items-center gap-2">
                               <ExternalLink className="h-3.5 w-3.5 text-primary shrink-0" />
                               <WexButton
-                                intent="link"
+                                intent="primary"
+                                variant="link"
                                 className="justify-start text-sm tracking-[-0.084px] h-auto p-0"
                               >
                                 {link.name}
@@ -294,31 +299,7 @@ export default function Resources() {
         </div>
       </div>
 
-      {/* Footer */}
-      <footer className="border-t bg-white py-4">
-        <div className="mx-auto max-w-[1440px] px-8">
-          <div className="flex flex-wrap items-center justify-center gap-4 text-sm text-muted-foreground">
-            <WexButton intent="ghost" className="h-auto p-0 text-sm text-muted-foreground">
-              Copyright
-            </WexButton>
-            <span>•</span>
-            <WexButton intent="ghost" className="h-auto p-0 text-sm text-muted-foreground">
-              Disclaimer
-            </WexButton>
-            <span>•</span>
-            <WexButton intent="ghost" className="h-auto p-0 text-sm text-muted-foreground">
-              Privacy Policy
-            </WexButton>
-            <span>•</span>
-            <WexButton intent="ghost" className="h-auto p-0 text-sm text-muted-foreground">
-              Terms of Use
-            </WexButton>
-          </div>
-          <p className="mt-2 text-center text-sm text-muted-foreground">
-            WEX Health Inc. 2004-2026. All rights reserved. Powered by WEX Health.
-          </p>
-        </div>
-      </footer>
+      <ConsumerFooter />
     </div>
   );
 }

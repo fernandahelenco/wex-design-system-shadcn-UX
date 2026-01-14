@@ -380,7 +380,7 @@ export default function HSABeneficiariesPage() {
                               </h4>
                               {canRemoveNewBeneficiary && (
                                 <WexButton
-                                  intent="ghost"
+                                  variant="ghost"
                                   onClick={() => handleRemoveNewBeneficiary(index)}
                                   className="px-3 py-1 text-destructive hover:text-destructive"
                                 >
@@ -398,7 +398,7 @@ export default function HSABeneficiariesPage() {
                               New Beneficiary 1
                             </h4>
                             <WexButton
-                              intent="ghost"
+                              variant="ghost"
                               onClick={() => handleRemoveNewBeneficiary(index)}
                               className="px-3 py-1 text-destructive hover:text-destructive"
                             >
@@ -605,7 +605,7 @@ export default function HSABeneficiariesPage() {
 
                     {/* Add New Beneficiary Button */}
                     <WexButton
-                      intent="ghost"
+                      variant="ghost"
                       onClick={handleAddNewBeneficiary}
                       className="self-start px-3 py-1"
                     >
@@ -629,13 +629,13 @@ export default function HSABeneficiariesPage() {
         {/* Footer */}
         <div className="absolute bottom-[32px] left-[32px] right-[32px] flex items-center justify-between">
           {/* Cancel Button */}
-          <WexButton intent="ghost" onClick={handleCancel} className="px-4 py-2">
+          <WexButton variant="ghost" onClick={handleCancel} className="px-4 py-2">
             Cancel
           </WexButton>
 
           {/* Back and Continue Buttons */}
           <div className="flex gap-2 items-center">
-            <WexButton intent="outline" onClick={handleBack} className="px-4 py-2">
+            <WexButton intent="secondary" variant="outline" onClick={handleBack} className="px-4 py-2">
               Back
             </WexButton>
             <WexButton intent="primary" onClick={handleContinue} className="px-4 py-2">

@@ -116,7 +116,7 @@ export default function ReimburseReview() {
                               Adam Smith
                             </WexLabel>
                           </div>
-                          <WexButton intent="link" className="px-0 justify-start h-auto p-0">
+                          <WexButton intent="primary" variant="link" className="px-0 justify-start h-auto p-0">
                             + Add a dependent
                           </WexButton>
                         </WexRadioGroup>
@@ -177,7 +177,7 @@ export default function ReimburseReview() {
               </div>
 
               <div className="flex items-center justify-between pt-2">
-                <WexButton intent="ghost" onClick={() => navigate("/")}>
+                <WexButton variant="ghost" onClick={() => navigate("/")}>
                   Cancel
                 </WexButton>
                 <div className="flex gap-2">

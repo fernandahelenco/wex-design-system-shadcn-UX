@@ -60,7 +60,7 @@ export default function HSAProfileReview() {
   };
 
   const handleBack = () => {
-    navigate("/hsa-enrollment/results");
+    navigate("/hsa-enrollment");
   };
 
   const handleContinue = () => {
@@ -298,7 +298,7 @@ export default function HSAProfileReview() {
         <div className="absolute bottom-[32px] left-[32px] right-[32px] flex items-center justify-between">
           {/* Cancel Button */}
           <WexButton
-            intent="ghost"
+            variant="ghost"
             onClick={handleCancel}
             className="px-4 py-2"
           >
@@ -308,7 +308,8 @@ export default function HSAProfileReview() {
           {/* Back and Continue Buttons */}
           <div className="flex gap-2 items-center">
             <WexButton
-              intent="outline"
+              intent="secondary"
+              variant="outline"
               onClick={handleBack}
               className="px-4 py-2"
             >

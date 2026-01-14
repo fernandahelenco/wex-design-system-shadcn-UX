@@ -318,7 +318,7 @@ export default function ThemeExportPage() {
         {/* Header */}
         <div className="mb-6 flex items-center gap-4">
           <WexButton
-            intent="ghost"
+            variant="ghost"
             size="sm"
             onClick={() => navigate("/theme-builder")}
           >

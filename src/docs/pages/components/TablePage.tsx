@@ -5,7 +5,14 @@ import { ExampleCard } from "@/docs/components/ExampleCard";
 import { CodeBlock } from "@/docs/components/CodeBlock";
 import { Guidance } from "@/docs/components/ProseBlock";
 import { TokenReference, type TokenRow } from "@/docs/components/TokenReference";
+import { PropsTable, type PropDefinition } from "@/docs/components/PropsTable";
 import { WexTable, WexBadge, WexButton, WexCheckbox } from "@/components/wex";
+
+// Props documentation
+const tableProps: PropDefinition[] = [
+  { name: "className", type: "string", description: "Additional CSS classes for the table" },
+  { name: "children", type: "ReactNode", required: true, description: "Table content (Header, Body, Footer)" },
+];
 
 // Token mappings for Table
 // Layer 3 component tokens
@@ -268,7 +275,7 @@ export default function TablePage() {
                   <WexTable.Cell className="font-medium">{inv.invoice}</WexTable.Cell>
                   <WexTable.Cell>{inv.status}</WexTable.Cell>
                   <WexTable.Cell className="text-right">
-                    <WexButton intent="ghost" size="sm">View</WexButton>
+                    <WexButton variant="ghost" size="sm">View</WexButton>
                   </WexTable.Cell>
                 </WexTable.Row>
               ))}
@@ -327,6 +334,10 @@ export default function TablePage() {
             <li><code className="bg-muted px-1 rounded">size</code>: "sm" | "md" | "lg"</li>
           </ul>
         </div>
+      </Section>
+
+      <Section title="API Reference">
+        <PropsTable props={tableProps} title="WexTable" />
       </Section>
 
       <TokenReference tokens={tableTokens} className="mt-12" />

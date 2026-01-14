@@ -239,7 +239,7 @@ export default function ReimburseMyself() {
             </div>
 
             <div className="flex items-center justify-between pt-2">
-              <WexButton intent="ghost" onClick={() => navigate("/")}>
+              <WexButton variant="ghost" onClick={() => navigate("/")}>
                 Cancel
               </WexButton>
               <WexButton
@@ -380,7 +380,8 @@ export default function ReimburseMyself() {
                       <span className="text-sm text-muted-foreground">Don&apos;t have a receipt?</span>
                       <WexButton
                         type="button"
-                        intent="link"
+                        intent="primary"
+                        variant="link"
                         className="h-auto p-0 text-sm"
                         onClick={handleManualEntry}
                       >
@@ -424,7 +425,7 @@ export default function ReimburseMyself() {
                         </div>
                         <WexButton
                           type="button"
-                          intent="ghost"
+                          variant="ghost"
                           size="sm"
                           onClick={handleRemoveFile}
                           className="h-8 w-8"
@@ -608,11 +609,11 @@ export default function ReimburseMyself() {
                     <WexSeparator />
 
                     <div className="flex items-center justify-between">
-                      <WexButton type="button" intent="ghost" onClick={() => setShowHelp(!showHelp)}>
+                      <WexButton type="button" variant="ghost" onClick={() => setShowHelp(!showHelp)}>
                         {showHelp ? "Hide help" : "Need help?"}
                       </WexButton>
                       <div className="flex gap-3">
-                        <WexButton type="button" intent="ghost" onClick={() => navigate("/")}>
+                        <WexButton type="button" variant="ghost" onClick={() => navigate("/")}>
                           Cancel
                         </WexButton>
                         <WexButton type="submit" intent="primary" disabled={isSubmitting}>

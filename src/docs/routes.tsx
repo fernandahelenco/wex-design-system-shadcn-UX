@@ -4,6 +4,7 @@ import { DocsLayout } from "./layout/DocsLayout";
 import { ReimbursementProvider } from "./pages/consumer/reimburse/ReimbursementContext";
 import { ScrollToTop } from "./components/ScrollToTop";
 import { ProtectedRoute } from "./components/ProtectedRoute";
+import { LightModeBoundary } from "./components/LightModeBoundary";
 
 // Lazy load pages for code splitting
 const OverviewPage = React.lazy(() => import("@/docs/pages/OverviewPage"));
@@ -52,9 +53,6 @@ const CustomComponentsDemo = React.lazy(() => import("@/docs/pages/consumer/Cust
 // HSA Enrollment page - standalone route
 const HSAEnrollmentPage = React.lazy(() => import("@/docs/pages/consumer/HSAEnrollmentPage"));
 
-// HSA Eligibility Results page - standalone route
-const HSAEligibilityResults = React.lazy(() => import("@/docs/pages/consumer/HSAEligibilityResults"));
-
 // HSA Profile Review page - standalone route
 const HSAProfileReview = React.lazy(() => import("@/docs/pages/consumer/HSAProfileReview"));
 
@@ -80,6 +78,7 @@ const TypographyPage = React.lazy(() => import("@/docs/pages/foundations/Typogra
 const SpacingPage = React.lazy(() => import("@/docs/pages/foundations/SpacingPage"));
 const ElevationPage = React.lazy(() => import("@/docs/pages/foundations/ElevationPage"));
 const PrimeNGParityPage = React.lazy(() => import("@/docs/pages/foundations/PrimeNGParityPage"));
+const IconsPage = React.lazy(() => import("@/docs/pages/foundations/IconsPage"));
 
 // Component pages - lazy loaded
 const AccordionPage = React.lazy(() => import("@/docs/pages/components/AccordionPage"));
@@ -169,6 +168,18 @@ function ProtectedDocsLayout() {
  * Consumer Experience is the landing page, Design System docs wrapped in DocsLayout
  */
 export function DocsRoutes() {
+  // Wrap consumer-facing pages to enforce light mode without persisting it
+  const withConsumerLight = (node: React.ReactNode) => (
+    <ProtectedRoute>
+      <LightModeBoundary>{node}</LightModeBoundary>
+    </ProtectedRoute>
+  );
+
+  // Wrap public pages (e.g., login) to enforce light mode without auth gate
+  const withLightOnly = (node: React.ReactNode) => (
+    <LightModeBoundary>{node}</LightModeBoundary>
+  );
+
   return (
     <React.Suspense fallback={<PageLoader />}>
       <ScrollToTop />
@@ -176,38 +187,38 @@ export function DocsRoutes() {
         {/* Standalone Login route - bypasses DocsLayout and protection */}
         <Route
           path="login"
-          element={
+          element={withLightOnly(
             <LoginPage
               onLoginSuccess={() => {
                 window.location.href = import.meta.env.BASE_URL
               }}
             />
-          }
+          )}
         />
 
         {/* All other routes are protected */}
-        <Route index element={<ProtectedRoute><ConsumerExperiencePage /></ProtectedRoute>} />
+        <Route index element={withConsumerLight(<ConsumerExperiencePage />)} />
         
         {/* Standalone Account Overview route - bypasses DocsLayout */}
-        <Route path="account-overview" element={<ProtectedRoute><AccountOverviewPage /></ProtectedRoute>} />
+        <Route path="account-overview" element={withConsumerLight(<AccountOverviewPage />)} />
         
         {/* Standalone Message Center route - bypasses DocsLayout */}
-        <Route path="message-center" element={<ProtectedRoute><MessageCenterPage /></ProtectedRoute>} />
+        <Route path="message-center" element={withConsumerLight(<MessageCenterPage />)} />
         
         {/* Standalone My Profile route - bypasses DocsLayout */}
-        <Route path="my-profile" element={<ProtectedRoute><MyProfilePage /></ProtectedRoute>} />
+        <Route path="my-profile" element={withConsumerLight(<MyProfilePage />)} />
 
         {/* Standalone Resources route - bypasses DocsLayout */}
-        <Route path="resources" element={<ProtectedRoute><ResourcesPage /></ProtectedRoute>} />
+        <Route path="resources" element={withConsumerLight(<ResourcesPage />)} />
 
         {/* Standalone Claims route - bypasses DocsLayout */}
-        <Route path="claims" element={<ProtectedRoute><ClaimsPage /></ProtectedRoute>} />
+        <Route path="claims" element={withConsumerLight(<ClaimsPage />)} />
 
         {/* Standalone Reimbursement flow routes - bypasses DocsLayout, wrapped with ReimbursementProvider */}
         <Route
           path="reimburse/*"
           element={
-            <ProtectedRoute>
+            withConsumerLight(
               <ReimbursementProvider>
                 <Routes>
                   <Route index element={<ReimburseMyselfPage />} />
@@ -218,36 +229,33 @@ export function DocsRoutes() {
                   <Route path="upload-mobile" element={<MobileUploadPage />} />
                 </Routes>
               </ReimbursementProvider>
-            </ProtectedRoute>
+            )
           }
         />
         
         {/* Custom Components Demo route - bypasses DocsLayout */}
-        <Route path="/custom-components-demo" element={<ProtectedRoute><CustomComponentsDemo /></ProtectedRoute>} />
+        <Route path="/custom-components-demo" element={withConsumerLight(<CustomComponentsDemo />)} />
         
         {/* Standalone HSA Enrollment route - bypasses DocsLayout */}
-        <Route path="hsa-enrollment" element={<ProtectedRoute><HSAEnrollmentPage /></ProtectedRoute>} />
-        
-        {/* Standalone HSA Eligibility Results route - bypasses DocsLayout */}
-        <Route path="hsa-enrollment/results" element={<ProtectedRoute><HSAEligibilityResults /></ProtectedRoute>} />
+        <Route path="hsa-enrollment" element={withConsumerLight(<HSAEnrollmentPage />)} />
         
         {/* Standalone HSA Profile Review route - bypasses DocsLayout */}
-        <Route path="hsa-enrollment/profile" element={<ProtectedRoute><HSAProfileReview /></ProtectedRoute>} />
+        <Route path="hsa-enrollment/profile" element={withConsumerLight(<HSAProfileReview />)} />
         
         {/* Standalone HSA Dependents route - bypasses DocsLayout */}
-        <Route path="hsa-enrollment/dependents" element={<ProtectedRoute><HSADependentsPage /></ProtectedRoute>} />
+        <Route path="hsa-enrollment/dependents" element={withConsumerLight(<HSADependentsPage />)} />
         
         {/* Standalone HSA Beneficiaries route - bypasses DocsLayout */}
-        <Route path="hsa-enrollment/beneficiaries" element={<ProtectedRoute><HSABeneficiariesPage /></ProtectedRoute>} />
+        <Route path="hsa-enrollment/beneficiaries" element={withConsumerLight(<HSABeneficiariesPage />)} />
         
         {/* Standalone HSA Reimbursement route - bypasses DocsLayout */}
-        <Route path="hsa-enrollment/reimbursement" element={<ProtectedRoute><HSAReimbursementPage /></ProtectedRoute>} />
+        <Route path="hsa-enrollment/reimbursement" element={withConsumerLight(<HSAReimbursementPage />)} />
         
         {/* Standalone HSA Enrollment Review route - bypasses DocsLayout */}
-        <Route path="hsa-enrollment/review" element={<ProtectedRoute><HSAEnrollmentReview /></ProtectedRoute>} />
+        <Route path="hsa-enrollment/review" element={withConsumerLight(<HSAEnrollmentReview />)} />
         
         {/* Standalone HSA Enrollment Success route - bypasses DocsLayout */}
-        <Route path="hsa-enrollment/success" element={<ProtectedRoute><HSAEnrollmentSuccess /></ProtectedRoute>} />
+        <Route path="hsa-enrollment/success" element={withConsumerLight(<HSAEnrollmentSuccess />)} />
         
         <Route element={<ProtectedDocsLayout />}>
           {/* Design System overview moved to /design-system */}
@@ -270,6 +278,7 @@ export function DocsRoutes() {
           <Route path="foundations/typography" element={<TypographyPage />} />
           <Route path="foundations/spacing" element={<SpacingPage />} />
           <Route path="foundations/elevation" element={<ElevationPage />} />
+          <Route path="foundations/icons" element={<IconsPage />} />
           <Route path="foundations/primeng-parity" element={<PrimeNGParityPage />} />
 
           {/* Component pages */}

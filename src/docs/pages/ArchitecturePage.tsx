@@ -1,6 +1,8 @@
 import * as React from "react";
 import { Section } from "@/docs/components/Section";
-import { WexCard, WexAlert } from "@/components/wex";
+import { CodeBlock } from "@/docs/components/CodeBlock";
+import { WexCard, WexAlert, WexButton, WexTabs } from "@/components/wex";
+import { Button } from "@/components/ui/button";
 import { 
   Building2, 
   Shield, 
@@ -8,11 +10,18 @@ import {
   Zap, 
   Package, 
   CheckCircle,
-  ArrowRight
+  ArrowRight,
 } from "lucide-react";
 
 /**
  * Architecture Page - Explains WEX component strategy and enterprise value
+ * 
+ * Page Structure:
+ * 1. Overview (brief intro to the two packages)
+ * 2. Industry Validation (establish credibility)
+ * 3. Choose Your Package (decision point)
+ * 4. Why WEX Components (benefits - reinforces decision)
+ * 5. Architecture Details (deep dive for curious devs)
  */
 export default function ArchitecturePage() {
   return (
@@ -26,12 +35,15 @@ export default function ArchitecturePage() {
         </p>
       </header>
 
+      {/* ================================================================
+          SECTION 1: OVERVIEW (Brief)
+          ================================================================ */}
       <Section title="Overview" className="mb-16">
         <p className="text-foreground mb-6">
           The WEX Design System provides two complementary packages that work together to deliver 
           a consistent, brand-compliant UI experience across all WEX applications:
         </p>
-        <div className="grid md:grid-cols-2 gap-6 mb-8">
+        <div className="grid md:grid-cols-2 gap-6">
           <WexCard className="p-5">
             <div className="flex items-start gap-4">
               <div className="p-2.5 rounded-lg bg-primary/10">
@@ -61,16 +73,193 @@ export default function ArchitecturePage() {
             </div>
           </WexCard>
         </div>
-        <WexAlert intent="info">
-          <WexAlert.Title>Recommended for most teams</WexAlert.Title>
-          <WexAlert.Description>
-            Use <code className="bg-muted px-1.5 py-0.5 rounded text-sm">@wex/components</code> for 
-            the simplest integration path. The theme-only package is available for power users 
-            with specific requirements.
-          </WexAlert.Description>
-        </WexAlert>
       </Section>
 
+      {/* ================================================================
+          SECTION 2: INDUSTRY VALIDATION (Establish Credibility)
+          ================================================================ */}
+      <Section 
+        title="Industry Validation" 
+        description="This pattern is used by leading design systems."
+        className="mb-16"
+      >
+        <p className="text-muted-foreground mb-6 mt-2">
+          The layered approach—headless primitives → styled components → brand layer—is 
+          the industry standard for enterprise design systems:
+        </p>
+        
+        <div className="grid md:grid-cols-3 gap-4 mb-6">
+          <ValidationCard
+            company="Vercel"
+            logo={<img src="/logos/vercel.svg" alt="Vercel" className="h-5 w-auto dark:invert" />}
+            description="Builds on Radix + Tailwind for their internal design system and Geist UI."
+          />
+          <ValidationCard
+            company="Shopify"
+            logo={<img src="/logos/shopify.svg" alt="Shopify" className="h-5 w-auto" />}
+            description="Uses headless primitives with a brand layer on top for consistent merchant experiences."
+          />
+          <ValidationCard
+            company="Stripe"
+            logo={<img src="/logos/stripe.svg" alt="Stripe" className="h-5 w-auto dark:invert" />}
+            description="Wraps Radix components with custom styling for their dashboard and documentation."
+          />
+        </div>
+
+        <div className="p-5 rounded-lg bg-muted/30 border border-border">
+          <h4 className="font-medium mb-2">Why this pattern works</h4>
+          <ul className="list-disc list-inside text-sm text-muted-foreground space-y-2">
+            <li><strong>Accessibility guaranteed</strong> — Radix provides WCAG-compliant primitives</li>
+            <li><strong>Brand consistency</strong> — Token layer ensures visual alignment</li>
+            <li><strong>Upgrade path</strong> — Upstream improvements flow through without friction</li>
+            <li><strong>Developer experience</strong> — Familiar patterns, minimal learning curve</li>
+          </ul>
+        </div>
+      </Section>
+
+      {/* ================================================================
+          SECTION 3: CHOOSE YOUR PACKAGE (Decision Point)
+          ================================================================ */}
+      <Section 
+        title="Choose Your Package" 
+        description="Pick the right integration path for your team."
+        className="mb-16"
+      >
+        <div className="grid md:grid-cols-2 gap-6 mt-2 mb-8">
+          {/* @wex/components - Recommended */}
+          <div className="relative p-6 rounded-lg border-2 border-primary bg-primary/5">
+            <span className="absolute -top-3 left-4 px-2 py-0.5 text-xs font-semibold bg-primary text-primary-foreground rounded">
+              Recommended
+            </span>
+            <div className="flex items-center gap-3 mb-4">
+              <div className="p-2 rounded-lg bg-primary/10">
+                <Package className="h-5 w-5 text-primary" />
+              </div>
+              <h3 className="text-lg font-semibold">@wex/components</h3>
+            </div>
+            <ul className="space-y-2 text-sm text-muted-foreground mb-4">
+              <li className="flex items-start gap-2">
+                <CheckCircle className="h-4 w-4 text-success mt-0.5 flex-shrink-0" />
+                <span>Ready-to-use, pre-styled components</span>
+              </li>
+              <li className="flex items-start gap-2">
+                <CheckCircle className="h-4 w-4 text-success mt-0.5 flex-shrink-0" />
+                <span>WEX intent variants (success, warning, etc.)</span>
+              </li>
+              <li className="flex items-start gap-2">
+                <CheckCircle className="h-4 w-4 text-success mt-0.5 flex-shrink-0" />
+                <span>Namespace pattern (WexDialog.Content)</span>
+              </li>
+              <li className="flex items-start gap-2">
+                <CheckCircle className="h-4 w-4 text-success mt-0.5 flex-shrink-0" />
+                <span>Curated updates from upstream</span>
+              </li>
+            </ul>
+            <p className="text-sm text-foreground font-medium">
+              Best for: Most teams starting fresh or wanting simplicity
+            </p>
+          </div>
+
+          {/* @wex/design-tokens - Power Users */}
+          <div className="p-6 rounded-lg border border-border bg-card">
+            
+            <div className="flex items-center gap-3 mb-4">
+              <div className="p-2 rounded-lg bg-info/10">
+                <Zap className="h-5 w-5 text-info" />
+              </div>
+              <h3 className="text-lg font-semibold">@wex/design-tokens</h3>
+            </div>
+            <ul className="space-y-2 text-sm text-muted-foreground mb-4">
+              <li className="flex items-start gap-2">
+                <CheckCircle className="h-4 w-4 text-muted-foreground mt-0.5 flex-shrink-0" />
+                <span>Theme only — bring your own components</span>
+              </li>
+              <li className="flex items-start gap-2">
+                <CheckCircle className="h-4 w-4 text-muted-foreground mt-0.5 flex-shrink-0" />
+                <span>Full control over component code</span>
+              </li>
+              <li className="flex items-start gap-2">
+                <CheckCircle className="h-4 w-4 text-muted-foreground mt-0.5 flex-shrink-0" />
+                <span>Use with shadcn CLI directly</span>
+              </li>
+              <li className="flex items-start gap-2">
+                <CheckCircle className="h-4 w-4 text-muted-foreground mt-0.5 flex-shrink-0" />
+                <span>CSS variables + Tailwind preset</span>
+              </li>
+            </ul>
+            <p className="text-sm text-foreground font-medium">
+              Best for: Existing shadcn setups or custom requirements
+            </p>
+            <span className="inline-block px-2 py-0.5 text-xs font-medium bg-muted text-muted-foreground rounded mb-4">
+              Power Users
+            </span>
+          </div>
+        </div>
+
+        {/* Package Comparison Table */}
+        <div className="overflow-x-auto mb-6">
+          <table className="w-full text-sm">
+            <thead>
+              <tr className="border-b border-border">
+                <th className="text-left py-3 px-4 font-medium">Feature</th>
+                <th className="text-left py-3 px-4 font-medium">@wex/components</th>
+                <th className="text-left py-3 px-4 font-medium">@wex/design-tokens</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-border">
+              <ComparisonRow 
+                feature="Ready-to-use components" 
+                components={true} 
+                tokens={false} 
+              />
+              <ComparisonRow 
+                feature="WEX intent variants (success, warning, etc.)" 
+                components={true} 
+                tokens={false} 
+              />
+              <ComparisonRow 
+                feature="Namespace pattern (WexDialog.Content)" 
+                components={true} 
+                tokens={false} 
+              />
+              <ComparisonRow 
+                feature="CSS design tokens" 
+                components={true} 
+                tokens={true} 
+              />
+              <ComparisonRow 
+                feature="Tailwind preset" 
+                components={true} 
+                tokens={true} 
+              />
+              <ComparisonRow 
+                feature="Use with raw shadcn CLI" 
+                components={false} 
+                tokens={true} 
+              />
+              <ComparisonRow 
+                feature="Full control over components" 
+                components={false} 
+                tokens={true} 
+              />
+            </tbody>
+          </table>
+        </div>
+        
+        <div className="p-5 rounded-lg bg-muted/30 border border-border">
+          <h4 className="font-medium mb-3">When to use @wex/design-tokens alone:</h4>
+          <ul className="list-disc list-inside text-sm text-muted-foreground space-y-2">
+            <li>You need to customize component behavior beyond what WEX provides</li>
+            <li>You're integrating with an existing shadcn setup</li>
+            <li>You require specific shadcn versions for compatibility reasons</li>
+            <li>You're building a new component library on top of WEX tokens</li>
+          </ul>
+        </div>
+      </Section>
+
+      {/* ================================================================
+          SECTION 4: WHY WEX COMPONENTS (Benefits - Reinforces Decision)
+          ================================================================ */}
       <Section title="Why WEX Components?" description="Enterprise benefits of using the WEX component library." className="mb-16">
         <div className="grid md:grid-cols-2 gap-6 mt-2">
           <BenefitCard
@@ -104,6 +293,11 @@ export default function ArchitecturePage() {
         </div>
       </Section>
 
+      {/* ================================================================
+          SECTION 5: ARCHITECTURE DETAILS (Deep Dive)
+          ================================================================ */}
+      
+      {/* 5a: Dependency Model */}
       <Section title="Dependency Model" description="How WEX components relate to underlying libraries." className="mb-16">
         <div className="bg-muted/30 border border-border rounded-lg p-8 mb-6 mt-2">
           <div className="flex flex-col items-center gap-5">
@@ -155,6 +349,160 @@ export default function ArchitecturePage() {
         </p>
       </Section>
 
+      {/* 5b: Developer Experience Comparison (Simplified with Tabs) */}
+      <Section 
+        title="Developer Experience" 
+        description="See the difference between using WEX components vs. building manually."
+        className="mb-16"
+      >
+        <WexTabs defaultValue="extended" className="mt-2">
+          <WexTabs.List className="mb-6">
+            <WexTabs.Trigger value="extended" className="gap-2">
+              <span className="w-2 h-2 rounded-full bg-info" />
+              Extended Variants (3 components)
+            </WexTabs.Trigger>
+            <WexTabs.Trigger value="wrapper" className="gap-2">
+              <span className="w-2 h-2 rounded-full bg-success" />
+              Styled Components (55 components)
+            </WexTabs.Trigger>
+          </WexTabs.List>
+          
+          {/* Scenario 1: Extended Variants */}
+          <WexTabs.Content value="extended">
+            <p className="text-sm text-muted-foreground mb-4">
+              <strong>Applies to:</strong> Button, Badge, Alert — these need intent variants 
+              like <code className="bg-muted px-1 rounded">destructive</code>, <code className="bg-muted px-1 rounded">success</code>, <code className="bg-muted px-1 rounded">warning</code> that 
+              shadcn doesn't offer out of the box.
+            </p>
+
+            {/* Live Button Comparison */}
+            <div className="mb-6">
+              <h4 className="text-sm font-medium text-muted-foreground mb-3">Live Result (identical appearance):</h4>
+              <div className="flex gap-8 items-center p-6 rounded-lg bg-muted/30 border border-border">
+                <div className="text-center">
+                  <WexButton intent="destructive">Delete Account</WexButton>
+                  <p className="text-xs text-muted-foreground mt-2">WexButton</p>
+                </div>
+                <div className="text-center">
+                  <Button
+                    className="
+                      inline-flex items-center justify-center gap-2
+                      h-11 min-h-[44px] px-4 py-2 rounded-md
+                      text-sm font-medium transition-colors
+                      bg-wex-button-destructive-bg
+                      text-wex-button-destructive-fg
+                      border border-wex-button-destructive-border
+                      hover:bg-wex-button-destructive-hover-bg
+                      active:bg-wex-button-destructive-active-bg
+                      focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2
+                      focus-visible:ring-wex-button-destructive-focus-ring
+                      disabled:pointer-events-none disabled:opacity-50
+                      disabled:bg-wex-button-destructive-disabled-bg
+                      disabled:text-wex-button-destructive-disabled-fg
+                    "
+                  >
+                    Delete Account
+                  </Button>
+                  <p className="text-xs text-muted-foreground mt-2">shadcn + manual CSS</p>
+                </div>
+              </div>
+            </div>
+
+            {/* Code Comparison */}
+            <div className="grid md:grid-cols-2 gap-4 mb-6">
+              <div>
+                <p className="text-xs font-medium text-muted-foreground mb-2 uppercase tracking-wide">With @wex/components</p>
+                <CodeBlock 
+                  language="tsx"
+                  code={`import { WexButton } from '@wex/components';
+
+<WexButton intent="destructive">
+  Delete Account
+</WexButton>`}
+                />
+                <p className="text-sm text-muted-foreground mt-3">
+                  <span className="font-semibold text-success">3 lines</span> — Import and use.
+                </p>
+              </div>
+              <div>
+                <p className="text-xs font-medium text-muted-foreground mb-2 uppercase tracking-wide">With shadcn + tokens</p>
+                <CodeBlock 
+                  language="css"
+                  code={`.btn-destructive {
+  @apply bg-wex-button-destructive-bg;
+  @apply text-wex-button-destructive-fg;
+  @apply border-wex-button-destructive-border;
+  /* + hover, active, focus, disabled... */
+}
+/* ~20 lines of CSS per variant */`}
+                />
+                <p className="text-sm text-muted-foreground mt-3">
+                  <span className="font-semibold text-destructive">~20 lines of CSS</span> — per variant.
+                </p>
+              </div>
+            </div>
+          </WexTabs.Content>
+          
+          {/* Scenario 2: Styled Components */}
+          <WexTabs.Content value="wrapper">
+            <p className="text-sm text-muted-foreground mb-4">
+              <strong>Applies to:</strong> Dialog, Card, Tabs, and most other components — these are 
+              styled with WEX tokens at the component level, then wrapped with namespace patterns.
+            </p>
+
+            {/* Code Comparison */}
+            <div className="grid md:grid-cols-2 gap-4 mb-6">
+              <div>
+                <p className="text-xs font-medium text-muted-foreground mb-2 uppercase tracking-wide">With @wex/components</p>
+                <CodeBlock 
+                  language="tsx"
+                  code={`import { WexDialog } from '@wex/components';
+
+<WexDialog>
+  <WexDialog.Trigger>Open</WexDialog.Trigger>
+  <WexDialog.Content>
+    <WexDialog.Header>
+      <WexDialog.Title>Title</WexDialog.Title>
+    </WexDialog.Header>
+    <p>Dialog content here.</p>
+  </WexDialog.Content>
+</WexDialog>`}
+                />
+              </div>
+              <div>
+                <p className="text-xs font-medium text-muted-foreground mb-2 uppercase tracking-wide">With shadcn + tokens</p>
+                <CodeBlock 
+                  language="tsx"
+                  code={`import { Dialog, DialogTrigger, DialogContent, 
+  DialogHeader, DialogTitle } from '@/components/ui/dialog';
+
+<Dialog>
+  <DialogTrigger>Open</DialogTrigger>
+  <DialogContent>
+    <DialogHeader>
+      <DialogTitle>Title</DialogTitle>
+    </DialogHeader>
+    <p>Dialog content here.</p>
+  </DialogContent>
+</Dialog>`}
+                />
+              </div>
+            </div>
+
+            <WexAlert intent="info">
+              <WexAlert.Title>Similar code, different value</WexAlert.Title>
+              <WexAlert.Description>
+                For styled components, the code looks nearly identical. The value of WEX is in 
+                <strong> consistency</strong> (same patterns across all teams), 
+                <strong> namespace syntax</strong> (cleaner imports), and 
+                <strong> curated updates</strong> (upstream changes are vetted before reaching your app).
+              </WexAlert.Description>
+            </WexAlert>
+          </WexTabs.Content>
+        </WexTabs>
+      </Section>
+
+      {/* 5c: Update Path */}
       <Section title="Update Path" description="How upstream improvements reach your application." className="mb-16">
         <div className="space-y-5 mt-2">
           <UpdateStep 
@@ -193,71 +541,98 @@ export default function ArchitecturePage() {
         </WexAlert>
       </Section>
 
-      <Section title="Package Comparison" description="Choose the right package for your team's needs.">
-        <div className="overflow-x-auto mt-2">
+      {/* 5d: Component Implementation Patterns */}
+      <Section 
+        title="Component Implementation Patterns" 
+        description="How WEX components are built under the hood."
+        className="mb-16"
+      >
+        <p className="text-muted-foreground mb-6 mt-2">
+          WEX components follow different implementation patterns depending on their requirements. 
+          All components are styled with WEX design tokens at the component level:
+        </p>
+        
+        <div className="overflow-x-auto mb-6">
           <table className="w-full text-sm">
             <thead>
               <tr className="border-b border-border">
-                <th className="text-left py-3 px-4 font-medium">Feature</th>
-                <th className="text-left py-3 px-4 font-medium">@wex/components</th>
-                <th className="text-left py-3 px-4 font-medium">@wex/design-tokens</th>
+                <th className="text-left py-3 px-4 font-medium">Pattern</th>
+                <th className="text-left py-3 px-4 font-medium">Count</th>
+                <th className="text-left py-3 px-4 font-medium">Components</th>
+                <th className="text-left py-3 px-4 font-medium">Description</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-border">
-              <ComparisonRow 
-                feature="Ready-to-use components" 
-                components={true} 
-                tokens={false} 
-              />
-              <ComparisonRow 
-                feature="WEX intent variants (success, warning, etc.)" 
-                components={true} 
-                tokens={false} 
-              />
-              <ComparisonRow 
-                feature="Namespace pattern (WexDialog.Content)" 
-                components={true} 
-                tokens={false} 
-              />
-              <ComparisonRow 
-                feature="CSS design tokens" 
-                components={true} 
-                tokens={true} 
-              />
-              <ComparisonRow 
-                feature="Tailwind preset" 
-                components={true} 
-                tokens={true} 
-              />
-              <ComparisonRow 
-                feature="Use with raw shadcn CLI" 
-                components={false} 
-                tokens={true} 
-              />
-              <ComparisonRow 
-                feature="Full control over components" 
-                components={false} 
-                tokens={true} 
-              />
+              <tr>
+                <td className="py-4 px-4 whitespace-nowrap">
+                  <span className="inline-flex items-center gap-1.5">
+                    <span className="w-2 h-2 rounded-full bg-info" />
+                    Extended Variants
+                  </span>
+                </td>
+                <td className="py-4 px-4 font-medium">3</td>
+                <td className="py-4 px-4 whitespace-nowrap">
+                  <code className="bg-muted px-1.5 py-0.5 rounded text-xs">Button</code>,{" "}
+                  <code className="bg-muted px-1.5 py-0.5 rounded text-xs">Badge</code>,{" "}
+                  <code className="bg-muted px-1.5 py-0.5 rounded text-xs">Alert</code>
+                </td>
+                <td className="py-4 px-4 text-muted-foreground">
+                  Extended with WEX intent props (success, warning, etc.) beyond shadcn defaults
+                </td>
+              </tr>
+              <tr>
+                <td className="py-4 px-4 whitespace-nowrap">
+                  <span className="inline-flex items-center gap-1.5">
+                    <span className="w-2 h-2 rounded-full bg-warning" />
+                    Fully Custom
+                  </span>
+                </td>
+                <td className="py-4 px-4 font-medium">~10</td>
+                <td className="py-4 px-4 whitespace-nowrap">
+                  <code className="bg-muted px-1.5 py-0.5 rounded text-xs">FloatLabel</code>,{" "}
+                  <code className="bg-muted px-1.5 py-0.5 rounded text-xs">Spinner</code>,{" "}
+                  <code className="bg-muted px-1.5 py-0.5 rounded text-xs">Empty</code>, etc.
+                </td>
+                <td className="py-4 px-4 text-muted-foreground">
+                  Built from scratch — no shadcn equivalent exists
+                </td>
+              </tr>
+              <tr>
+                <td className="py-4 px-4 whitespace-nowrap">
+                  <span className="inline-flex items-center gap-1.5">
+                    <span className="w-2 h-2 rounded-full bg-success" />
+                    Styled + Wrapped
+                  </span>
+                </td>
+                <td className="py-4 px-4 font-medium">~45</td>
+                <td className="py-4 px-4 whitespace-nowrap text-muted-foreground">
+                  Dialog, Card, Tabs, Select, etc.
+                </td>
+                <td className="py-4 px-4 text-muted-foreground">
+                  shadcn components styled with WEX tokens and wrapped with namespace pattern
+                </td>
+              </tr>
             </tbody>
           </table>
         </div>
-        
-        <div className="mt-8 p-5 rounded-lg bg-muted/30 border border-border">
-          <h4 className="font-medium mb-3">When to use @wex/design-tokens alone:</h4>
-          <ul className="list-disc list-inside text-sm text-muted-foreground space-y-2">
-            <li>You need to customize component behavior beyond what WEX provides</li>
-            <li>You're integrating with an existing shadcn setup</li>
-            <li>You require specific shadcn versions for compatibility reasons</li>
-            <li>You're building a new component library on top of WEX tokens</li>
-          </ul>
-        </div>
+
+        <WexAlert intent="info">
+          <WexAlert.Title>Styling happens at the component level</WexAlert.Title>
+          <WexAlert.Description>
+            All 58 components use WEX design tokens for consistent styling. The namespace wrappers 
+            (WexDialog, WexCard, etc.) provide a clean API and abstraction layer for future changes, 
+            while the underlying styled components ensure brand consistency.
+          </WexAlert.Description>
+        </WexAlert>
       </Section>
+
     </article>
   );
 }
 
-// Helper Components
+// ================================================================
+// HELPER COMPONENTS
+// ================================================================
 
 function BenefitCard({ 
   icon, 
@@ -361,3 +736,24 @@ function ComparisonRow({
   );
 }
 
+function ValidationCard({
+  company,
+  logo,
+  description,
+}: {
+  company: string;
+  logo?: React.ReactNode;
+  description: string;
+}) {
+  return (
+    <div className="p-4 rounded-lg border border-border bg-card">
+      <div className="flex items-center gap-2 mb-2">
+        {logo && (
+          <span className="text-foreground">{logo}</span>
+        )}
+        <h4 className="font-medium text-foreground">{company}</h4>
+      </div>
+      <p className="text-sm text-muted-foreground leading-relaxed">{description}</p>
+    </div>
+  );
+}

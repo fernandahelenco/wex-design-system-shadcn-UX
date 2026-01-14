@@ -1,11 +1,12 @@
 import { useState } from "react";
+import { cn } from "@/lib/utils";
 import { WexSheet } from "@/components/wex/wex-sheet";
 import { WexButton } from "@/components/wex/wex-button";
 import { WexBadge } from "@/components/wex/wex-badge";
 import { WexTabs } from "@/components/wex/wex-tabs";
 import { WexSeparator } from "@/components/wex/wex-separator";
 import { WexScrollArea } from "@/components/wex/wex-scroll-area";
-import { Calendar, Trash2, Upload, Send, X } from "lucide-react";
+import { Calendar, Trash2, Send } from "lucide-react";
 
 // Base Claim interface - matches Claims.tsx
 export interface Claim {
@@ -52,19 +53,22 @@ interface ClaimDetailSheetProps {
 }
 
 // Configuration interface for sidebar actions
+type SidebarIntent = "ghost" | "outline" | "primary" | "destructive";
+
 interface SidebarActionConfig {
   leftActions: Array<{
     label: string;
-    intent: "ghost" | "outline" | "primary" | "destructive";
+    intent: SidebarIntent;
     icon?: React.ReactNode;
     onClick: () => void;
     className?: string;
   }>;
   rightActions: Array<{
     label: string;
-    intent: "ghost" | "outline" | "primary" | "destructive";
+    intent: SidebarIntent;
     icon?: React.ReactNode;
     onClick: () => void;
+    className?: string;
   }>;
 }
 
@@ -106,7 +110,6 @@ const getSidebarActions = (claim: Claim): SidebarActionConfig => {
           {
             label: "Upload documentation",
             intent: "outline",
-            icon: <Upload className="h-4 w-4 mr-2" />,
             onClick: () => console.log("Upload documentation for claim:", claim.id),
           },
           {
@@ -124,17 +127,15 @@ const getSidebarActions = (claim: Claim): SidebarActionConfig => {
         leftActions: [
           {
             label: "Cancel claim",
-            intent: "ghost",
-            icon: <X className="h-4 w-4 mr-2" />,
+            intent: "outline",
             onClick: () => console.log("Cancel claim:", claim.id),
-            className: "text-destructive hover:text-destructive hover:bg-destructive/10",
+            className: "text-primary",
           },
         ],
         rightActions: [
           {
             label: "Upload documentation",
             intent: "outline",
-            icon: <Upload className="h-4 w-4 mr-2" />,
             onClick: () => console.log("Upload documentation for claim:", claim.id),
           },
         ],
@@ -148,15 +149,14 @@ const getSidebarActions = (claim: Claim): SidebarActionConfig => {
           {
             label: "Cancel claim",
             intent: "outline",
-            icon: <X className="h-4 w-4 mr-2" />,
             onClick: () => console.log("Cancel claim:", claim.id),
+            className: "text-primary",
           },
         ],
         rightActions: [
           {
             label: "Upload documentation",
-            intent: "primary",
-            icon: <Upload className="h-4 w-4 mr-2" />,
+            intent: "outline",
             onClick: () => console.log("Upload documentation for claim:", claim.id),
           },
         ],
@@ -169,7 +169,6 @@ const getSidebarActions = (claim: Claim): SidebarActionConfig => {
           {
             label: "Upload documentation",
             intent: "outline",
-            icon: <Upload className="h-4 w-4 mr-2" />,
             onClick: () => console.log("Upload documentation for claim:", claim.id),
           },
         ],
@@ -332,7 +331,7 @@ export function ClaimDetailSheet({
                         >
                           <span className="text-sm text-foreground">{doc.name}</span>
                           {doc.url && (
-                            <WexButton intent="ghost" size="sm" asChild>
+                            <WexButton variant="ghost" size="sm" asChild>
                               <a href={doc.url} target="_blank" rel="noopener noreferrer">
                                 View
                               </a>
@@ -410,7 +409,7 @@ export function ClaimDetailSheet({
                             </p>
                           </div>
                           {letter.url && (
-                            <WexButton intent="link" size="sm" asChild>
+                            <WexButton intent="primary" variant="link" size="sm" asChild>
                               <a href={letter.url} target="_blank" rel="noopener noreferrer">
                                 View
                               </a>
@@ -437,9 +436,10 @@ export function ClaimDetailSheet({
             {sidebarActions.leftActions.map((action, index) => (
               <WexButton
                 key={index}
-                intent={action.intent}
+                intent="primary"
+                variant="outline"
                 size="md"
-                className={action.className}
+                className={cn("text-primary border-primary hover:bg-primary/10 active:bg-primary/20", action.className)}
                 onClick={action.onClick}
               >
                 {action.icon}
@@ -453,7 +453,8 @@ export function ClaimDetailSheet({
             {sidebarActions.rightActions.map((action, index) => (
               <WexButton
                 key={index}
-                intent={action.intent}
+                intent="primary"
+                variant="outline"
                 size="md"
                 onClick={action.onClick}
               >

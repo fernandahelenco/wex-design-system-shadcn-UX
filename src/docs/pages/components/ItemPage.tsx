@@ -3,8 +3,25 @@ import { Section } from "@/docs/components/Section";
 import { ExampleCard } from "@/docs/components/ExampleCard";
 import { CodeBlock } from "@/docs/components/CodeBlock";
 import { TokenReference, type TokenRow } from "@/docs/components/TokenReference";
+import { PropsTable, type PropDefinition } from "@/docs/components/PropsTable";
 import { WexItem, WexButton, WexAvatar } from "@/components/wex";
 import { MoreHorizontal } from "lucide-react";
+
+// Props documentation
+const itemRootProps: PropDefinition[] = [
+  { name: "asChild", type: "boolean", default: "false", description: "Merge with child element" },
+  { name: "className", type: "string", description: "Additional CSS classes" },
+];
+
+const itemMediaProps: PropDefinition[] = [
+  { name: "variant", type: '"icon" | "image" | "avatar"', default: '"icon"', description: "Media type" },
+  { name: "children", type: "ReactNode", required: true, description: "Media content" },
+];
+
+const itemGroupProps: PropDefinition[] = [
+  { name: "divider", type: "boolean", default: "true", description: "Show dividers between items" },
+  { name: "className", type: "string", description: "Additional CSS classes" },
+];
 
 // Token mappings for WexItem
 const itemTokens: TokenRow[] = [
@@ -37,7 +54,7 @@ export default function ItemPage() {
                 <WexItem.Description>Software Engineer</WexItem.Description>
               </WexItem.Content>
               <WexItem.Actions>
-                <WexButton intent="ghost" size="icon" aria-label="More options for John Doe">
+                <WexButton variant="ghost" size="icon" aria-label="More options for John Doe">
                   <MoreHorizontal className="h-4 w-4" aria-hidden="true" />
                 </WexButton>
               </WexItem.Actions>
@@ -94,7 +111,7 @@ export default function ItemPage() {
               <WexItem>
                 <WexItem.Header>
                   <WexItem.Title>Notification Settings</WexItem.Title>
-                  <WexButton intent="ghost" size="sm">Edit</WexButton>
+                  <WexButton variant="ghost" size="sm">Edit</WexButton>
                 </WexItem.Header>
                 <WexItem.Content>
                   <WexItem.Description>
@@ -135,7 +152,7 @@ export default function ItemPage() {
       <WexItem.Description>Software Engineer</WexItem.Description>
     </WexItem.Content>
     <WexItem.Actions>
-      <WexButton intent="ghost" size="icon">
+      <WexButton variant="ghost" size="icon">
         <MoreHorizontal />
       </WexButton>
     </WexItem.Actions>
@@ -143,6 +160,20 @@ export default function ItemPage() {
   <WexItem.Separator />
   <WexItem>...</WexItem>
 </WexItem.Group>`}
+        />
+      </Section>
+
+      <Section title="API Reference">
+        <PropsTable 
+          props={itemRootProps}
+          subComponents={[
+            { name: "WexItem.Group", props: itemGroupProps },
+            { name: "WexItem.Media", props: itemMediaProps },
+            { name: "WexItem.Content", props: [{ name: "className", type: "string", description: "Additional CSS classes" }] },
+            { name: "WexItem.Title", props: [{ name: "className", type: "string", description: "Additional CSS classes" }] },
+            { name: "WexItem.Description", props: [{ name: "className", type: "string", description: "Additional CSS classes" }] },
+            { name: "WexItem.Actions", props: [{ name: "className", type: "string", description: "Additional CSS classes" }] },
+          ]}
         />
       </Section>
 

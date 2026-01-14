@@ -5,7 +5,21 @@ import { ExampleCard } from "@/docs/components/ExampleCard";
 import { CodeBlock } from "@/docs/components/CodeBlock";
 import { Guidance } from "@/docs/components/ProseBlock";
 import { TokenReference, type TokenRow } from "@/docs/components/TokenReference";
+import { PropsTable, SubComponentProps, type PropDefinition } from "@/docs/components/PropsTable";
 import { WexDropdownMenu, WexButton } from "@/components/wex";
+
+// Props documentation
+const dropdownMenuContentProps: PropDefinition[] = [
+  { name: "side", type: '"top" | "right" | "bottom" | "left"', default: '"bottom"', description: "Preferred side to render" },
+  { name: "align", type: '"start" | "center" | "end"', default: '"center"', description: "Alignment along the side" },
+  { name: "sideOffset", type: "number", default: "4", description: "Offset from the trigger" },
+  { name: "className", type: "string", description: "Additional CSS classes" },
+];
+
+const dropdownMenuItemProps: PropDefinition[] = [
+  { name: "disabled", type: "boolean", default: "false", description: "Disables the item" },
+  { name: "onSelect", type: "(event: Event) => void", description: "Callback when item is selected" },
+];
 
 // Token mappings for WexDropdownMenu
 // Layer 3 component tokens
@@ -36,7 +50,7 @@ export default function DropdownMenuPage() {
         <ExampleCard>
           <WexDropdownMenu>
             <WexDropdownMenu.Trigger asChild>
-              <WexButton intent="outline">Open Menu</WexButton>
+              <WexButton variant="outline">Open Menu</WexButton>
             </WexDropdownMenu.Trigger>
             <WexDropdownMenu.Content>
               <WexDropdownMenu.Label>My Account</WexDropdownMenu.Label>
@@ -60,7 +74,7 @@ export default function DropdownMenuPage() {
           <ExampleCard title="With Keyboard Shortcuts" description="Show keyboard shortcuts for actions.">
             <WexDropdownMenu>
               <WexDropdownMenu.Trigger asChild>
-                <WexButton intent="outline">Edit Menu</WexButton>
+                <WexButton variant="outline">Edit Menu</WexButton>
               </WexDropdownMenu.Trigger>
               <WexDropdownMenu.Content className="w-56">
                 <WexDropdownMenu.Label>Edit</WexDropdownMenu.Label>
@@ -93,7 +107,7 @@ export default function DropdownMenuPage() {
           <ExampleCard title="With Submenus" description="Nested menu items.">
             <WexDropdownMenu>
               <WexDropdownMenu.Trigger asChild>
-                <WexButton intent="outline">File</WexButton>
+                <WexButton variant="outline">File</WexButton>
               </WexDropdownMenu.Trigger>
               <WexDropdownMenu.Content className="w-56">
                 <WexDropdownMenu.Group>
@@ -128,7 +142,7 @@ export default function DropdownMenuPage() {
           <ExampleCard title="With Checkboxes" description="Toggle options on/off.">
             <WexDropdownMenu>
               <WexDropdownMenu.Trigger asChild>
-                <WexButton intent="outline">View Options</WexButton>
+                <WexButton variant="outline">View Options</WexButton>
               </WexDropdownMenu.Trigger>
               <WexDropdownMenu.Content className="w-56">
                 <WexDropdownMenu.Label>Appearance</WexDropdownMenu.Label>
@@ -156,7 +170,7 @@ export default function DropdownMenuPage() {
           <ExampleCard title="With Radio Items" description="Select one option from a group.">
             <WexDropdownMenu>
               <WexDropdownMenu.Trigger asChild>
-                <WexButton intent="outline">Position: {position}</WexButton>
+                <WexButton variant="outline">Position: {position}</WexButton>
               </WexDropdownMenu.Trigger>
               <WexDropdownMenu.Content className="w-56">
                 <WexDropdownMenu.Label>Panel Position</WexDropdownMenu.Label>
@@ -174,7 +188,7 @@ export default function DropdownMenuPage() {
           <ExampleCard title="With Disabled Items" description="Some options unavailable.">
             <WexDropdownMenu>
               <WexDropdownMenu.Trigger asChild>
-                <WexButton intent="outline">Actions</WexButton>
+                <WexButton variant="outline">Actions</WexButton>
               </WexDropdownMenu.Trigger>
               <WexDropdownMenu.Content className="w-56">
                 <WexDropdownMenu.Item>View Details</WexDropdownMenu.Item>
@@ -194,7 +208,7 @@ export default function DropdownMenuPage() {
           <ExampleCard title="With Groups" description="Organized sections.">
             <WexDropdownMenu>
               <WexDropdownMenu.Trigger asChild>
-                <WexButton intent="outline">Account</WexButton>
+                <WexButton variant="outline">Account</WexButton>
               </WexDropdownMenu.Trigger>
               <WexDropdownMenu.Content className="w-56">
                 <WexDropdownMenu.Label>john@example.com</WexDropdownMenu.Label>
@@ -276,6 +290,11 @@ const [value, setValue] = useState("a");
   <WexDropdownMenu.Shortcut>⌘S</WexDropdownMenu.Shortcut>
 </WexDropdownMenu.Item>`}
         />
+      </Section>
+
+      <Section title="API Reference">
+        <PropsTable props={dropdownMenuContentProps} title="WexDropdownMenu.Content" />
+        <SubComponentProps name="WexDropdownMenu.Item" props={dropdownMenuItemProps} />
       </Section>
 
       <TokenReference tokens={dropdownMenuTokens} className="mt-12" />

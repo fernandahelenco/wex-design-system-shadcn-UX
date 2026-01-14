@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { WexButton } from "@/components/wex/wex-button";
+import { ConsumerFooter } from "./Footer";
 import { WexCard } from "@/components/wex/wex-card";
 import { WexTable } from "@/components/wex/wex-table";
 import { WexBadge } from "@/components/wex/wex-badge";
@@ -407,7 +408,7 @@ export default function Claims() {
               Claims
             </h1>
             <div className="flex gap-4">
-              <WexButton intent="outline" className="border-primary text-primary">
+              <WexButton intent="primary" variant="outline" className="border-primary text-primary">
                 <CreditCard className="h-4 w-4" />
                 Pay provider
               </WexButton>
@@ -623,7 +624,7 @@ export default function Claims() {
                               </WexBadge>
                               {claim.hasRefresh && (
                                 <WexButton
-                                  intent="ghost"
+                                  variant="ghost"
                                   size="icon"
                                   className="h-6 w-6 bg-[var(--utility-info-10,#d4effc)] rounded-full hover:bg-[var(--utility-info-20,#a9dff9)]"
                                   onClick={(e) => {
@@ -739,31 +740,7 @@ export default function Claims() {
         </div>
       </div>
 
-      {/* Footer */}
-      <footer className="border-t bg-white py-4">
-        <div className="mx-auto max-w-[1440px] px-8">
-          <div className="flex flex-wrap items-center justify-center gap-4 text-sm text-muted-foreground">
-            <WexButton intent="ghost" className="h-auto p-0 text-sm text-muted-foreground">
-              Copyright
-            </WexButton>
-            <span>•</span>
-            <WexButton intent="ghost" className="h-auto p-0 text-sm text-muted-foreground">
-              Disclaimer
-            </WexButton>
-            <span>•</span>
-            <WexButton intent="ghost" className="h-auto p-0 text-sm text-muted-foreground">
-              Privacy Policy
-            </WexButton>
-            <span>•</span>
-            <WexButton intent="ghost" className="h-auto p-0 text-sm text-muted-foreground">
-              Terms of Use
-            </WexButton>
-          </div>
-          <p className="mt-2 text-center text-sm text-muted-foreground">
-            WEX Health Inc. 2004-2026. All rights reserved. Powered by WEX Health.
-          </p>
-        </div>
-      </footer>
+      <ConsumerFooter />
 
       {/* Claim Detail Sheet */}
       <ClaimDetailSheet

@@ -8,7 +8,6 @@ import {
   ArrowRight,
   Layers,
   Accessibility,
-  Sparkles,
 } from "lucide-react";
 
 /**
@@ -25,11 +24,6 @@ export default function OverviewPage() {
         {/* Hero Section: Clean, Airy, and Professional */}
         <header className="relative pt-10 pb-16">
           <div className="max-w-3xl">
-          <div className="mb-6 inline-flex items-center gap-2 rounded-full bg-brand-red/10 px-4 py-1 text-xs font-bold uppercase tracking-widest text-brand-red">
-            <Sparkles className="h-3.5 w-3.5" />
-            v0.6.0 Hardening Pass
-          </div>
-          
           <h1 className="mb-6 text-5xl font-display font-bold tracking-tight text-foreground md:text-7xl">
             Design, develop, 
             <br />
@@ -53,7 +47,7 @@ export default function OverviewPage() {
                 <ArrowRight className="ml-2 h-5 w-5 transition-transform group-hover:translate-x-1" />
               </Link>
             </WexButton>
-            <WexButton intent="outline" size="lg" asChild className="backdrop-blur-sm border-white/20">
+            <WexButton variant="outline" size="lg" asChild className="backdrop-blur-sm border-white/20">
               <Link to="/story">
                 Our philosophy
               </Link>
@@ -238,17 +232,15 @@ export default function OverviewPage() {
           </div>
         </div>
         
-        <div className="mt-20 flex flex-col items-center justify-between gap-6 border-t border-border/30 py-10 sm:flex-row">
-          <div className="flex items-center gap-4">
-            <img src={`${import.meta.env.BASE_URL}WEX_Logo_Red_Vector.svg`} alt="WEX" className="h-5" />
-            <span className="text-sm font-medium text-muted-foreground">Design System</span>
-          </div>
-          
-          <div className="flex flex-wrap justify-center gap-x-8 gap-y-2 text-xs text-muted-foreground">
-            <p>© {new Date().getFullYear()} WEX Inc.</p>
-            <a href="#" className="transition-colors hover:text-brand-red">Privacy Policy</a>
-            <a href="#" className="transition-colors hover:text-brand-red">Terms of Service</a>
-            <a href="#" className="transition-colors hover:text-brand-red">Cookie Settings</a>
+        <div className="mt-20 border-t border-border/30 py-10">
+          <div className="flex flex-col items-center gap-3 text-center text-sm text-muted-foreground">
+            <div className="flex items-center gap-3">
+              <img src={`${import.meta.env.BASE_URL}WEX_Logo_Red_Vector.svg`} alt="WEX" className="h-5" />
+              <span className="text-sm font-medium text-muted-foreground">Design System</span>
+            </div>
+            <p className="text-xs text-muted-foreground">
+              © {new Date().getFullYear()} WEX Inc. All rights reserved.
+            </p>
           </div>
         </div>
       </footer>

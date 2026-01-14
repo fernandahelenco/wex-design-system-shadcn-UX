@@ -2,9 +2,9 @@ import { useState, useEffect } from "react"
 import { WexButton } from "@/components/wex/wex-button"
 import { WexFloatLabel } from "@/components/wex/wex-float-label"
 import { WexCard } from "@/components/wex/wex-card"
+import { WexCheckbox } from "@/components/wex/wex-checkbox"
 import { wexToast } from "@/components/wex/wex-toast"
-import { Eye, EyeOff } from "lucide-react"
-import WexLogo from "/WEX_Logo_Red_Vector.svg"
+import { Eye, EyeOff, AlertCircle, Mail, MessageSquare, ChevronRight } from "lucide-react"
 import { useAuth } from "@/docs/context/AuthContext"
 
 interface LoginProps {
@@ -13,7 +13,9 @@ interface LoginProps {
 
 export default function Login({ onLoginSuccess }: LoginProps) {
   const { login } = useAuth()
-  const [step, setStep] = useState<1 | 2 | 3>(1)
+  const wexLogoUrl = `${import.meta.env.BASE_URL}WEX_Logo_Red_Vector.svg`
+  const loginBgUrl = `${import.meta.env.BASE_URL}login-bg.svg`
+  const [step, setStep] = useState<1 | 2 | 3 | 4>(1)
   const [username, setUsername] = useState("")
   const [password, setPassword] = useState("")
   const [showPassword, setShowPassword] = useState(false)
@@ -22,6 +24,109 @@ export default function Login({ onLoginSuccess }: LoginProps) {
   const [resendTimer, setResendTimer] = useState(13)
   const [generatedCode, setGeneratedCode] = useState("")
   const [codeError, setCodeError] = useState(false)
+  const [saveUsername, setSaveUsername] = useState(false)
+  const [selectedMfaMethod, setSelectedMfaMethod] = useState<'email' | 'sms'>('email')
+
+  // Debug instrumentation (Debug Mode)
+  useEffect(() => {
+    const runId = 'pre-fix'
+    // #region agent log
+    fetch('http://127.0.0.1:7242/ingest/0f2d92c4-4c76-48a6-a34a-0a7a7699a103', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        sessionId: 'debug-session',
+        runId,
+        hypothesisId: 'H1',
+        location: 'Login.tsx:initial',
+        message: 'Login background asset resolved',
+        data: {
+          loginBg: loginBgUrl,
+          baseUrl: import.meta.env.BASE_URL,
+          windowPath: typeof window !== 'undefined' ? window.location.pathname : 'no-window'
+        },
+        timestamp: Date.now(),
+      }),
+    }).catch(() => {})
+    // #endregion
+  }, [])
+
+  // Debug instrumentation (asset reachability)
+  useEffect(() => {
+    const runId = 'pre-fix'
+    const targetUrl = loginBgUrl
+
+    // #region agent log
+    fetch(targetUrl, { method: 'HEAD' })
+      .then((res) => {
+        fetch('http://127.0.0.1:7242/ingest/0f2d92c4-4c76-48a6-a34a-0a7a7699a103', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            sessionId: 'debug-session',
+            runId,
+            hypothesisId: 'H1',
+            location: 'Login.tsx:head-check',
+            message: 'HEAD check for login background',
+            data: { targetUrl, status: res.status, resolvedUrl: res.url },
+            timestamp: Date.now(),
+          }),
+        }).catch(() => {})
+      })
+      .catch((err) => {
+        fetch('http://127.0.0.1:7242/ingest/0f2d92c4-4c76-48a6-a34a-0a7a7699a103', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            sessionId: 'debug-session',
+            runId,
+            hypothesisId: 'H1',
+            location: 'Login.tsx:head-check',
+            message: 'HEAD check failed',
+            data: { targetUrl, error: String(err) },
+            timestamp: Date.now(),
+          }),
+        }).catch(() => {})
+      })
+    // #endregion
+
+    const img = new Image()
+    img.onload = () => {
+      // #region agent log
+      fetch('http://127.0.0.1:7242/ingest/0f2d92c4-4c76-48a6-a34a-0a7a7699a103', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          sessionId: 'debug-session',
+          runId,
+          hypothesisId: 'H1',
+          location: 'Login.tsx:image-load',
+          message: 'Background image load success',
+          data: { targetUrl },
+          timestamp: Date.now(),
+        }),
+      }).catch(() => {})
+      // #endregion
+    }
+    img.onerror = () => {
+      // #region agent log
+      fetch('http://127.0.0.1:7242/ingest/0f2d92c4-4c76-48a6-a34a-0a7a7699a103', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          sessionId: 'debug-session',
+          runId,
+          hypothesisId: 'H1',
+          location: 'Login.tsx:image-load',
+          message: 'Background image load failed',
+          data: { targetUrl },
+          timestamp: Date.now(),
+        }),
+      }).catch(() => {})
+      // #endregion
+    }
+    img.src = targetUrl
+  }, [])
 
   // Generate code when entering Step 3
   useEffect(() => {
@@ -46,9 +151,22 @@ export default function Login({ onLoginSuccess }: LoginProps) {
     }
   }, [step, resendTimer])
 
+  // Load saved username on mount
+  useEffect(() => {
+    const savedUsername = localStorage.getItem('wex_saved_username')
+    if (savedUsername) {
+      setUsername(savedUsername)
+      setSaveUsername(true)
+    }
+  }, [])
+
   const handleUsernameSubmit = (e: React.FormEvent) => {
     e.preventDefault()
     if (username.trim()) {
+      // Save username if checkbox is checked
+      if (saveUsername) {
+        localStorage.setItem('wex_saved_username', username.trim())
+      }
       setStep(2)
     }
   }
@@ -105,6 +223,36 @@ export default function Login({ onLoginSuccess }: LoginProps) {
     setStep(1)
   }
 
+  const handleSaveUsernameChange = (checked: boolean) => {
+    setSaveUsername(checked)
+    if (!checked) {
+      localStorage.removeItem('wex_saved_username')
+    }
+  }
+
+  const handleTryAnotherMethod = () => {
+    setStep(4)
+  }
+
+  const handleMethodSelect = (method: 'email' | 'sms') => {
+    setSelectedMfaMethod(method)
+    // Generate new code
+    const code = Math.floor(10000 + Math.random() * 90000).toString()
+    setGeneratedCode(code)
+    setCodeError(false)
+    setMfaCode("")
+    setResendTimer(13)
+    
+    // Show toast with new code
+    wexToast(`Your MFA code is: ${code}`, {
+      duration: 30000,
+      position: 'top-right'
+    })
+    
+    // Return to Step 3
+    setStep(3)
+  }
+
   const maskUsername = (value: string): string => {
     if (value.includes('@')) {
       // Email masking: show first 4 chars + ****** + domain with ****
@@ -118,12 +266,23 @@ export default function Login({ onLoginSuccess }: LoginProps) {
     }
   }
 
+  const maskPhoneForSms = (): string => {
+    // SMS phone masking: show XXXXXX + last 4 digits
+    // For prototype purposes, generate a mock phone number display
+    return 'XXXXXX8789'
+  }
+
   return (
-    <div className="min-h-screen bg-[hsl(var(--wex-palette-blue-50))] relative overflow-hidden">
-      {/* Background decorative elements - simplified version */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        {/* Decorative circles/squares would go here - simplified for now */}
-      </div>
+    <div 
+      className="min-h-screen w-full relative overflow-hidden"
+      style={{ 
+        backgroundImage: `url(${loginBgUrl})`,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        backgroundRepeat: 'no-repeat',
+        backgroundColor: '#f0f4f8'
+      }}
+    >
 
       {/* Main Content */}
       <div className="relative z-10 min-h-screen flex flex-col">
@@ -135,18 +294,20 @@ export default function Login({ onLoginSuccess }: LoginProps) {
                 {/* Logo + Title + Subtext */}
                 <div className="flex flex-col gap-6 items-center">
                   <div className="w-[150px] h-[50px]">
-                    <img src={WexLogo} alt="WEX" className="w-full h-full object-contain" />
+                    <img src={wexLogoUrl} alt="WEX" className="w-full h-full object-contain" />
                   </div>
                   <div className="flex flex-col gap-2 items-center text-center">
                     <h1 className="text-[18px] font-semibold leading-6 tracking-[-0.252px] text-foreground">
-                      {step === 1 ? "Welcome" : step === 2 ? "Enter your password" : "Verify your identity"}
+                      {step === 1 ? "Welcome" : step === 2 ? "Enter your password" : step === 3 ? "Verify your identity" : "Keep your account safe"}
                     </h1>
                     <p className="text-[16px] font-normal leading-6 tracking-[-0.176px] text-foreground max-w-[328px]">
                       {step === 1 
-                        ? "Please enter your username or email address to log into WEX Health & Benefits"
+                        ? "Please enter your username to log into WEX Health & Benefits"
                         : step === 2
                         ? "Please enter your password to log into WEX Health & Benefits"
-                        : "We've sent an email with your code to"}
+                        : step === 3
+                        ? (selectedMfaMethod === 'sms' ? "We've sent a text message to" : "We've sent an email with your code to")
+                        : "Select an authentication method"}
                     </p>
                   </div>
                 </div>
@@ -157,13 +318,36 @@ export default function Login({ onLoginSuccess }: LoginProps) {
                     <form onSubmit={handleUsernameSubmit} className="flex flex-col gap-6">
                       {/* Input Field with Floating Label */}
                       <WexFloatLabel
-                        label="Username or Email address"
+                        label="Username"
                         type="text"
                         value={username}
                         onChange={(e) => setUsername(e.target.value)}
                         size="lg"
                         className="text-[16px] leading-6 tracking-[-0.176px]"
                       />
+
+                      {/* Save Username Checkbox and Forgot Username Link */}
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                          <WexCheckbox
+                            id="save-username"
+                            checked={saveUsername}
+                            onCheckedChange={(checked) => handleSaveUsernameChange(checked as boolean)}
+                          />
+                          <label 
+                            htmlFor="save-username" 
+                            className="text-[16px] font-normal leading-6 tracking-[-0.176px] text-foreground cursor-pointer"
+                          >
+                            Save Username
+                          </label>
+                        </div>
+                        <button
+                          type="button"
+                          className="text-[16px] font-normal leading-6 tracking-[-0.176px] text-[hsl(var(--wex-primary))] hover:underline"
+                        >
+                          Forgot Username
+                        </button>
+                      </div>
 
                       {/* Continue Button */}
                       <WexButton
@@ -176,13 +360,13 @@ export default function Login({ onLoginSuccess }: LoginProps) {
                     </form>
 
                     {/* Sign Up Link */}
-                    <div className="flex gap-2 items-center justify-center text-[16px] leading-6 tracking-[-0.176px]">
+                    <div className="flex gap-2 items-center justify-start text-[16px] leading-6 tracking-[-0.176px]">
                       <p className="text-muted-foreground">Don't have an account?</p>
                       <button
                         type="button"
                         className="text-[hsl(var(--wex-primary))] hover:underline cursor-pointer font-normal"
                       >
-                        Sign up
+                        Register
                       </button>
                     </div>
                   </>
@@ -194,7 +378,7 @@ export default function Login({ onLoginSuccess }: LoginProps) {
                     {/* Username Display Field (read-only with Edit) */}
                     <div className="relative">
                       <WexFloatLabel
-                        label="Username or Email address"
+                        label="Username"
                         type="text"
                         value={username}
                         readOnly
@@ -240,8 +424,9 @@ export default function Login({ onLoginSuccess }: LoginProps) {
                           }
                         />
                         {passwordError && (
-                          <p className="text-[12px] text-[hsl(var(--wex-destructive))] px-3">
-                            Invalid username/email or password
+                          <p className="text-[12px] text-[hsl(var(--wex-destructive))] px-3 flex items-center gap-1">
+                            <AlertCircle className="h-3 w-3" />
+                            Invalid username or password
                           </p>
                         )}
                       </div>
@@ -271,9 +456,9 @@ export default function Login({ onLoginSuccess }: LoginProps) {
                   <form onSubmit={handleMfaSubmit} className="flex flex-col gap-[21px]">
                     {/* Masked Email/Phone Field (read-only) */}
                     <WexFloatLabel
-                      label="Email or Mobile number"
+                      label={selectedMfaMethod === 'sms' ? "Mobile number" : "Email"}
                       type="text"
-                      value={maskUsername(username)}
+                      value={selectedMfaMethod === 'sms' ? maskPhoneForSms() : maskUsername(username)}
                       readOnly
                       size="lg"
                       className="text-[16px] leading-6 tracking-[-0.176px] cursor-default"
@@ -294,8 +479,9 @@ export default function Login({ onLoginSuccess }: LoginProps) {
                     className="text-[16px] leading-6 tracking-[-0.176px]"
                   />
                   {codeError && (
-                    <p className="text-[12px] text-[hsl(var(--wex-destructive))] px-3">
-                      Incorrect Code, please try again
+                    <p className="text-[12px] text-[hsl(var(--wex-destructive))] px-3 flex items-center gap-1">
+                      <AlertCircle className="h-3 w-3" />
+                      The code you entered is invalid
                     </p>
                   )}
                 </div>
@@ -330,11 +516,51 @@ export default function Login({ onLoginSuccess }: LoginProps) {
                     {/* Try Another Method Link */}
                     <button
                       type="button"
+                      onClick={handleTryAnotherMethod}
                       className="text-[16px] font-semibold leading-6 tracking-[-0.176px] text-[hsl(var(--wex-primary))] hover:underline text-left"
                     >
                       Try another method
                     </button>
                   </form>
+                )}
+
+                {/* Step 4: Method Selection */}
+                {step === 4 && (
+                  <div className="flex flex-col gap-4">
+                      {/* Email Option */}
+                      <button
+                        type="button"
+                        onClick={() => handleMethodSelect('email')}
+                        className="w-full"
+                      >
+                        <div className="flex items-center justify-between p-4 border border-border rounded-lg hover:border-[hsl(var(--wex-primary))] hover:bg-accent transition-colors cursor-pointer">
+                          <div className="flex items-center gap-3">
+                            <Mail className="h-5 w-5 text-foreground" />
+                            <span className="text-[16px] font-normal leading-6 tracking-[-0.176px] text-foreground">
+                              Email Address
+                            </span>
+                          </div>
+                          <ChevronRight className="h-5 w-5 text-muted-foreground" />
+                        </div>
+                      </button>
+
+                      {/* SMS Option */}
+                      <button
+                        type="button"
+                        onClick={() => handleMethodSelect('sms')}
+                        className="w-full"
+                      >
+                        <div className="flex items-center justify-between p-4 border border-border rounded-lg hover:border-[hsl(var(--wex-primary))] hover:bg-accent transition-colors cursor-pointer">
+                          <div className="flex items-center gap-3">
+                            <MessageSquare className="h-5 w-5 text-foreground" />
+                            <span className="text-[16px] font-normal leading-6 tracking-[-0.176px] text-foreground">
+                              SMS
+                            </span>
+                          </div>
+                          <ChevronRight className="h-5 w-5 text-muted-foreground" />
+                        </div>
+                      </button>
+                  </div>
                 )}
               </div>
             </WexCard.Content>

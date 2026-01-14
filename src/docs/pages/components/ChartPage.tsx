@@ -4,7 +4,24 @@ import { Guidance } from "@/docs/components/ProseBlock";
 import { CodeBlock } from "@/docs/components/CodeBlock";
 import { ExampleCard } from "@/docs/components/ExampleCard";
 import { TokenReference, type TokenRow } from "@/docs/components/TokenReference";
+import { PropsTable, type PropDefinition } from "@/docs/components/PropsTable";
 import { WexChart, type WexChartConfig } from "@/components/wex/wex-chart";
+
+// Props documentation
+const chartContainerProps: PropDefinition[] = [
+  { name: "config", type: "WexChartConfig", required: true, description: "Chart configuration mapping keys to colors/labels" },
+  { name: "className", type: "string", description: "Additional CSS classes" },
+  { name: "children", type: "ReactNode", required: true, description: "Recharts chart component" },
+];
+
+const chartTooltipProps: PropDefinition[] = [
+  { name: "content", type: "ReactNode | ({ active, payload, label }) => ReactNode", description: "Custom tooltip content" },
+  { name: "hideLabel", type: "boolean", default: "false", description: "Hide the label in tooltip" },
+  { name: "hideIndicator", type: "boolean", default: "false", description: "Hide color indicator" },
+  { name: "indicator", type: '"line" | "dot" | "dashed"', default: '"dot"', description: "Indicator style" },
+  { name: "nameKey", type: "string", description: "Key to use for data name" },
+  { name: "labelKey", type: "string", description: "Key to use for label" },
+];
 import {
   Bar,
   BarChart,
@@ -81,7 +98,7 @@ export default function ChartPage() {
             Good for showing cumulative totals or comparing parts of a whole.
           </Guidance>
 
-          <ExampleCard title="Pie Chart" description="Show proportional distribution of data.">
+          <ExampleCard title="Pie Chart (custom)" description="Show proportional distribution of data.">
             <PieChartExample />
           </ExampleCard>
           <Guidance>
@@ -202,6 +219,16 @@ function MyChart() {
         />
       </Section>
 
+      <Section title="API Reference">
+        <PropsTable 
+          props={chartContainerProps}
+          subComponents={[
+            { name: "WexChart.Tooltip", props: chartTooltipProps },
+            { name: "WexChart.Legend", props: [{ name: "content", type: "ReactNode", description: "Custom legend content" }] },
+          ]}
+        />
+      </Section>
+
       <TokenReference tokens={chartTokens} className="mt-12" />
     </ComponentPage>
   );
@@ -221,7 +248,7 @@ const barChartConfig = {
 function BasicBarChartExample() {
   return (
     <WexChart.Container config={barChartConfig} className="h-[250px] w-full">
-      <BarChart data={sampleData.monthly} accessibilityLayer>
+      <BarChart data={sampleData.monthly} >
         <CartesianGrid vertical={false} />
         <XAxis
           dataKey="month"
@@ -247,7 +274,7 @@ const lineChartConfig = {
 function LineChartExample() {
   return (
     <WexChart.Container config={lineChartConfig} className="h-[250px] w-full">
-      <LineChart data={sampleData.monthly} accessibilityLayer>
+      <LineChart data={sampleData.monthly} >
         <CartesianGrid vertical={false} />
         <XAxis
           dataKey="month"
@@ -283,7 +310,7 @@ const multiSeriesConfig = {
 function MultiSeriesBarChartExample() {
   return (
     <WexChart.Container config={multiSeriesConfig} className="h-[250px] w-full">
-      <BarChart data={sampleData.multiSeries} accessibilityLayer>
+      <BarChart data={sampleData.multiSeries} >
         <CartesianGrid vertical={false} />
         <XAxis
           dataKey="month"
@@ -311,7 +338,7 @@ const areaChartConfig = {
 function AreaChartExample() {
   return (
     <WexChart.Container config={areaChartConfig} className="h-[250px] w-full">
-      <AreaChart data={sampleData.monthly} accessibilityLayer>
+      <AreaChart data={sampleData.monthly} >
         <CartesianGrid vertical={false} />
         <XAxis
           dataKey="month"
@@ -354,8 +381,8 @@ const pieChartConfig = {
 
 function PieChartExample() {
   return (
-    <WexChart.Container config={pieChartConfig} className="h-[250px] w-full">
-      <PieChart accessibilityLayer>
+    <WexChart.Container config={pieChartConfig} className="h-[250px] w-full" aria-label="Pie chart showing distribution of Desktop, Mobile, Tablet, and Other usage">
+      <PieChart>
         <WexChart.Tooltip content={<WexChart.TooltipContent />} />
         <WexChart.Legend content={<WexChart.LegendContent />} />
         <Pie
@@ -367,6 +394,7 @@ function PieChartExample() {
           innerRadius={40}
           outerRadius={80}
           paddingAngle={2}
+          tabIndex={-1}
         >
           {sampleData.distribution.map((entry, index) => (
             <Cell key={`cell-${index}`} fill={entry.fill} />

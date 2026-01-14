@@ -32,7 +32,7 @@ export function QuickLinksSection() {
             {quickLinksData.map((link, index) => (
               <WexButton
                 key={index}
-                intent="ghost"
+                variant="ghost"
                 size="md"
                 className="rounded-[32px] bg-info/10 text-primary hover:bg-info/20 shrink-0 h-auto py-1"
                 onClick={() => handleLinkClick(link.label)}

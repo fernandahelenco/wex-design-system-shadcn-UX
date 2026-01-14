@@ -380,7 +380,8 @@ export function MessageCenterWidget() {
               </p>
             </div>
             <WexButton 
-              intent="link" 
+              intent="primary"
+              variant="link"
               size="sm"
               onClick={() => navigate("/message-center")}
               className="self-start text-primary hover:text-primary/80"
@@ -494,7 +495,7 @@ export function MessageCenterWidget() {
                       </p>
                     </div>
                     <WexButton
-                      intent="ghost"
+                      variant="ghost"
                       size="icon"
                       className="h-[22px] w-[22px] shrink-0"
                       aria-label="Download attachment"
