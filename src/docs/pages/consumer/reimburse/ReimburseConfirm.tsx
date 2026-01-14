@@ -13,6 +13,90 @@ import {
 } from "@/components/wex";
 import { Info, Pencil, ShoppingCart, CheckCircle2, X, ChevronDown, ChevronRight } from "lucide-react";
 
+// Helper function to get plan card data by account value
+const getPlanCardData = (accountValue: string) => {
+  const plans = {
+    "medical-fsa": {
+      title: "Medical FSA",
+      dateRange: "01/01/2026 - 12/31/2026",
+      balance: "$2,734.76",
+      finalFilingDate: "04/30/2027",
+      finalServiceDate: "12/31/2026",
+    },
+    "lifestyle-spending-2026": {
+      title: "Lifestyle Spending Account",
+      dateRange: "01/01/2026 - 12/31/2026",
+      balance: "$250.00",
+      finalFilingDate: "04/30/2027",
+      finalServiceDate: "12/31/2026",
+    },
+    "lifestyle-spending-2025": {
+      title: "Lifestyle Spending Account",
+      dateRange: "01/01/2025 - 12/31/2025",
+      balance: "$250.00",
+      finalFilingDate: "04/30/2026",
+      finalServiceDate: "12/31/2025",
+    },
+  };
+  return plans[accountValue as keyof typeof plans] || plans["medical-fsa"];
+};
+
+// Plan Card Component
+const PlanCard = ({
+  title,
+  dateRange,
+  balance,
+  finalFilingDate,
+  finalServiceDate,
+}: {
+  title: string;
+  dateRange: string;
+  balance: string;
+  finalFilingDate: string;
+  finalServiceDate: string;
+}) => (
+  <WexCard className="border border-border w-[325px] shrink-0">
+    <WexCard.Content className="p-4 space-y-2">
+      {/* Header with title, date range, and info icon */}
+      <div className="flex items-start justify-between">
+        <div className="flex flex-col gap-0.5">
+          <p className="text-base font-semibold text-foreground leading-6 tracking-[-0.176px]">
+            {title}
+          </p>
+          <p className="text-[11px] font-normal text-muted-foreground leading-4 tracking-[0.055px]">
+            {dateRange}
+          </p>
+        </div>
+        <WexButton
+          intent="ghost"
+          size="sm"
+          className="h-7 w-7 p-0"
+          aria-label="Account information"
+        >
+          <Info className="h-3.5 w-3.5 text-muted-foreground" />
+        </WexButton>
+      </div>
+
+      {/* Balance and dates */}
+      <div className="flex flex-col gap-1 pt-2">
+        <div className="flex items-center">
+          <p className="text-xl font-bold text-foreground leading-8 tracking-[-0.34px]">
+            {balance}
+          </p>
+        </div>
+        <div className="flex items-center gap-1.5 text-sm leading-6 tracking-[-0.084px]">
+          <span className="text-muted-foreground">Final Filing Date:</span>
+          <span className="text-foreground">{finalFilingDate}</span>
+        </div>
+        <div className="flex items-center gap-1.5 text-sm leading-6 tracking-[-0.084px]">
+          <span className="text-muted-foreground">Final Service Date:</span>
+          <span className="text-foreground">{finalServiceDate}</span>
+        </div>
+      </div>
+    </WexCard.Content>
+  </WexCard>
+);
+
 export default function ReimburseConfirm() {
   const navigate = useNavigate();
   const { state, updateState } = useReimbursement();
@@ -32,7 +116,13 @@ export default function ReimburseConfirm() {
   };
 
   // Get form data from state
-  const accountLabel = state.account === "medical-fsa" ? "Medical FSA" : state.account === "dependent-care-fsa" ? "Dependent Care FSA" : "HSA";
+  const getAccountLabel = (accountValue: string) => {
+    if (accountValue === "medical-fsa") return "Medical FSA";
+    if (accountValue === "lifestyle-spending-2026") return "Lifestyle Spending Account 2026";
+    if (accountValue === "lifestyle-spending-2025") return "Lifestyle Spending Account 2025";
+    return "Medical FSA";
+  };
+  const accountLabel = getAccountLabel(state.account);
   const recipientLabel = state.category === "me" ? "Me" : state.category === "provider" ? "Provider" : "Dependent";
   const expenseLabel = state.category || "Office Visit";
   const amount = state.amount || "$150.00";
@@ -45,7 +135,7 @@ export default function ReimburseConfirm() {
       <div className="mx-auto max-w-[1440px] px-8 py-8">
         <div className="mx-auto max-w-[1376px] space-y-8">
           <div className="flex items-center justify-between">
-            <h1 className="text-2xl font-semibold text-foreground">Reimburse Myself</h1>
+            <h1 className="text-[30px] font-bold leading-[40px] tracking-[-0.63px] text-foreground">Reimburse Myself</h1>
           </div>
 
           {showSuccessBanner && (
@@ -73,15 +163,27 @@ export default function ReimburseConfirm() {
           )}
 
           <WexCard>
-            <WexCard.Content className="space-y-8 p-6 md:p-8">
-              <div>
-                <p className="text-sm font-semibold text-foreground">Available Balance</p>
-                <div className="mt-3 space-y-1">
-                  <div className="flex items-center gap-2 text-sm text-foreground">
-                    Medical FSA <Info className="h-4 w-4 text-muted-foreground" />
-                  </div>
-                  <p className="text-xl font-semibold text-foreground">$2,734.76</p>
-                </div>
+            <WexCard.Content className="space-y-6 p-6">
+              <div className="space-y-6">
+                <h2 className="text-xl font-semibold text-foreground leading-8 tracking-[-0.34px]">
+                  Available Balance
+                </h2>
+                
+                {/* Selected Plan Card */}
+                {state.account && (() => {
+                  const planData = getPlanCardData(state.account);
+                  return (
+                    <div className="flex gap-6 items-start">
+                      <PlanCard
+                        title={planData.title}
+                        dateRange={planData.dateRange}
+                        balance={planData.balance}
+                        finalFilingDate={planData.finalFilingDate}
+                        finalServiceDate={planData.finalServiceDate}
+                      />
+                    </div>
+                  );
+                })()}
               </div>
 
               <WexSeparator />
